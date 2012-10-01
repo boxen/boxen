@@ -6,9 +6,15 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
+    metaclass (0.0.1)
+    minitest (3.5.0)
+    mocha (0.12.6)
+      metaclass (~> 0.0.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   boxen!
+  minitest (= 3.5.0)
+  mocha

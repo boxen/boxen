@@ -12,4 +12,7 @@ Gem::Specification.new do |gem|
   gem.files         = `git ls-files`.split $/
   gem.test_files    = gem.files.grep /^test/
   gem.require_paths = ["lib"]
+
+  gem.add_development_dependency "minitest", "3.5.0"
+  gem.add_development_dependency "mocha"
 end
