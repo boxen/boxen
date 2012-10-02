@@ -1,5 +1,7 @@
 require "boxen/config"
 require "boxen/flags"
+require "boxen/preflight"
+require "boxen/postflight"
 
 module Boxen
 
@@ -24,11 +26,11 @@ module Boxen
 
     # Run the preflight checks.
 
-    #Boxen::Preflight.run config
+    Boxen::Preflight.run config
 
     # Save the config for Puppet (and next time).
 
-    #Boxen::Config.save config
+    Boxen::Config.save config
 
     # Make the magic happen.
 
@@ -36,7 +38,7 @@ module Boxen
 
     # Run the postflight checks.
 
-    #Boxen::Postflight.run config
+    Boxen::Postflight.run config if code.zero?
 
     p :config => config
 

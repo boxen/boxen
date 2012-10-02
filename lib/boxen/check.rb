@@ -16,6 +16,12 @@ module Boxen
         map { |c| c.new config }
     end
 
+    # Search `dir` and load all Ruby files under it.
+
+    def self.register(dir)
+      Dir["#{dir}/*.rb"].sort.each { |f| load f }
+    end
+
     # Check each instance against `config`.
 
     def self.run(config)

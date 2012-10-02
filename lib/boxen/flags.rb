@@ -132,7 +132,7 @@ module Boxen
     end
 
     # Parse `args` as an array of CLI argument Strings. Raises
-    # Setup::Error if anything goes wrong. Returns `self`.
+    # Boxen::Error if anything goes wrong. Returns `self`.
 
     def parse(*args)
       @args = @options.parse! args.flatten.compact.map(&:to_s)
