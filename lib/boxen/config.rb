@@ -18,8 +18,7 @@ module Boxen
 
     def self.load(&block)
       new do |config|
-        home = ENV["BOXEN_HOME"] || "/opt/boxen"
-        file = "#{home}/config/boxen/defaults.json"
+        file = "#{config.homedir}/config/boxen/defaults.json"
 
         if File.file? file
           attrs = JSON.parse File.read file
@@ -197,9 +196,8 @@ module Boxen
     # file.
 
     def projects
-      root  = File.expand_path "../../..", __FILE__
-      files = Dir["modules/github/manifests/projects/*.pp"]
-      names = (files.map { |m| File.basename m, ".pp" } - %w(all)).sort
+      files = Dir["#{repodir}/modules/projects/manifests/*.pp"]
+      names = files.map { |m| File.basename m, ".pp" }.sort
 
       names.map do |name|
         Boxen::Project.new "#{srcdir}/#{name}"
