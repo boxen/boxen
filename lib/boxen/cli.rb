@@ -17,7 +17,26 @@ module Boxen
     end
 
     def run
-      warn "Finna run."
+
+      # --env prints out the current BOXEN_ env vars.
+
+      exec "env | grep ^BOXEN_ | sort" if flags.env?
+
+      # --help prints some CLI help and exits.
+
+      abort "#{flags}\n" if flags.help?
+
+      # --projects prints a list of available projects and exits.
+
+      if flags.projects?
+        config.projects.each do |project|
+          prefix = project.installed? ? "*" : " "
+          puts "#{prefix} #{project.name}"
+        end
+
+        exit
+      end
+
       0 # FIX: puppet exit code
     end
 
