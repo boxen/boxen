@@ -13,6 +13,9 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep /^test/
   gem.require_paths = ["lib"]
 
+  gem.add_dependency "json_pure"
+  gem.add_dependency "octokit"
+
   gem.add_development_dependency "minitest", "3.5.0"
   gem.add_development_dependency "mocha"
 end
