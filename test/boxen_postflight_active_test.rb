@@ -7,12 +7,12 @@ class BoxenPostflightActiveTest < Boxen::Test
   end
 
   def test_ok?
-    Boxen.expects(:active?).returns true
+    Boxen::Util.expects(:active?).returns true
     assert @check.ok?
   end
 
   def test_ok_bad
-    Boxen.expects(:active?).returns false
+    Boxen::Util.expects(:active?).returns false
     refute @check.ok?
   end
 

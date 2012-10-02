@@ -1,5 +1,5 @@
 require "fileutils"
-require "boxen"
+require "boxen/util"
 
 module Boxen
 
@@ -14,7 +14,7 @@ module Boxen
 
     def command
       manifest = File.expand_path "../../../manifests/init.pp", __FILE__ # FIX
-      puppet   = File.expand_path "../../../bin/puppet", __FILE__ # FIX
+      puppet   = "#{config.repodir}/bin/puppet"
 
       [puppet, "apply", flags, manifest].flatten
     end
@@ -52,11 +52,11 @@ module Boxen
     end
 
     def run
-      Boxen.sudo "/bin/mkdir", "-p", "/tmp/puppet"
-      Boxen.sudo "/bin/rm", "-f", config.logfile
+      Boxen::Util.sudo "/bin/mkdir", "-p", "/tmp/puppet"
+      Boxen::Util.sudo "/bin/rm", "-f", config.logfile
 
       warn command.join " " if config.debug?
-      Boxen.sudo *command
+      Boxen::Util.sudo *command
 
       $?.exitstatus
     end

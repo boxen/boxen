@@ -37,17 +37,18 @@ class BoxenPuppeteerTest < Boxen::Test
 
   def test_run
     config = stub do
-      stubs(:logfile).returns "logfile"
-      stubs(:profile?).returns false
       stubs(:debug?).returns false
+      stubs(:logfile).returns "logfile"
       stubs(:pretend?).returns false
+      stubs(:profile?).returns false
+      stubs(:repodir).returns "test/fixtures/repo"
     end
 
     puppet = Boxen::Puppeteer.new config
 
-    Boxen.expects(:sudo).with "/bin/rm", "-f", "logfile"
-    Boxen.expects(:sudo).with "/bin/mkdir", "-p", "/tmp/puppet"
-    Boxen.expects(:sudo).with *puppet.command
+    Boxen::Util.expects(:sudo).with "/bin/rm", "-f", "logfile"
+    Boxen::Util.expects(:sudo).with "/bin/mkdir", "-p", "/tmp/puppet"
+    Boxen::Util.expects(:sudo).with *puppet.command
 
     puppet.run
   end

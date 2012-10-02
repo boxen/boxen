@@ -1,11 +1,11 @@
-require "boxen"
 require "boxen/postflight"
+require "boxen/util"
 
 # Checks to see if the basic environment is loaded.
 
 class Boxen::Postflight::Active < Boxen::Postflight
   def ok?
-    Boxen.active?
+    Boxen::Util.active?
   end
 
   def run
