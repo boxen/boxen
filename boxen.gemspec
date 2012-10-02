@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "ansi"
   gem.add_dependency "json_pure"
   gem.add_dependency "octokit"
+  gem.add_dependency "puppet"
 
   gem.add_development_dependency "minitest", "3.5.0"
   gem.add_development_dependency "mocha"
