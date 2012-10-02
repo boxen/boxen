@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     boxen (0.0.0)
+      ansi
       json_pure
       octokit
 
@@ -9,6 +10,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     addressable (2.3.2)
+    ansi (1.4.3)
     faraday (0.8.4)
       multipart-post (~> 1.1)
     faraday_middleware (0.8.8)

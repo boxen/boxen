@@ -13,6 +13,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep /^test/
   gem.require_paths = ["lib"]
 
+  gem.add_dependency "ansi"
   gem.add_dependency "json_pure"
   gem.add_dependency "octokit"
 
