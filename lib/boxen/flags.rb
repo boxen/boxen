@@ -94,7 +94,7 @@ module Boxen
         end
       end
 
-      parse args
+      parse args.flatten.compact
     end
 
     # Apply these flags to `config`. Returns `config`.
