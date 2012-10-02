@@ -18,7 +18,7 @@ module Boxen
 
     def self.load(&block)
       new do |config|
-        home = ENV["GH_HOME"] || "/opt/boxen"
+        home = ENV["BOXEN_HOME"] || "/opt/boxen"
         file = "#{home}/config/boxen/defaults.json"
 
         if File.file? file
