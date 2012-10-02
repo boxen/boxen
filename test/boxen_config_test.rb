@@ -109,6 +109,18 @@ def test_initialize
     assert_equal files.size, @config.projects.size
   end
 
+  def test_repodir
+    assert_equal "#{@config.homedir}/repo", @config.repodir
+
+    @config.repodir = "foo"
+    assert_equal "foo", @config.repodir
+  end
+
+  def test_repodir_env_var
+    ENV.expects(:[]).with("BOXEN_REPO_DIR").returns "foo"
+    assert_equal "foo", @config.repodir
+  end
+
   def test_srcdir
     @config.expects(:user).returns "foo"
     assert_equal "/Users/foo/src", @config.srcdir

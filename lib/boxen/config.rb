@@ -206,6 +206,16 @@ module Boxen
       end
     end
 
+    # The directory of the custom Boxen repo for an org. Default is
+    # `"#{homedir}/repo"`. Respects the `BOXEN_REPO_DIR` environment
+    # variable.
+
+    def repodir
+      @repodir || ENV["BOXEN_REPO_DIR"] || "#{homedir}/repo"
+    end
+
+    attr_writer :repodir
+
     # The directory where repos live. Default is
     # `"/Users/#{user}/src"`.
 
