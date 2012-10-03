@@ -27,7 +27,7 @@ module Boxen
       flags << ["--vardir",      "#{config.puppetdir}/var"]
       flags << ["--libdir",      "#{config.repodir}/lib"]
       flags << ["--manifestdir", "#{config.repodir}/manifests"]
-      flags << ["--modulepath",  "#{config.repodir}/modules"]
+      flags << ["--modulepath",  "#{config.repodir}/modules:#{config.repodir}/shared"]
 
       # Log to both the console and a file.
 
