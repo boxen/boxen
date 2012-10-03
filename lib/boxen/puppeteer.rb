@@ -23,6 +23,7 @@ module Boxen
       flags = []
       root  = File.expand_path "../../..", __FILE__
 
+      flags << ["--group",       "admin"]
       flags << ["--confdir",     "#{config.puppetdir}/conf"]
       flags << ["--vardir",      "#{config.puppetdir}/var"]
       flags << ["--libdir",      "#{config.repodir}/lib"]#:#{root}/lib"]
