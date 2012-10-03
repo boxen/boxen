@@ -29,6 +29,7 @@ class BoxenPuppeteerTest < Boxen::Test
     assert_flag "--summarize", flags
 
     assert_flag_value "--confdir", :anything, flags
+    assert_flag_value "--group", "admin", flags
     assert_flag_value "--vardir", :anything, flags
     assert_flag_value "--libdir", :anything, flags
     assert_flag_value "--manifestdir", :anything, flags
