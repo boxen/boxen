@@ -52,14 +52,13 @@ module Boxen
     end
 
     def run
-#      Boxen::Util.sudo "/bin/mkdir", "-p", "/tmp/puppet"
-#      Boxen::Util.sudo "/bin/rm", "-f", config.logfile
+      Boxen::Util.sudo "/bin/mkdir", "-p", "/tmp/puppet"
+      Boxen::Util.sudo "/bin/rm", "-f", config.logfile
 
-      warn command.join " " #if config.debug?
-#      Boxen::Util.sudo *command
+      warn command.join " " if config.debug?
+      Boxen::Util.sudo *command
 
-      #      $?.exitstatus
-      0
+      $?.exitstatus
     end
   end
 end
