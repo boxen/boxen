@@ -9,8 +9,11 @@ class BoxenPuppeteerTest < Boxen::Test
 
   def test_flags
     config = stub do
+      stubs(:homedir).returns "homedir"
       stubs(:logfile).returns "logfile"
       stubs(:profile?).returns true
+      stubs(:puppetdir).returns "puppetdir"
+      stubs(:repodir).returns "repodir"
       stubs(:debug?).returns true
       stubs(:pretend?).returns true
     end
@@ -38,16 +41,20 @@ class BoxenPuppeteerTest < Boxen::Test
   def test_run
     config = stub do
       stubs(:debug?).returns false
+      stubs(:homedir).returns "homedir"
       stubs(:logfile).returns "logfile"
       stubs(:pretend?).returns false
       stubs(:profile?).returns false
+      stubs(:puppetdir).returns "puppetdir"
       stubs(:repodir).returns "test/fixtures/repo"
     end
 
     puppet = Boxen::Puppeteer.new config
 
-    Boxen::Util.expects(:sudo).with "/bin/rm", "-f", "logfile"
-    Boxen::Util.expects(:sudo).with "/bin/mkdir", "-p", "/tmp/puppet"
+    FileUtils.expects(:rm_f).with config.logfile
+    FileUtils.expects(:touch).with config.logfile
+    FileUtils.expects(:mkdir_p).with File.dirname(config.logfile)
+    FileUtils.expects(:mkdir_p).with config.puppetdir
     Boxen::Util.expects(:sudo).with *puppet.command
 
     puppet.run

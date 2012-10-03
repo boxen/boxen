@@ -53,7 +53,7 @@ def test_initialize
   end
 
   def test_logfile
-    assert_equal "/tmp/boxen.log", @config.logfile
+    assert_equal "#{@config.repodir}/log/boxen.log", @config.logfile
 
     @config.logfile = "foo"
     assert_equal "foo", @config.logfile
@@ -106,8 +106,17 @@ def test_initialize
     assert_equal files.size, @config.projects.size
   end
 
+  def test_puppetdir
+    assert_equal "/tmp/boxen/puppet", @config.puppetdir
+  end
+
+  def test_puppetdir_env_var
+    ENV.expects(:[]).with("BOXEN_PUPPET_DIR").returns "foo"
+    assert_equal "foo", @config.puppetdir
+  end
+
   def test_repodir
-    assert_equal "#{@config.homedir}/repo", @config.repodir
+    assert_equal Dir.pwd, @config.repodir
 
     @config.repodir = "foo"
     assert_equal "foo", @config.repodir

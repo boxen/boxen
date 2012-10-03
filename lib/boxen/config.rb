@@ -48,12 +48,14 @@ module Boxen
 
     def self.save(config)
       attrs = {
-        :email    => config.email,
-        :homedir  => config.homedir,
-        :login    => config.login,
-        :name     => config.name,
-        :srcdir   => config.srcdir,
-        :user     => config.user
+        :email     => config.email,
+        :homedir   => config.homedir,
+        :login     => config.login,
+        :name      => config.name,
+        :puppetdir => config.puppetdir,
+        :repodir   => config.repodir,
+        :srcdir    => config.srcdir,
+        :user      => config.user
       }
 
       file = "#{config.homedir}/config/boxen/defaults.json"
@@ -129,11 +131,12 @@ module Boxen
 
     attr_writer :homedir
 
-    # Boxen's log file. Default is `"/tmp/boxen.log"`. Respects the
-    # `BOXEN_LOG_FILE` environment variable.
+    # Boxen's log file. Default is `"#{repodir}/log/boxen.log"`.
+    # Respects the `BOXEN_LOG_FILE` environment variable. The log is
+    # overwritten on every run.
 
     def logfile
-      @logfile || ENV["BOXEN_LOG_FILE"] || "/tmp/boxen.log"
+      @logfile || ENV["BOXEN_LOG_FILE"] || "#{repodir}/log/boxen.log"
     end
 
     attr_writer :logfile
@@ -198,6 +201,17 @@ module Boxen
         Boxen::Project.new "#{srcdir}/#{name}"
       end
     end
+
+    # The directory where Puppet expects configuration (which we don't
+    # use) and runtime information (which we generally don't care
+    # about). Default is `/tmp/boxen/puppet`. Respects the
+    # `BOXEN_PUPPET_DIR` environment variable.
+
+    def puppetdir
+      @puppetdir || ENV["BOXEN_PUPPET_DIR"] || "/tmp/boxen/puppet"
+    end
+
+    attr_writer :puppetdir
 
     # The directory of the custom Boxen repo for an org. Default is
     # `Dir.pwd`. Respects the `BOXEN_REPO_DIR` environment variable.

@@ -23,8 +23,8 @@ module Boxen
       flags = []
       root  = File.expand_path "../../..", __FILE__
 
-      flags << ["--confdir",     "/tmp/puppet/conf"]
-      flags << ["--vardir",      "/tmp/puppet/var"]
+      flags << ["--confdir",     "#{config.puppetdir}/conf"]
+      flags << ["--vardir",      "#{config.puppetdir}/var"]
       flags << ["--libdir",      "#{config.repodir}/lib"]
       flags << ["--manifestdir", "#{config.repodir}/manifests"]
       flags << ["--modulepath",  "#{config.repodir}/modules"]
@@ -52,8 +52,12 @@ module Boxen
     end
 
     def run
-      Boxen::Util.sudo "/bin/mkdir", "-p", "/tmp/puppet"
-      Boxen::Util.sudo "/bin/rm", "-f", config.logfile
+      FileUtils.mkdir_p config.puppetdir
+
+      FileUtils.rm_f config.logfile
+
+      FileUtils.mkdir_p File.dirname config.logfile
+      FileUtils.touch config.logfile
 
       warn command.join " " if config.debug?
       Boxen::Util.sudo *command
