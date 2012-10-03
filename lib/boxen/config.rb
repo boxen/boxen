@@ -241,6 +241,10 @@ module Boxen
 
     attr_writer :stealth
 
+    # A GitHub OAuth token. Default is `nil`.
+
+    attr_accessor :token
+
     # A local user login. Default is the `USER` environment variable.
 
     def user
