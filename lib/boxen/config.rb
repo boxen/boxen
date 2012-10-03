@@ -55,8 +55,8 @@ module Boxen
         :puppetdir => config.puppetdir,
         :repodir   => config.repodir,
         :srcdir    => config.srcdir,
-        :user      => config.user,
-        :token     => config.token
+        :token     => config.token,
+        :user      => config.user
       }
 
       file = "#{config.homedir}/config/boxen/defaults.json"
