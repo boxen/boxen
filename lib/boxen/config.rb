@@ -97,6 +97,10 @@ module Boxen
 
     attr_writer :debug
 
+    def dirty?
+      `git status --porcelain`.strip.empty?
+    end
+
     # A GitHub user's public email.
 
     attr_accessor :email
@@ -177,15 +181,6 @@ module Boxen
     end
 
     attr_writer :profile
-
-    # Dirty tree?
-    def dirty?
-      changes.empty?
-    end
-
-    def changes
-      `git status --porcelain`.strip
-    end
 
     # An Array of Boxen::Project entries, one for each project Boxen
     # knows how to manage.
