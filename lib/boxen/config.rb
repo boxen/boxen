@@ -55,6 +55,7 @@ module Boxen
         :puppetdir => config.puppetdir,
         :repodir   => config.repodir,
         :srcdir    => config.srcdir,
+        :token     => config.token,
         :user      => config.user
       }
 
@@ -239,6 +240,10 @@ module Boxen
     end
 
     attr_writer :stealth
+
+    # A GitHub OAuth token. Default is `nil`.
+
+    attr_accessor :token
 
     # A local user login. Default is the `USER` environment variable.
 

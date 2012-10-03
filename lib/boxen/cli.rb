@@ -3,6 +3,7 @@ require "boxen/flags"
 require "boxen/postflight"
 require "boxen/preflight"
 require "boxen/puppeteer"
+require "boxen/util"
 
 module Boxen
   class CLI
@@ -37,9 +38,10 @@ module Boxen
         exit
       end
 
-      status = puppet.run
+      # Actually run Puppet and return its exit code. FIX: Here's
+      # where we'll reintegrate automatic error reporting.
 
-      return status
+      return puppet.run
     end
 
     # Run Boxen by wiring together the command-line flags, config,
@@ -58,6 +60,11 @@ module Boxen
       # Run the preflight checks.
 
       Boxen::Preflight.run config
+
+      # Okay, we're gonna run Puppet. Let's make some dirs.
+
+      Boxen::Util.sudo("mkdir", "-p", config.homedir) &&
+        Boxen::Util.sudo("chown", "#{config.user}:staff", config.homedir)
 
       # Save the config for Puppet (and next time).
 

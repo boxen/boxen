@@ -147,6 +147,13 @@ def test_initialize
     assert @config.stealth?
   end
 
+  def test_token
+    assert_nil @config.token
+
+    @config.token = "foo"
+    assert_equal "foo", @config.token
+  end
+
   def test_user
     ENV.expects(:[]).with("USER").returns "foo"
     assert_equal "foo", @config.user
