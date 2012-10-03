@@ -60,6 +60,19 @@ module Boxen
       FileUtils.mkdir_p File.dirname config.logfile
       FileUtils.touch config.logfile
 
+      if File.file? "Puppetfile"
+        librarian = "#{config.repodir}/bin/librarian-puppet"
+
+        # Set an environment variable for librarian-puppet's
+        # github_tarball source strategy.
+
+        ENV["GITHUB_API_TOKEN"] = config.token
+
+        unless system librarian, "install", "--path=#{config.repodir}/shared"
+          abort "Can't run Puppet, fetching dependencies with librarian failed."
+        end
+      end
+
       warn command.join " " if config.debug?
       Boxen::Util.sudo *command
 
