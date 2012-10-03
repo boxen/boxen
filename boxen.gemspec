@@ -13,11 +13,12 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep /^test/
   gem.require_paths = ["lib"]
 
-  gem.add_dependency "ansi",      "~> 1.4"
-  gem.add_dependency "highline",  "~> 1.6"
-  gem.add_dependency "json_pure", "~> 1.7"
-  gem.add_dependency "octokit",   "~> 1.15"
-  gem.add_dependency "puppet",    "~> 3.0"
+  gem.add_dependency "ansi",             "~> 1.4"
+  gem.add_dependency "highline",         "~> 1.6"
+  gem.add_dependency "json_pure",        "~> 1.7"
+  gem.add_dependency "librarian-puppet", "~> 0.9"
+  gem.add_dependency "octokit",          "~> 1.15"
+  gem.add_dependency "puppet",           "~> 3.0"
 
   gem.add_development_dependency "minitest", "3.5.0" # pinned for mocha
   gem.add_development_dependency "mocha", "~> 0.12"

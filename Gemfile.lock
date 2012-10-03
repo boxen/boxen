@@ -5,6 +5,7 @@ PATH
       ansi (~> 1.4)
       highline (~> 1.6)
       json_pure (~> 1.7)
+      librarian-puppet (~> 0.9)
       octokit (~> 1.15)
       puppet (~> 3.0)
 
@@ -24,6 +25,10 @@ GEM
     highline (1.6.15)
     json (1.7.5)
     json_pure (1.7.5)
+    librarian-puppet (0.9.5)
+      json
+      puppet
+      thor (~> 0.15)
     metaclass (0.0.1)
     minitest (3.5.0)
     mocha (0.12.6)
@@ -39,6 +44,7 @@ GEM
     puppet (3.0.0)
       facter (>= 1.6.11)
       hiera (>= 1.0.0rc)
+    thor (0.16.0)
 
 PLATFORMS
   ruby
