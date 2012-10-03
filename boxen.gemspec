@@ -5,20 +5,20 @@ Gem::Specification.new do |gem|
   gem.version       = "0.0.0"
   gem.authors       = ["John Barnette", "Will Farrington"]
   gem.email         = ["jbarnette@github.com", "wfarr@github.com"]
-  gem.description   = "Manage development boxes with love (and Puppet)."
-  gem.summary       = "You know, for laptops."
+  gem.description   = "Manage Mac development boxes with love (and Puppet)."
+  gem.summary       = "You know, for laptops and stuff."
   gem.homepage      = "https://github.com/boxen/boxen"
 
   gem.files         = `git ls-files`.split $/
   gem.test_files    = gem.files.grep /^test/
   gem.require_paths = ["lib"]
 
-  gem.add_dependency "ansi"
-  gem.add_dependency "highline"
-  gem.add_dependency "json_pure"
-  gem.add_dependency "octokit"
-  gem.add_dependency "puppet"
+  gem.add_dependency "ansi",      "~> 1.4"
+  gem.add_dependency "highline",  "~> 1.6"
+  gem.add_dependency "json_pure", "~> 1.7"
+  gem.add_dependency "octokit",   "~> 1.15"
+  gem.add_dependency "puppet",    "~> 3.0"
 
-  gem.add_development_dependency "minitest", "3.5.0"
-  gem.add_development_dependency "mocha"
+  gem.add_development_dependency "minitest", "3.5.0" # pinned for mocha
+  gem.add_development_dependency "mocha", "~> 0.12"
 end

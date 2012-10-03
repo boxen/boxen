@@ -2,11 +2,11 @@ PATH
   remote: .
   specs:
     boxen (0.0.0)
-      ansi
-      highline
-      json_pure
-      octokit
-      puppet
+      ansi (~> 1.4)
+      highline (~> 1.6)
+      json_pure (~> 1.7)
+      octokit (~> 1.15)
+      puppet (~> 3.0)
 
 GEM
   remote: http://rubygems.org/
@@ -46,4 +46,4 @@ PLATFORMS
 DEPENDENCIES
   boxen!
   minitest (= 3.5.0)
-  mocha
+  mocha (~> 0.12)
