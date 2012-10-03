@@ -25,7 +25,8 @@ module Boxen
 
       flags << ["--confdir",     "#{config.puppetdir}/conf"]
       flags << ["--vardir",      "#{config.puppetdir}/var"]
-      flags << ["--libdir",      "#{config.repodir}/lib:#{root}/lib"]
+      flags << ["--libdir",      "#{config.repodir}/lib"]#:#{root}/lib"]
+      flags << ["--libdir",      "#{root}/lib"]
       flags << ["--manifestdir", "#{config.repodir}/manifests"]
       flags << ["--modulepath",  "#{config.repodir}/modules:#{config.repodir}/shared"]
 
