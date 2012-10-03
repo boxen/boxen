@@ -13,7 +13,7 @@ module Boxen
     end
 
     def command
-      manifest = File.expand_path "../../../manifests/init.pp", __FILE__ # FIX
+      manifest = "#{config.repodir}/manifests/site.pp"
       puppet   = "#{config.repodir}/bin/puppet"
 
       [puppet, "apply", flags, manifest].flatten
@@ -25,9 +25,9 @@ module Boxen
 
       flags << ["--confdir",     "/tmp/puppet/conf"]
       flags << ["--vardir",      "/tmp/puppet/var"]
-      flags << ["--libdir",      "#{root}/lib"]
-      flags << ["--manifestdir", "#{root}/manifests"]
-      flags << ["--modulepath",  "#{root}/modules"]
+      flags << ["--libdir",      "#{config.repodir}/lib"]
+      flags << ["--manifestdir", "#{config.repodir}/manifests"]
+      flags << ["--modulepath",  "#{config.repodir}/modules"]
 
       # Log to both the console and a file.
 
@@ -52,13 +52,14 @@ module Boxen
     end
 
     def run
-      Boxen::Util.sudo "/bin/mkdir", "-p", "/tmp/puppet"
-      Boxen::Util.sudo "/bin/rm", "-f", config.logfile
+#      Boxen::Util.sudo "/bin/mkdir", "-p", "/tmp/puppet"
+#      Boxen::Util.sudo "/bin/rm", "-f", config.logfile
 
-      warn command.join " " if config.debug?
-      Boxen::Util.sudo *command
+      warn command.join " " #if config.debug?
+#      Boxen::Util.sudo *command
 
-      $?.exitstatus
+      #      $?.exitstatus
+      0
     end
   end
 end

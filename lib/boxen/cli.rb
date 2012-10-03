@@ -37,7 +37,9 @@ module Boxen
         exit
       end
 
-      0 # FIX: puppet exit code
+      status = puppet.run
+
+      return status
     end
 
     # Run Boxen by wiring together the command-line flags, config,
@@ -63,13 +65,15 @@ module Boxen
 
       # Make the magic happen.
 
-      code = Boxen::CLI.new(config, flags).run
+      status = Boxen::CLI.new(config, flags).run
 
       # Run the postflight checks.
 
-      Boxen::Postflight.run config if code.zero?
+      Boxen::Postflight.run config if status.zero?
 
-      return code
+      # Return Puppet's exit status.
+
+      return status
     end
   end
 end
