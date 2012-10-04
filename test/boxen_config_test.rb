@@ -202,6 +202,21 @@ def test_initialize
     assert_equal "bar", @config.user
   end
 
+  def test_changes
+    changes = '   maybe a bunch of stuff happened   '
+    @config.expects(:"`").with("git status --porcelain").returns(changes)
+
+    assert_equal changes.strip, @config.changes
+  end
+
+  def test_dirty?
+    @config.stubs(:changes).returns('stuff happened')
+    assert @config.dirty?
+
+    @config.stubs(:changes).returns('')
+    assert !@config.dirty?
+  end
+
   def test_api
     @config.login    = login = 'someuser'
     @config.password = pass  = 's3kr!7'
