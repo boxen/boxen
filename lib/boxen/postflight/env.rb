@@ -7,7 +7,7 @@ class Boxen::Postflight::Env < Boxen::Postflight
   def self.checksum
 
     # We can't get this from config 'cause it's static (gotta happen
-    # on load), and GH_HOME might not be set.
+    # on load), and BOXEN_HOME might not be set.
 
     home = ENV["BOXEN_HOME"] || "/opt/boxen"
     return unless File.file? "#{home}/env.sh"
