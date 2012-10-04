@@ -1,6 +1,6 @@
 # Boxen
 
-Manage development boxes with love (and Puppet).
+Manage Mac development boxes with love (and Puppet).
 
 ## Contributing
 
