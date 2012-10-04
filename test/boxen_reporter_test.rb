@@ -66,12 +66,17 @@ class BoxenReporterTest < Boxen::Test
     @reporter.stubs(:shell).returns(shell)
     os = '11.1.1'
     @reporter.stubs(:os).returns(os)
+    log = "so\nmany\nthings\nto\nreport"
+    @reporter.stubs(:log).returns(log)
 
     @config.stubs(:reponame).returns('some/repo')
     compare = @reporter.compare_url
     changes = 'so many changes'
     @config.stubs(:changes).returns(changes)
     @config.stubs(:dirty?).returns(true)
+
+    logfile = '/path/to/logfile.txt'
+    @config.stubs(:logfile).returns(logfile)
 
     details = @reporter.failure_details
 
@@ -81,5 +86,17 @@ class BoxenReporterTest < Boxen::Test
     assert_match os,       details
     assert_match compare,  details
     assert_match changes,  details
+    assert_match logfile,  details
+    assert_match log,      details
+  end
+
+  def test_log
+    logfile = '/path/to/logfile.txt'
+    @config.stubs(:logfile).returns(logfile)
+
+    log = 'a bunch of log data'
+    File.expects(:read).with(logfile).returns(log)
+
+    assert_equal log, @reporter.log
   end
 end
