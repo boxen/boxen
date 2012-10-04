@@ -4,7 +4,8 @@ require "boxen/reporter"
 class BoxenReporterTest < Boxen::Test
   def setup
     @config   = mock "config"
-    @reporter = Boxen::Reporter.new @config
+    @puppet   = mock 'puppeteer'
+    @reporter = Boxen::Reporter.new @config, @puppet
   end
 
   def test_compare_url
@@ -21,8 +22,9 @@ class BoxenReporterTest < Boxen::Test
   end
 
   def test_initialize
-    reporter = Boxen::Reporter.new :config
+    reporter = Boxen::Reporter.new :config, :puppet
     assert_equal :config, reporter.config
+    assert_equal :puppet, reporter.puppet
   end
 
   def test_os
@@ -75,6 +77,10 @@ class BoxenReporterTest < Boxen::Test
     @config.stubs(:changes).returns(changes)
     @config.stubs(:dirty?).returns(true)
 
+    commands = %w[/path/to/puppet apply stuff_and_things]
+    @puppet.stubs(:command).returns(commands)
+    command = commands.join(' ')
+
     logfile = '/path/to/logfile.txt'
     @config.stubs(:logfile).returns(logfile)
 
@@ -86,6 +92,7 @@ class BoxenReporterTest < Boxen::Test
     assert_match os,       details
     assert_match compare,  details
     assert_match changes,  details
+    assert_match command,  details
     assert_match logfile,  details
     assert_match log,      details
   end

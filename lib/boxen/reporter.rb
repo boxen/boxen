@@ -1,9 +1,11 @@
 module Boxen
   class Reporter
     attr_reader :config
+    attr_reader :puppet
 
-    def initialize(config)
+    def initialize(config, puppet)
       @config = config
+      @puppet = puppet
     end
 
     def compare_url
@@ -47,6 +49,11 @@ module Boxen
         body << "```\n#{config.changes}\n```"
         body << "\n\n"
       end 
+
+      body << "### Puppet Command"
+      body << "\n\n"
+      body << "```\n#{puppet.command.join(' ')}\n```"
+      body << "\n\n"
 
       body << "### Output (from #{config.logfile})"
       body << "\n\n"
