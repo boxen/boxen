@@ -12,7 +12,7 @@ facts["github_token"]  = config.token
 
 facts["boxen_home"]    = config.homedir
 facts["boxen_srcdir"]  = config.srcdir
-
+facts["boxen_repodir"] = config.repodir
 facts["luser"]         = config.user
 
 Dir["#{config.homedir}/config/facts/*.json"].each do |file|
