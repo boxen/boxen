@@ -34,4 +34,5 @@ git fetch -t origin
 
 # Tag it and bag it.
 
-gem push boxen-*.gem && git tag "$tag" && git push origin --tags
+gem push boxen-*.gem && git tag "$tag" &&
+  git push origin master && git push origin "$tag"
