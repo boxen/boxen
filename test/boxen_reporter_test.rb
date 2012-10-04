@@ -51,7 +51,7 @@ class BoxenReporterTest < Boxen::Test
     @config.stubs(:user).returns(user)
 
     api = mock('api')
-    api.expects(:create_issue).with(repo, "Failed for #{user}", details)
+    api.expects(:create_issue).with(repo, "Failed for #{user}", details, :labels => ['failure'])
     @config.stubs(:api).returns(api)
 
     @reporter.record_failure

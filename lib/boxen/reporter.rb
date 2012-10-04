@@ -32,7 +32,7 @@ module Boxen
     end
 
     def record_failure
-      config.api.create_issue(config.reponame, "Failed for #{config.user}", failure_details)
+      config.api.create_issue(config.reponame, "Failed for #{config.user}", failure_details, :labels => %w[failure])
     end
 
     def failure_details
