@@ -26,5 +26,9 @@ module Boxen
     def shell
       ENV["SHELL"]
     end
+
+    def record_failure
+      @config.api.create_issue(@config.reponame, "Failed for #{@config.user}", failure_details)
+    end
   end
 end

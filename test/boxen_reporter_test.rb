@@ -40,4 +40,20 @@ class BoxenReporterTest < Boxen::Test
     ENV.expects(:[]).with("SHELL").returns "/bin/crush"
     assert_equal "/bin/crush", @reporter.shell
   end
+
+  def test_record_failure
+    details = 'Everything went wrong.'
+    @reporter.stubs(:failure_details).returns(details)
+
+    repo = 'some/repo'
+    user = 'hapless'
+    @config.stubs(:reponame).returns(repo)
+    @config.stubs(:user).returns(user)
+
+    api = mock('api')
+    api.expects(:create_issue).with(repo, "Failed for #{user}", details)
+    @config.stubs(:api).returns(api)
+
+    @reporter.record_failure
+  end
 end
