@@ -3,7 +3,7 @@ require "boxen/config"
 
 config   = Boxen::Config.load
 facts    = {}
-factsdir = File.join config.homedir, "config", "facts"
+factsdir = "#{config.homedir}/config/facts"
 
 facts["github_login"]  = config.login
 facts["github_email"]  = config.email
@@ -13,7 +13,8 @@ facts["github_token"]  = config.token
 facts["boxen_home"]    = config.homedir
 facts["boxen_srcdir"]  = config.srcdir
 facts["boxen_repodir"] = config.repodir
-facts["luser"]         = config.user
+facts["boxen_user"]    = config.user
+facts["luser"]         = config.user # this is goin' away
 
 Dir["#{config.homedir}/config/facts/*.json"].each do |file|
   facts.merge! JSON.parse File.read file
