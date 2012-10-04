@@ -28,11 +28,11 @@ module Boxen
     end
 
     def log
-      File.read @config.logfile
+      File.read config.logfile
     end
 
     def record_failure
-      @config.api.create_issue(@config.reponame, "Failed for #{@config.user}", failure_details)
+      config.api.create_issue(config.reponame, "Failed for #{config.user}", failure_details)
     end
 
     def failure_details
