@@ -201,4 +201,15 @@ def test_initialize
     @config.user = "bar"
     assert_equal "bar", @config.user
   end
+
+  def test_api
+    @config.login    = login = 'someuser'
+    @config.password = pass  = 's3kr!7'
+
+    api = Object.new
+    Octokit::Client.expects(:new).with(:login => login, :password => pass).once.returns(api)
+
+    assert_equal api, @config.api
+    assert_equal api, @config.api  # This extra call plus the `once` on the expectation is for the ivar cache.
+  end
 end
