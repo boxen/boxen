@@ -9,8 +9,15 @@ cd $(dirname "$0")/..
 
 # Build a new gem archive.
 
-rm boxen-*.gem
+rm -rf boxen-*.gem
 gem build -q boxen.gemspec
+
+# Make sure we're on the master branch.
+
+(git branch | grep '* master') || {
+  echo "Only release from the master branch."
+  exit 1
+}
 
 # Figure out what version we're releasing.
 
