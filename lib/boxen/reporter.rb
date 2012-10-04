@@ -30,5 +30,13 @@ module Boxen
     def record_failure
       @config.api.create_issue(@config.reponame, "Failed for #{@config.user}", failure_details)
     end
+
+    def failure_details
+      body = ''
+      body << "Running on `#{hostname}` (OS X #{os}) under `#{shell}`, "
+      body << "version #{sha} ([compare to master](#{compare_url}))."
+
+      body
+    end
   end
 end

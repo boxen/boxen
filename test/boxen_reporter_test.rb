@@ -56,4 +56,26 @@ class BoxenReporterTest < Boxen::Test
 
     @reporter.record_failure
   end
+
+  def test_failure_details
+    sha = 'decafbad'
+    @reporter.stubs(:sha).returns(sha)
+    hostname = 'cools.local'
+    @reporter.stubs(:hostname).returns(hostname)
+    shell = '/bin/ksh'
+    @reporter.stubs(:shell).returns(shell)
+    os = '11.1.1'
+    @reporter.stubs(:os).returns(os)
+
+    @config.stubs(:reponame).returns('some/repo')
+    compare = @reporter.compare_url
+
+    details = @reporter.failure_details
+
+    assert_match sha,      details
+    assert_match hostname, details
+    assert_match shell,    details
+    assert_match os,       details
+    assert_match compare,  details
+  end
 end
