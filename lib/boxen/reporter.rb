@@ -36,6 +36,13 @@ module Boxen
       body << "Running on `#{hostname}` (OS X #{os}) under `#{shell}`, "
       body << "version #{sha} ([compare to master](#{compare_url}))."
 
+      if config.dirty?
+        body << "\n\n"
+        body << "### Changes"
+        body << "\n\n"
+        body << "```\n#{config.changes}\n```"
+      end 
+
       body
     end
   end

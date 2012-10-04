@@ -69,6 +69,9 @@ class BoxenReporterTest < Boxen::Test
 
     @config.stubs(:reponame).returns('some/repo')
     compare = @reporter.compare_url
+    changes = 'so many changes'
+    @config.stubs(:changes).returns(changes)
+    @config.stubs(:dirty?).returns(true)
 
     details = @reporter.failure_details
 
@@ -77,5 +80,6 @@ class BoxenReporterTest < Boxen::Test
     assert_match shell,    details
     assert_match os,       details
     assert_match compare,  details
+    assert_match changes,  details
   end
 end
