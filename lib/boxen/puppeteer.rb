@@ -12,15 +12,11 @@ module Boxen
       @config = config
     end
 
-    def caffeinate
-      "/usr/bin/caffeinate -dis"
-    end
-
     def command
       manifest = "#{config.repodir}/manifests/site.pp"
       puppet   = "#{config.repodir}/bin/puppet"
 
-      [caffeinate, puppet, "apply", flags, manifest].flatten
+      [puppet, "apply", flags, manifest].flatten
     end
 
     def flags
@@ -73,9 +69,7 @@ module Boxen
 
         ENV["GITHUB_API_TOKEN"] = config.token
 
-        # caffeinate ensures the system will not sleep during a run
-        unless system caffeinate,
-                      librarian, "install", "--path=#{config.repodir}/shared"
+        unless system librarian, "install", "--path=#{config.repodir}/shared"
           abort "Can't run Puppet, fetching dependencies with librarian failed."
         end
       end
