@@ -34,7 +34,7 @@ module Boxen
     end
 
     def record_failure
-      config.api.create_issue(config.reponame, "Failed for #{config.user}", failure_details, :labels => %w[failure])
+      config.api.create_issue(config.reponame, "Failed for #{config.user}", failure_details, :labels => [failure_label])
     end
 
     def failure_details
@@ -61,5 +61,10 @@ module Boxen
 
       body
     end
+
+    def failure_label
+      @failure_label ||= 'failure'
+    end
+    attr_writer :failure_label
   end
 end

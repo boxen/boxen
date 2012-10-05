@@ -59,6 +59,17 @@ class BoxenReporterTest < Boxen::Test
     @reporter.record_failure
   end
 
+  def test_failure_label
+    default = 'failure'
+    assert_equal default, @reporter.failure_label
+
+    @reporter.failure_label = label = 'oops'
+    assert_equal label, @reporter.failure_label
+
+    @reporter.failure_label = nil
+    assert_equal default, @reporter.failure_label
+  end
+
   def test_failure_details
     sha = 'decafbad'
     @reporter.stubs(:sha).returns(sha)
