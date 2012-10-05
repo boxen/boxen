@@ -130,10 +130,18 @@ class BoxenReporterTest < Boxen::Test
     assert_equal log, @reporter.log
   end
 
+
+  Issue = Struct.new(:number, :labels) do
+    def labels
+      self[:labels] || []
+    end
+  end
+  Label = Struct.new(:name)
+
   def test_close_failures
     @config.reponame = repo = 'some/repo'
 
-    issues = Array.new(3) { |i|  stub('issue', :number => i*2 + 2) }
+    issues = Array.new(3) { |i|  Issue.new(i*2 + 2) }
     @reporter.stubs(:failures).returns(issues)
 
     sha = 'decafbad'
@@ -155,12 +163,16 @@ class BoxenReporterTest < Boxen::Test
     @reporter.failure_label = fail_label = 'ouch'
     @reporter.ongoing_label = goon_label = 'goon'
 
+    fail_l = Label.new(fail_label)
+    goon_l = Label.new(goon_label)
+    pop_l  = Label.new('popcorn')
+
     issues = [
-      stub('issue', :labels => [stub('label', :name => fail_label)]),
-      stub('issue', :labels => [stub('label', :name => fail_label), stub('label', :name => 'popcorn')]),
-      stub('issue', :labels => [stub('label', :name => fail_label), stub('label', :name => goon_label)]),
-      stub('issue', :labels => [stub('label', :name => fail_label), stub('label', :name => 'bang')]),
-      stub('issue', :labels => [stub('label', :name => fail_label), stub('label', :name => goon_label), stub('label', :name => 'popcorn')]),
+      Issue.new(0, [fail_l]),
+      Issue.new(1, [fail_l, pop_l]),
+      Issue.new(2, [fail_l, goon_l]),
+      Issue.new(3, [fail_l, Label.new('bang')]),
+      Issue.new(4, [fail_l, goon_l, pop_l]),
     ]
 
     @config.api = api = mock('api')
