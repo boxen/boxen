@@ -121,4 +121,37 @@ class BoxenReporterTest < Boxen::Test
 
     assert_equal log, @reporter.log
   end
+
+  def test_close_failures
+    repo = 'some/repo'
+    @config.stubs(:reponame).returns(repo)
+
+    issues = Array.new(3) { |i|  stub('issue', :number => i*2 + 2) }
+    @reporter.stubs(:failures).returns(issues)
+
+    api = mock('api')
+    issues.each do |issue|
+      api.expects(:close_issue).with(repo, issue.number)
+    end
+    @config.stubs(:api).returns(api)
+
+    @reporter.close_failures
+  end
+
+  def test_failures
+    repo = 'some/repo'
+    user = 'hapless'
+    @config.stubs(:reponame).returns(repo)
+    @config.stubs(:login).returns(user)
+
+    @reporter.failure_label = label = 'ouch'
+
+    issues = Array.new(3) { mock 'issue' }
+
+    api = mock('api')
+    api.expects(:list_issues).with(repo, :state => 'open', :labels => label, :creator => user).returns(issues)
+    @config.stubs(:api).returns(api)
+
+    assert_equal issues, @reporter.failures
+  end
 end

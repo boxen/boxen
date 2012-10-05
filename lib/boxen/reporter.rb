@@ -39,6 +39,16 @@ module Boxen
       config.api.create_issue(config.reponame, "Failed for #{config.user}", failure_details, :labels => [failure_label])
     end
 
+    def close_failures
+      failures.each do |issue|
+        config.api.close_issue(config.reponame, issue.number)
+      end
+    end
+
+    def failures
+      config.api.list_issues(config.reponame, :state => 'open', :labels => failure_label, :creator => config.login)
+    end
+
     def failure_details
       body = ''
       body << "Running on `#{hostname}` (OS X #{os}) under `#{shell}`, "
