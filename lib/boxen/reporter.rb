@@ -1,11 +1,13 @@
 module Boxen
   class Reporter
     attr_reader :config
+    attr_reader :checkout
     attr_reader :puppet
 
-    def initialize(config, puppet)
-      @config = config
-      @puppet = puppet
+    def initialize(config, checkout, puppet)
+      @config   = config
+      @checkout = checkout
+      @puppet   = puppet
     end
 
     def compare_url
@@ -43,10 +45,10 @@ module Boxen
       body << "version #{sha} ([compare to master](#{compare_url}))."
       body << "\n\n"
 
-      if config.dirty?
+      if checkout.dirty?
         body << "### Changes"
         body << "\n\n"
-        body << "```\n#{config.changes}\n```"
+        body << "```\n#{checkout.changes}\n```"
         body << "\n\n"
       end 
 

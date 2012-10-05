@@ -5,7 +5,8 @@ class BoxenReporterTest < Boxen::Test
   def setup
     @config   = mock "config"
     @puppet   = mock 'puppeteer'
-    @reporter = Boxen::Reporter.new @config, @puppet
+    @checkout = mock 'checkout'
+    @reporter = Boxen::Reporter.new @config, @checkout, @puppet
   end
 
   def test_compare_url
@@ -22,9 +23,10 @@ class BoxenReporterTest < Boxen::Test
   end
 
   def test_initialize
-    reporter = Boxen::Reporter.new :config, :puppet
-    assert_equal :config, reporter.config
-    assert_equal :puppet, reporter.puppet
+    reporter = Boxen::Reporter.new :config, :checkout, :puppet
+    assert_equal :config,   reporter.config
+    assert_equal :checkout, reporter.checkout
+    assert_equal :puppet,   reporter.puppet
   end
 
   def test_os
@@ -85,8 +87,8 @@ class BoxenReporterTest < Boxen::Test
     @config.stubs(:reponame).returns('some/repo')
     compare = @reporter.compare_url
     changes = 'so many changes'
-    @config.stubs(:changes).returns(changes)
-    @config.stubs(:dirty?).returns(true)
+    @checkout.stubs(:changes).returns(changes)
+    @checkout.stubs(:dirty?).returns(true)
 
     commands = %w[/path/to/puppet apply stuff_and_things]
     @puppet.stubs(:command).returns(commands)
