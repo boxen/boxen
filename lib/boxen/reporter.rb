@@ -12,7 +12,7 @@ module Boxen
 
     def compare_url
       return unless config.reponame
-      "https://github.com/#{config.reponame}/compare/#{sha}...master"
+      "https://github.com/#{config.reponame}/compare/#{checkout.sha}...master"
     end
 
     def hostname
@@ -21,10 +21,6 @@ module Boxen
 
     def os
       `sw_vers -productVersion`.strip
-    end
-
-    def sha
-      Dir.chdir(config.repodir) { `git rev-parse HEAD`.strip }
     end
 
     def shell
@@ -40,7 +36,7 @@ module Boxen
     end
 
     def close_failures
-      version = sha
+      version = checkout.sha
       failures.each do |issue|
         config.api.add_comment(config.reponame, issue.number, "Succeeded at version #{version}.")
         config.api.close_issue(config.reponame, issue.number)
@@ -56,7 +52,7 @@ module Boxen
     def failure_details
       body = ''
       body << "Running on `#{hostname}` (OS X #{os}) under `#{shell}`, "
-      body << "version #{sha} ([compare to master](#{compare_url}))."
+      body << "version #{checkout.sha} ([compare to master](#{compare_url}))."
       body << "\n\n"
 
       if checkout.dirty?

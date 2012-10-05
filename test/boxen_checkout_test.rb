@@ -12,6 +12,13 @@ class BoxenCheckoutTest < Boxen::Test
     assert_equal :config, checkout.config
   end
 
+  def test_sha
+    sha = 'deadbeef'
+    @config.expects(:repodir).returns "test/fixtures/repo"
+    @checkout.expects(:"`").with("git rev-parse HEAD").returns("#{sha}\n")
+    assert_equal sha, @checkout.sha
+  end
+
   def test_changes
     changes = '   maybe a bunch of stuff happened   '
     @config.expects(:repodir).returns "test/fixtures/repo"

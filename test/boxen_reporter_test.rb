@@ -11,7 +11,7 @@ class BoxenReporterTest < Boxen::Test
 
   def test_compare_url
     @config.stubs(:reponame).returns "org/repo"
-    @reporter.expects(:sha).returns "deadbeef"
+    @checkout.expects(:sha).returns "deadbeef"
 
     expected = "https://github.com/org/repo/compare/deadbeef...master"
     assert_equal expected, @reporter.compare_url
@@ -32,12 +32,6 @@ class BoxenReporterTest < Boxen::Test
   def test_os
     @reporter.expects(:"`").with("sw_vers -productVersion").returns "11.1.1\n"
     assert_equal "11.1.1", @reporter.os
-  end
-
-  def test_sha
-    @config.expects(:repodir).returns "test/fixtures/repo"
-    @reporter.expects(:"`").with("git rev-parse HEAD").returns "deadbeef\n"
-    assert_equal "deadbeef", @reporter.sha
   end
 
   def test_shell
@@ -87,7 +81,7 @@ class BoxenReporterTest < Boxen::Test
 
   def test_failure_details
     sha = 'decafbad'
-    @reporter.stubs(:sha).returns(sha)
+    @checkout.stubs(:sha).returns(sha)
     hostname = 'cools.local'
     @reporter.stubs(:hostname).returns(hostname)
     shell = '/bin/ksh'
@@ -141,7 +135,7 @@ class BoxenReporterTest < Boxen::Test
     @reporter.stubs(:failures).returns(issues)
 
     sha = 'decafbad'
-    @reporter.stubs(:sha).returns(sha)
+    @checkout.stubs(:sha).returns(sha)
 
     api = mock('api')
     issues.each do |issue|

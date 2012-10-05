@@ -6,6 +6,10 @@ module Boxen
       @config = config
     end
 
+    def sha
+      Dir.chdir(config.repodir) { `git rev-parse HEAD`.strip }
+    end
+
     def dirty?
       !changes.empty?
     end
