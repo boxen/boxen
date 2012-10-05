@@ -1,8 +1,10 @@
+require "boxen/checkout"
 require "boxen/config"
 require "boxen/flags"
 require "boxen/postflight"
 require "boxen/preflight"
 require "boxen/puppeteer"
+require "boxen/reporter"
 require "boxen/util"
 
 module Boxen
@@ -10,11 +12,14 @@ module Boxen
     attr_reader :config
     attr_reader :flags
     attr_reader :puppet
+    attr_reader :report
 
     def initialize(config, flags)
       @config = config
       @flags  = flags
       @puppet = Boxen::Puppeteer.new @config
+      checkout = Boxen::Checkout.new(@config)
+      @report = Boxen::Reporter.new(@config, checkout, @puppet)
     end
 
     def run
