@@ -23,8 +23,7 @@ module Boxen
       @reporter = Boxen::Reporter.new(@config, @checkout, @puppet)
     end
 
-    def run
-
+    def process
       # --env prints out the current BOXEN_ env vars.
 
       exec "env | grep ^BOXEN_ | sort" if flags.env?
@@ -46,11 +45,15 @@ module Boxen
 
       # Actually run Puppet and return its exit code.
 
-      result = puppet.run
+      puppet.run
+    end
 
+    def run
+      report(process)
+    end
+
+    def report(result)
       return result unless issues?
-
-      # Report errors
 
       if result.zero?
         reporter.close_failures
