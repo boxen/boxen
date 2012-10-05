@@ -48,6 +48,8 @@ module Boxen
 
       result = puppet.run
 
+      return result unless issues?
+
       # Report errors
 
       if result.zero?
