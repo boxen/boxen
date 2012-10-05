@@ -12,14 +12,15 @@ module Boxen
     attr_reader :config
     attr_reader :flags
     attr_reader :puppet
+    attr_reader :checkout
     attr_reader :report
 
     def initialize(config, flags)
       @config = config
       @flags  = flags
       @puppet = Boxen::Puppeteer.new @config
-      checkout = Boxen::Checkout.new(@config)
-      @report = Boxen::Reporter.new(@config, checkout, @puppet)
+      @checkout = Boxen::Checkout.new(@config)
+      @report = Boxen::Reporter.new(@config, @checkout, @puppet)
     end
 
     def run

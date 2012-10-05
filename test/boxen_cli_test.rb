@@ -20,6 +20,7 @@ class BoxenCLITest < Boxen::Test
     
     assert_equal config, cli.report.config
     assert_equal config, cli.report.checkout.config
+    assert_equal cli.checkout, cli.report.checkout
     assert_equal cli.puppet, cli.report.puppet
   end
 
