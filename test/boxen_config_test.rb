@@ -180,6 +180,7 @@ def test_initialize
   def test_reponame_git_config_bad_url
     @config.expects(:"`").with("git config remote.origin.url").
       returns "https://spumco.com/some-org/our-boxen\n"
+    $?.expects(:success?).returns true
 
     assert_nil @config.reponame
   end
@@ -187,6 +188,7 @@ def test_initialize
   def test_reponame_git_config_git_extension
     @config.expects(:"`").with("git config remote.origin.url").
       returns "https://github.com/some-org/our-boxen.git\n"
+    $?.expects(:success?).returns true
 
     assert_equal "some-org/our-boxen", @config.reponame
   end
