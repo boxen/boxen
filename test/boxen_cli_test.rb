@@ -24,6 +24,43 @@ class BoxenCLITest < Boxen::Test
     assert_equal cli.puppet, cli.report.puppet
   end
 
+  def test_issues?
+    @config.stealth = true
+    @config.pretend = true
+    @cli.checkout.stubs(:master?).returns(false)
+    assert !@cli.issues?
+
+    @config.stealth = false
+    @config.pretend = true
+    @cli.checkout.stubs(:master?).returns(false)
+    assert !@cli.issues?
+
+    @config.stealth = true
+    @config.pretend = false
+    @cli.checkout.stubs(:master?).returns(false)
+    assert !@cli.issues?
+
+    @config.stealth = true
+    @config.pretend = true
+    @cli.checkout.stubs(:master?).returns(true)
+    assert !@cli.issues?
+
+    @config.stealth = false
+    @config.pretend = true
+    @cli.checkout.stubs(:master?).returns(true)
+    assert !@cli.issues?
+
+    @config.stealth = true
+    @config.pretend = false
+    @cli.checkout.stubs(:master?).returns(true)
+    assert !@cli.issues?
+
+    @config.stealth = false
+    @config.pretend = false
+    @cli.checkout.stubs(:master?).returns(true)
+    assert @cli.issues?
+  end
+
   def test_report_failure
     @cli.stubs(:exec)
     @cli.stubs(:abort)
