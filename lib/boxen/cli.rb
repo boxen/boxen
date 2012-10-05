@@ -104,7 +104,7 @@ module Boxen
     # Should the result of this run have any effect on GitHub issues?
 
     def issues?
-      !@config.stealth? && !@config.pretend? && @checkout.master?
+      !config.stealth? && !config.pretend? && checkout.master?
     end
   end
 end
