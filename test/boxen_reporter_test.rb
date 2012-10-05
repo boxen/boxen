@@ -1,19 +1,24 @@
 require "boxen/test"
 require "boxen/reporter"
 
+class Boxen::Config
+  attr_writer :api
+end
+
 class BoxenReporterTest < Boxen::Test
   def setup
-    @config   = mock "config"
+    @config   = Boxen::Config.new
+    @checkout = Boxen::Checkout.new(@config)
     @puppet   = mock 'puppeteer'
-    @checkout = mock 'checkout'
     @reporter = Boxen::Reporter.new @config, @checkout, @puppet
   end
 
   def test_compare_url
-    @config.stubs(:reponame).returns "org/repo"
-    @checkout.expects(:sha).returns "deadbeef"
+    @config.reponame = repo = 'org/repo'
+    sha = 'deadbeef'
+    @checkout.expects(:sha).returns(sha)
 
-    expected = "https://github.com/org/repo/compare/deadbeef...master"
+    expected = "https://github.com/#{repo}/compare/#{sha}...master"
     assert_equal expected, @reporter.compare_url
   end
 
@@ -47,16 +52,13 @@ class BoxenReporterTest < Boxen::Test
     details = 'Everything went wrong.'
     @reporter.stubs(:failure_details).returns(details)
 
-    repo = 'some/repo'
-    user = 'hapless'
-    @config.stubs(:reponame).returns(repo)
-    @config.stubs(:user).returns(user)
+    @config.reponame = repo = 'some/repo'
+    @config.user     = user = 'hapless'
 
     @reporter.failure_label = label = 'boom'
 
-    api = mock('api')
+    @config.api = api = mock('api')
     api.expects(:create_issue).with(repo, "Failed for #{user}", details, :labels => [label])
-    @config.stubs(:api).returns(api)
 
     @reporter.record_failure
   end
@@ -95,18 +97,16 @@ class BoxenReporterTest < Boxen::Test
     log = "so\nmany\nthings\nto\nreport"
     @reporter.stubs(:log).returns(log)
 
-    @config.stubs(:reponame).returns('some/repo')
+    @config.reponame = repo = 'some/repo'
     compare = @reporter.compare_url
     changes = 'so many changes'
     @checkout.stubs(:changes).returns(changes)
-    @checkout.stubs(:dirty?).returns(true)
 
     commands = %w[/path/to/puppet apply stuff_and_things]
     @puppet.stubs(:command).returns(commands)
     command = commands.join(' ')
 
-    logfile = '/path/to/logfile.txt'
-    @config.stubs(:logfile).returns(logfile)
+    @config.logfile = logfile = '/path/to/logfile.txt'
 
     details = @reporter.failure_details
 
@@ -122,8 +122,7 @@ class BoxenReporterTest < Boxen::Test
   end
 
   def test_log
-    logfile = '/path/to/logfile.txt'
-    @config.stubs(:logfile).returns(logfile)
+    @config.logfile = logfile = '/path/to/logfile.txt'
 
     log = 'a bunch of log data'
     File.expects(:read).with(logfile).returns(log)
@@ -132,8 +131,7 @@ class BoxenReporterTest < Boxen::Test
   end
 
   def test_close_failures
-    repo = 'some/repo'
-    @config.stubs(:reponame).returns(repo)
+    @config.reponame = repo = 'some/repo'
 
     issues = Array.new(3) { |i|  stub('issue', :number => i*2 + 2) }
     @reporter.stubs(:failures).returns(issues)
@@ -141,21 +139,18 @@ class BoxenReporterTest < Boxen::Test
     sha = 'decafbad'
     @checkout.stubs(:sha).returns(sha)
 
-    api = mock('api')
+    @config.api = api = mock('api')
     issues.each do |issue|
       api.expects(:add_comment).with(repo, issue.number, "Succeeded at version #{sha}.")
       api.expects(:close_issue).with(repo, issue.number)
     end
-    @config.stubs(:api).returns(api)
 
     @reporter.close_failures
   end
 
   def test_failures
-    repo = 'some/repo'
-    user = 'hapless'
-    @config.stubs(:reponame).returns(repo)
-    @config.stubs(:login).returns(user)
+    @config.reponame = repo = 'some/repo'
+    @config.login    = user = 'hapless'
 
     @reporter.failure_label = fail_label = 'ouch'
     @reporter.ongoing_label = goon_label = 'goon'
@@ -168,9 +163,8 @@ class BoxenReporterTest < Boxen::Test
       stub('issue', :labels => [stub('label', :name => fail_label), stub('label', :name => goon_label), stub('label', :name => 'popcorn')]),
     ]
 
-    api = mock('api')
+    @config.api = api = mock('api')
     api.expects(:list_issues).with(repo, :state => 'open', :labels => fail_label, :creator => user).returns(issues)
-    @config.stubs(:api).returns(api)
 
     assert_equal issues.values_at(0,1,3), @reporter.failures
   end
