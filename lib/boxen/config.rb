@@ -54,6 +54,7 @@ module Boxen
         :name      => config.name,
         :puppetdir => config.puppetdir,
         :repodir   => config.repodir,
+        :reponame  => config.reponame,
         :srcdir    => config.srcdir,
         :token     => config.token,
         :user      => config.user
@@ -100,10 +101,6 @@ module Boxen
 
     attr_writer :debug
 
-    def dirty?
-      `git status --porcelain`.strip.empty?
-    end
-
     # A GitHub user's public email.
 
     attr_accessor :email
@@ -149,12 +146,6 @@ module Boxen
     def login=(login)
       @api = nil
       @login = login
-    end
-
-    # Is Boxen running on the `master` branch?
-
-    def master?
-      `git symbolic-ref HEAD`.chomp == "refs/heads/master"
     end
 
     # A GitHub user's profile name.
@@ -222,6 +213,26 @@ module Boxen
     end
 
     attr_writer :repodir
+
+    # The repo on GitHub to use for error reports and automatic
+    # updates, in `owner/repo` format. Default is the `origin` of a
+    # Git repo in `repodir`, if it exists and points at GitHub.
+    # Respects the `BOXEN_REPO_NAME` environment variable.
+
+    def reponame
+      override = @reponame || ENV["BOXEN_REPO_NAME"]
+      return override unless override.nil?
+
+      if File.directory? repodir
+        url = Dir.chdir(repodir) { `git config remote.origin.url`.strip }
+
+        if $?.success? && %r|github\.com[/:]([^/]+/[^/]+)| =~ url
+          @reponame = $1.sub /\.git$/, ""
+        end
+      end
+    end
+
+    attr_writer :reponame
 
     # The directory where repos live. Default is
     # `"/Users/#{user}/src"`.
