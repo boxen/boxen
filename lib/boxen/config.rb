@@ -148,12 +148,6 @@ module Boxen
       @login = login
     end
 
-    # Is Boxen running on the `master` branch?
-
-    def master?
-      `git symbolic-ref HEAD`.chomp == "refs/heads/master"
-    end
-
     # A GitHub user's profile name.
 
     attr_accessor :name

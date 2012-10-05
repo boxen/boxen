@@ -10,6 +10,10 @@ module Boxen
       Dir.chdir(config.repodir) { `git rev-parse HEAD`.strip }
     end
 
+    def master?
+      Dir.chdir(config.repodir) { `git symbolic-ref HEAD`.strip == 'refs/heads/master' }
+    end
+
     def dirty?
       !changes.empty?
     end

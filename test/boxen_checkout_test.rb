@@ -18,6 +18,14 @@ class BoxenCheckoutTest < Boxen::Test
     assert_equal sha, @checkout.sha
   end
 
+  def test_master?
+    @checkout.stubs(:"`").with("git symbolic-ref HEAD").returns("refs/heads/topic\n")
+    assert !@checkout.master?
+
+    @checkout.stubs(:"`").with("git symbolic-ref HEAD").returns("refs/heads/master\n")
+    assert @checkout.master?
+  end
+
   def test_changes
     changes = '   maybe a bunch of stuff happened   '
     @checkout.expects(:"`").with("git status --porcelain").returns(changes)
