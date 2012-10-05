@@ -43,10 +43,20 @@ module Boxen
         exit
       end
 
-      # Actually run Puppet and return its exit code. FIX: Here's
-      # where we'll reintegrate automatic error reporting.
+      # Actually run Puppet and return its exit code.
 
-      return puppet.run
+      result = puppet.run
+
+      # Report errors
+
+      if result.zero?
+        report.close_failures
+      else
+        warn "Sorry! Creating an issue on #{config.reponame}."
+        report.record_failure
+      end
+
+      result
     end
 
     # Run Boxen by wiring together the command-line flags, config,
