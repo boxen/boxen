@@ -62,12 +62,10 @@ class BoxenCLITest < Boxen::Test
   end
 
   def test_report_failure
-    @cli.stubs(:exec)
-    @cli.stubs(:abort)
+    @cli.stubs(:issues?).returns(true)
+    @cli.stubs(:process).returns(1)
     @cli.stubs(:warn)
 
-    @cli.stubs(:issues?).returns(true)
-    @cli.puppet.stubs(:run).returns(1)
     @cli.reporter.expects(:record_failure)
     @cli.reporter.expects(:close_failures).never
 
@@ -75,11 +73,9 @@ class BoxenCLITest < Boxen::Test
   end
 
   def test_run_success
-    @cli.stubs(:exec)
-    @cli.stubs(:abort)
-
     @cli.stubs(:issues?).returns(true)
-    @cli.puppet.stubs(:run).returns(0)
+    @cli.stubs(:process).returns(0)
+
     @cli.reporter.expects(:record_failure).never
     @cli.reporter.expects(:close_failures)
 
@@ -87,11 +83,9 @@ class BoxenCLITest < Boxen::Test
   end
 
   def test_run_failure_no_issues
-    @cli.stubs(:exec)
-    @cli.stubs(:abort)
-
     @cli.stubs(:issues?).returns(false)
-    @cli.puppet.stubs(:run).returns(1)
+    @cli.stubs(:process).returns(1)
+
     @cli.reporter.expects(:record_failure).never
     @cli.reporter.expects(:close_failures).never
 
@@ -99,11 +93,9 @@ class BoxenCLITest < Boxen::Test
   end
 
   def test_run_success_no_issues
-    @cli.stubs(:exec)
-    @cli.stubs(:abort)
-
     @cli.stubs(:issues?).returns(false)
-    @cli.puppet.stubs(:run).returns(0)
+    @cli.stubs(:process).returns(0)
+
     @cli.reporter.expects(:record_failure).never
     @cli.reporter.expects(:close_failures).never
 
