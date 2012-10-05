@@ -32,20 +32,23 @@ module Boxen
     end
 
     def record_failure
-      config.api.create_issue(config.reponame, "Failed for #{config.user}", failure_details, :labels => [failure_label])
+      title = "Failed for #{config.user}"
+      config.api.create_issue(config.reponame, title, failure_details,
+        :labels => [failure_label])
     end
 
     def close_failures
-      version = checkout.sha
+      comment = "Succeeded at version #{checkout.sha}."
       failures.each do |issue|
-        config.api.add_comment(config.reponame, issue.number, "Succeeded at version #{version}.")
+        config.api.add_comment(config.reponame, issue.number, comment)
         config.api.close_issue(config.reponame, issue.number)
       end
     end
 
     def failures
-      issues = config.api.list_issues(config.reponame, :state => 'open', :labels => failure_label, :creator => config.login)
-      issues.reject!  { |issue|  issue.labels.collect(&:name).include?(ongoing_label) }
+      issues = config.api.list_issues(config.reponame, :state => 'open',
+        :labels => failure_label, :creator => config.login)
+      issues.reject! {|i| i.labels.collect(&:name).include?(ongoing_label)}
       issues
     end
 
