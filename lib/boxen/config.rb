@@ -101,14 +101,6 @@ module Boxen
 
     attr_writer :debug
 
-    def dirty?
-      !changes.empty?
-    end
-
-    def changes
-      `git status --porcelain`.strip
-    end
-
     # A GitHub user's public email.
 
     attr_accessor :email
