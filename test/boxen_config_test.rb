@@ -29,8 +29,12 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_fde_env_var
-    ENV.expects(:[]).with("BOXEN_NO_FDE").returns "1"
+    val = ENV['BOXEN_NO_FDE']
+
+    ENV['BOXEN_NO_FDE'] = '1'
     refute @config.fde?
+
+    ENV['BOXEN_NO_FDE'] = val
   end
 
   def test_homedir
@@ -41,8 +45,12 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_homedir_env_var_boxen_home
-    ENV.expects(:[]).with("BOXEN_HOME").returns "foo"
+    val = ENV['BOXEN_NO_FDE']
+
+    ENV['BOXEN_HOME'] = 'foo'
     assert_equal "foo", @config.homedir
+
+    ENV['BOXEN_HOME'] = val
   end
 
 def test_initialize
@@ -61,8 +69,12 @@ def test_initialize
   end
 
   def test_logfile_env_var
-    ENV.expects(:[]).with("BOXEN_LOG_FILE").returns "foo"
+    val = ENV['BOXEN_LOG_FILE']
+
+    ENV['BOXEN_LOG_FILE'] = 'foo'
     assert_equal "foo", @config.logfile
+
+    ENV['BOXEN_LOG_FILE'] = val
   end
 
   def test_login
@@ -110,8 +122,12 @@ def test_initialize
   end
 
   def test_puppetdir_env_var
-    ENV.expects(:[]).with("BOXEN_PUPPET_DIR").returns "foo"
+    val = ENV['BOXEN_PUPPET_DIR']
+
+    ENV['BOXEN_PUPPET_DIR'] = 'foo'
     assert_equal "foo", @config.puppetdir
+
+    ENV['BOXEN_PUPPET_DIR'] = val
   end
 
   def test_repodir
@@ -125,8 +141,12 @@ def test_initialize
   def test_repodir_env_var
     @config.repodir = nil
 
-    ENV.expects(:[]).with("BOXEN_REPO_DIR").returns "foo"
+    val = ENV['BOXEN_REPO_DIR']
+
+    ENV['BOXEN_REPO_DIR'] = 'foo'
     assert_equal "foo", @config.repodir
+
+    ENV['BOXEN_REPO_DIR'] = val
   end
 
   def test_reponame
@@ -135,8 +155,12 @@ def test_initialize
   end
 
   def test_reponame_env_var
-    ENV.expects(:[]).with("BOXEN_REPO_NAME").returns "env/var"
+    val = ENV['BOXEN_REPO_NAME']
+
+    ENV['BOXEN_REPO_NAME'] = 'env/var'
     assert_equal "env/var", @config.reponame
+
+    ENV['BOXEN_REPO_NAME'] = val
   end
 
   def test_reponame_git_config
@@ -183,8 +207,12 @@ def test_initialize
   end
 
   def test_stealth_env_var
-    ENV.expects(:[]).with("BOXEN_NO_ISSUE").returns "1"
+    val = ENV['BOXEN_NO_ISSUE']
+
+    ENV['BOXEN_NO_ISSUE'] = '1'
     assert @config.stealth?
+
+    ENV['BOXEN_NO_ISSUE'] = val
   end
 
   def test_token
@@ -195,7 +223,7 @@ def test_initialize
   end
 
   def test_user
-    ENV.expects(:[]).with("USER").returns "foo"
+    ENV['USER'] = 'foo'
     assert_equal "foo", @config.user
 
     @config.user = "bar"

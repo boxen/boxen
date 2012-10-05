@@ -35,8 +35,12 @@ class BoxenReporterTest < Boxen::Test
   end
 
   def test_shell
-    ENV.expects(:[]).with("SHELL").returns "/bin/crush"
+    val = ENV['SHELL']
+
+    ENV['SHELL'] = '/bin/crush'
     assert_equal "/bin/crush", @reporter.shell
+
+    ENV['SHELL'] = val
   end
 
   def test_record_failure
