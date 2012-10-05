@@ -13,14 +13,14 @@ module Boxen
     attr_reader :flags
     attr_reader :puppet
     attr_reader :checkout
-    attr_reader :report
+    attr_reader :reporter
 
     def initialize(config, flags)
       @config = config
       @flags  = flags
       @puppet = Boxen::Puppeteer.new @config
       @checkout = Boxen::Checkout.new(@config)
-      @report = Boxen::Reporter.new(@config, @checkout, @puppet)
+      @reporter = Boxen::Reporter.new(@config, @checkout, @puppet)
     end
 
     def run
@@ -53,10 +53,10 @@ module Boxen
       # Report errors
 
       if result.zero?
-        report.close_failures
+        reporter.close_failures
       else
         warn "Sorry! Creating an issue on #{config.reponame}."
-        report.record_failure
+        reporter.record_failure
       end
 
       result

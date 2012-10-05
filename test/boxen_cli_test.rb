@@ -18,10 +18,10 @@ class BoxenCLITest < Boxen::Test
     assert_equal flags, cli.flags
     assert_equal config, cli.puppet.config
     
-    assert_equal config, cli.report.config
-    assert_equal config, cli.report.checkout.config
-    assert_equal cli.checkout, cli.report.checkout
-    assert_equal cli.puppet, cli.report.puppet
+    assert_equal config, cli.reporter.config
+    assert_equal config, cli.reporter.checkout.config
+    assert_equal cli.checkout, cli.reporter.checkout
+    assert_equal cli.puppet, cli.reporter.puppet
   end
 
   def test_issues?
@@ -68,8 +68,8 @@ class BoxenCLITest < Boxen::Test
 
     @cli.stubs(:issues?).returns(true)
     @cli.puppet.stubs(:run).returns(1)
-    @cli.report.expects(:record_failure)
-    @cli.report.expects(:close_failures).never
+    @cli.reporter.expects(:record_failure)
+    @cli.reporter.expects(:close_failures).never
 
     @cli.run
   end
@@ -80,8 +80,8 @@ class BoxenCLITest < Boxen::Test
 
     @cli.stubs(:issues?).returns(true)
     @cli.puppet.stubs(:run).returns(0)
-    @cli.report.expects(:record_failure).never
-    @cli.report.expects(:close_failures)
+    @cli.reporter.expects(:record_failure).never
+    @cli.reporter.expects(:close_failures)
 
     @cli.run
   end
@@ -92,8 +92,8 @@ class BoxenCLITest < Boxen::Test
 
     @cli.stubs(:issues?).returns(false)
     @cli.puppet.stubs(:run).returns(1)
-    @cli.report.expects(:record_failure).never
-    @cli.report.expects(:close_failures).never
+    @cli.reporter.expects(:record_failure).never
+    @cli.reporter.expects(:close_failures).never
 
     @cli.run
   end
@@ -104,8 +104,8 @@ class BoxenCLITest < Boxen::Test
 
     @cli.stubs(:issues?).returns(false)
     @cli.puppet.stubs(:run).returns(0)
-    @cli.report.expects(:record_failure).never
-    @cli.report.expects(:close_failures).never
+    @cli.reporter.expects(:record_failure).never
+    @cli.reporter.expects(:close_failures).never
 
     @cli.run
   end
