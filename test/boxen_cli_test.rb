@@ -86,7 +86,7 @@ class BoxenCLITest < Boxen::Test
     @cli.run
   end
 
-  def test_report_failure
+  def test_run_failure_no_issues
     @cli.stubs(:exec)
     @cli.stubs(:abort)
 
@@ -98,7 +98,7 @@ class BoxenCLITest < Boxen::Test
     @cli.run
   end
 
-  def test_run_success
+  def test_run_success_no_issues
     @cli.stubs(:exec)
     @cli.stubs(:abort)
 
