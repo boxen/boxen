@@ -11,7 +11,7 @@ module Boxen
     end
 
     def changes
-      `git status --porcelain`.strip
+      Dir.chdir(config.repodir) { `git status --porcelain`.strip }
     end
   end
 end

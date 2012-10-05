@@ -14,6 +14,7 @@ class BoxenCheckoutTest < Boxen::Test
 
   def test_changes
     changes = '   maybe a bunch of stuff happened   '
+    @config.expects(:repodir).returns "test/fixtures/repo"
     @checkout.expects(:"`").with("git status --porcelain").returns(changes)
 
     assert_equal changes.strip, @checkout.changes
