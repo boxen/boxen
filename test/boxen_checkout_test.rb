@@ -3,7 +3,7 @@ require "boxen/checkout"
 
 class BoxenCheckoutTest < Boxen::Test
   def setup
-    @config = mock "config"
+    @config   = Boxen::Config.new { |c|  c.repodir = 'test/fixtures/repo' }
     @checkout = Boxen::Checkout.new @config
   end
 
@@ -14,16 +14,13 @@ class BoxenCheckoutTest < Boxen::Test
 
   def test_sha
     sha = 'deadbeef'
-    @config.expects(:repodir).returns "test/fixtures/repo"
     @checkout.expects(:"`").with("git rev-parse HEAD").returns("#{sha}\n")
     assert_equal sha, @checkout.sha
   end
 
   def test_changes
     changes = '   maybe a bunch of stuff happened   '
-    @config.expects(:repodir).returns "test/fixtures/repo"
     @checkout.expects(:"`").with("git status --porcelain").returns(changes)
-
     assert_equal changes.strip, @checkout.changes
   end
 
