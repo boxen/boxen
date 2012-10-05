@@ -16,6 +16,7 @@ load ".env.local.rb" if File.file? ".env.local.rb"
 
 abort "Bootstrap failed." unless system "script/bootstrap"
 
+require "rubygems"
 require "bundler/setup"
 require "octokit"
 
