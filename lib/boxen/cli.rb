@@ -1,8 +1,10 @@
+require "boxen/checkout"
 require "boxen/config"
 require "boxen/flags"
 require "boxen/postflight"
 require "boxen/preflight"
 require "boxen/puppeteer"
+require "boxen/reporter"
 require "boxen/util"
 
 module Boxen
@@ -10,15 +12,18 @@ module Boxen
     attr_reader :config
     attr_reader :flags
     attr_reader :puppet
+    attr_reader :checkout
+    attr_reader :reporter
 
     def initialize(config, flags)
       @config = config
       @flags  = flags
       @puppet = Boxen::Puppeteer.new @config
+      @checkout = Boxen::Checkout.new(@config)
+      @reporter = Boxen::Reporter.new(@config, @checkout, @puppet)
     end
 
-    def run
-
+    def process
       # --env prints out the current BOXEN_ env vars.
 
       exec "env | grep ^BOXEN_ | sort" if flags.env?
@@ -38,10 +43,26 @@ module Boxen
         exit
       end
 
-      # Actually run Puppet and return its exit code. FIX: Here's
-      # where we'll reintegrate automatic error reporting.
+      # Actually run Puppet and return its exit code.
 
-      return puppet.run
+      puppet.run
+    end
+
+    def run
+      report(process)
+    end
+
+    def report(result)
+      return result unless issues?
+
+      if result.zero?
+        reporter.close_failures
+      else
+        warn "Sorry! Creating an issue on #{config.reponame}."
+        reporter.record_failure
+      end
+
+      result
     end
 
     # Run Boxen by wiring together the command-line flags, config,
@@ -81,6 +102,12 @@ module Boxen
       # Return Puppet's exit status.
 
       return status
+    end
+
+    # Should the result of this run have any effect on GitHub issues?
+
+    def issues?
+      !config.stealth? && !config.pretend? && checkout.master?
     end
   end
 end
