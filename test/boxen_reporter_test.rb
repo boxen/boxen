@@ -140,8 +140,12 @@ class BoxenReporterTest < Boxen::Test
     issues = Array.new(3) { |i|  stub('issue', :number => i*2 + 2) }
     @reporter.stubs(:failures).returns(issues)
 
+    sha = 'decafbad'
+    @reporter.stubs(:sha).returns(sha)
+
     api = mock('api')
     issues.each do |issue|
+      api.expects(:add_comment).with(repo, issue.number, "Succeeded at version #{sha}.")
       api.expects(:close_issue).with(repo, issue.number)
     end
     @config.stubs(:api).returns(api)

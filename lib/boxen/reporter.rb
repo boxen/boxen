@@ -40,7 +40,9 @@ module Boxen
     end
 
     def close_failures
+      version = sha
       failures.each do |issue|
+        config.api.add_comment(config.reponame, issue.number, "Succeeded at version #{version}.")
         config.api.close_issue(config.reponame, issue.number)
       end
     end
