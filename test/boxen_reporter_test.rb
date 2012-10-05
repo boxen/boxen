@@ -74,6 +74,17 @@ class BoxenReporterTest < Boxen::Test
     assert_equal default, @reporter.failure_label
   end
 
+  def test_ongoing_label
+    default = 'ongoing'
+    assert_equal default, @reporter.ongoing_label
+
+    @reporter.ongoing_label = label = 'checkit'
+    assert_equal label, @reporter.ongoing_label
+
+    @reporter.ongoing_label = nil
+    assert_equal default, @reporter.ongoing_label
+  end
+
   def test_failure_details
     sha = 'decafbad'
     @reporter.stubs(:sha).returns(sha)
@@ -144,14 +155,21 @@ class BoxenReporterTest < Boxen::Test
     @config.stubs(:reponame).returns(repo)
     @config.stubs(:login).returns(user)
 
-    @reporter.failure_label = label = 'ouch'
+    @reporter.failure_label = fail_label = 'ouch'
+    @reporter.ongoing_label = goon_label = 'goon'
 
-    issues = Array.new(3) { mock 'issue' }
+    issues = [
+      stub('issue', :labels => [stub('label', :name => fail_label)]),
+      stub('issue', :labels => [stub('label', :name => fail_label), stub('label', :name => 'popcorn')]),
+      stub('issue', :labels => [stub('label', :name => fail_label), stub('label', :name => goon_label)]),
+      stub('issue', :labels => [stub('label', :name => fail_label), stub('label', :name => 'bang')]),
+      stub('issue', :labels => [stub('label', :name => fail_label), stub('label', :name => goon_label), stub('label', :name => 'popcorn')]),
+    ]
 
     api = mock('api')
-    api.expects(:list_issues).with(repo, :state => 'open', :labels => label, :creator => user).returns(issues)
+    api.expects(:list_issues).with(repo, :state => 'open', :labels => fail_label, :creator => user).returns(issues)
     @config.stubs(:api).returns(api)
 
-    assert_equal issues, @reporter.failures
+    assert_equal issues.values_at(0,1,3), @reporter.failures
   end
 end

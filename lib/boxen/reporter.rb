@@ -46,7 +46,9 @@ module Boxen
     end
 
     def failures
-      config.api.list_issues(config.reponame, :state => 'open', :labels => failure_label, :creator => config.login)
+      issues = config.api.list_issues(config.reponame, :state => 'open', :labels => failure_label, :creator => config.login)
+      issues.reject!  { |issue|  issue.labels.collect(&:name).include?(ongoing_label) }
+      issues
     end
 
     def failure_details
@@ -78,5 +80,10 @@ module Boxen
       @failure_label ||= 'failure'
     end
     attr_writer :failure_label
+
+    def ongoing_label
+      @ongoing_label ||= 'ongoing'
+    end
+    attr_writer :ongoing_label
   end
 end
