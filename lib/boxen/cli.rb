@@ -55,7 +55,7 @@ module Boxen
     def report(result)
       return result unless issues?
 
-      if successful_exit_code? result
+      if self.class.successful_exit_code? result
         reporter.close_failures
       else
         warn "Sorry! Creating an issue on #{config.reponame}."
@@ -104,15 +104,16 @@ module Boxen
       return status
     end
 
+    # Puppet's detailed exit codes reserves 2 for a successful run with changes
+
+    def self.successful_exit_code?(code)
+      [0, 2].member? code
+    end
+
     # Should the result of this run have any effect on GitHub issues?
 
     def issues?
       !config.stealth? && !config.pretend? && checkout.master?
-    end
-
-    private
-    def successful_exit_code?(code)
-      [0, 2].member? code
     end
   end
 end
