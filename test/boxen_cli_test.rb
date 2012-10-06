@@ -92,7 +92,6 @@ class BoxenCLITest < Boxen::Test
     @cli.run
   end
 
-
   def test_run_failure_no_issues
     @cli.stubs(:issues?).returns(false)
     @cli.stubs(:process).returns(1)
