@@ -55,7 +55,7 @@ module Boxen
     def report(result)
       return result unless issues?
 
-      if result.zero?
+      if successful_exit_code? result
         reporter.close_failures
       else
         warn "Sorry! Creating an issue on #{config.reponame}."
@@ -97,7 +97,7 @@ module Boxen
 
       # Run the postflight checks.
 
-      Boxen::Postflight.run config if status.zero?
+      Boxen::Postflight.run config if successful_exit_code?(status)
 
       # Return Puppet's exit status.
 
@@ -108,6 +108,11 @@ module Boxen
 
     def issues?
       !config.stealth? && !config.pretend? && checkout.master?
+    end
+
+    private
+    def successful_exit_code?(code)
+      [0, 2].member? code
     end
   end
 end
