@@ -82,6 +82,17 @@ class BoxenCLITest < Boxen::Test
     @cli.run
   end
 
+  def test_run_success_exit_code_2
+    @cli.stubs(:issues?).returns(true)
+    @cli.stubs(:process).returns(2)
+
+    @cli.reporter.expects(:record_failure).never
+    @cli.reporter.expects(:close_failures)
+
+    @cli.run
+  end
+
+
   def test_run_failure_no_issues
     @cli.stubs(:issues?).returns(false)
     @cli.stubs(:process).returns(1)
@@ -95,6 +106,16 @@ class BoxenCLITest < Boxen::Test
   def test_run_success_no_issues
     @cli.stubs(:issues?).returns(false)
     @cli.stubs(:process).returns(0)
+
+    @cli.reporter.expects(:record_failure).never
+    @cli.reporter.expects(:close_failures).never
+
+    @cli.run
+  end
+
+  def test_run_success_exit_code_2_no_issues
+    @cli.stubs(:issues?).returns(false)
+    @cli.stubs(:process).returns(2)
 
     @cli.reporter.expects(:record_failure).never
     @cli.reporter.expects(:close_failures).never
