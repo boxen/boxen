@@ -28,8 +28,8 @@ Use the OS X system Ruby (1.8.7). Run `script/tests` often. Open PR's.
 There are roughly nine million puppet modules under the
 [Boxen GitHub organization][boxen]. To clone them all, run
 `script/sync-puppet`. This script will make sure every
-`boxen/puppet-*` repo is cloned under the `./puppet`, which is ignored
-by Git.
+`boxen/puppet-*` repo is cloned under the `./puppet` directory, which is
+ignored by Git.
 
 [boxen]: https://github.com/boxen
 
