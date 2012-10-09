@@ -53,6 +53,21 @@ class BoxenFlagsTest < Boxen::Test
     end
   end
 
+  def test_disable_services?
+    refute flags.disable_services?
+    assert flags("--disable-services").disable_services?
+  end
+
+  def test_enable_services?
+    refute flags.enable_services?
+    assert flags("--enable-services").enable_services?
+  end
+
+  def test_list_services?
+    refute flags.list_services?
+    assert flags("--list-services").list_services?
+  end
+
   def test_homedir
     assert_nil flags.homedir
     assert_equal "foo", flags("--homedir", "foo").homedir
