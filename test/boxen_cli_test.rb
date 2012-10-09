@@ -133,6 +133,7 @@ class BoxenCLITest < Boxen::Test
     Dir.expects(:[]).with("/Library/LaunchDaemons/com.boxen.*.plist").returns([
       "/Library/LaunchDaemons/com.boxen.test.plist"
     ])
+
     Boxen::Util.expects(:sudo).with(
       "/bin/launchctl",
       "unload",
@@ -143,40 +144,40 @@ class BoxenCLITest < Boxen::Test
     assert_raises(SystemExit) do
       cli.process
     end
+  end
 
-    def test_enable_services
-      config = Boxen::Config.new
-      flags  = Boxen::Flags.new('--enable-services')
-      cli    = Boxen::CLI.new config, flags
+  def test_enable_services
+    config = Boxen::Config.new
+    flags  = Boxen::Flags.new('--enable-services')
+    cli    = Boxen::CLI.new config, flags
 
-      Dir.expects(:[]).with("/Library/LaunchDaemons/com.boxen.*.plist").returns([
-        "/Library/LaunchDaemons/com.boxen.test.plist"
-      ])
+    Dir.expects(:[]).with("/Library/LaunchDaemons/com.boxen.*.plist").returns([
+      "/Library/LaunchDaemons/com.boxen.test.plist"
+    ])
 
-      Boxen::Util.expects(:sudo).with(
-        "/bin/launchctl",
-        "load",
-        "-w",
-        "/Library/LaunchDaemons/com.boxen.test.plist"
-      ).returns(true)
+    Boxen::Util.expects(:sudo).with(
+      "/bin/launchctl",
+      "load",
+      "-w",
+      "/Library/LaunchDaemons/com.boxen.test.plist"
+    ).returns(true)
 
-      assert_raises(SystemExit) do
-        cli.process
-      end
+    assert_raises(SystemExit) do
+      cli.process
+    end
+  end
 
-      def test_list_services
-        config = Boxen::Config.new
-        flags  = Boxen::Flags.new('--list-services')
-        cli    = Boxen::CLI.new config, flags
+  def test_list_services
+    config = Boxen::Config.new
+    flags  = Boxen::Flags.new('--list-services')
+    cli    = Boxen::CLI.new config, flags
 
-        Dir.expects(:[]).with("/Library/LaunchDaemons/com.boxen.*.plist").returns([
-          "/Library/LaunchDaemons/com.boxen.test.plist"
-        ])
+    Dir.expects(:[]).with("/Library/LaunchDaemons/com.boxen.*.plist").returns([
+      "/Library/LaunchDaemons/com.boxen.test.plist"
+    ])
 
-        assert_raises(SystemExit) do
-          cli.process
-        end
-      end
+    assert_raises(SystemExit) do
+      cli.process
     end
   end
 end

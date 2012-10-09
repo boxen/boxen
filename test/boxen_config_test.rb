@@ -53,7 +53,7 @@ class BoxenConfigTest < Boxen::Test
     ENV['BOXEN_HOME'] = val
   end
 
-def test_initialize
+  def test_initialize
     config = Boxen::Config.new do |c|
       c.homedir = "foo"
     end
