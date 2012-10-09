@@ -43,6 +43,41 @@ module Boxen
         exit
       end
 
+      # --disable-services stops all services
+
+      if flags.disable_services?
+        Dir["/Library/LaunchDaemons/com.boxen.*.plist"]. each do |service|
+          service_human_name = service.match(/com\.boxen\.(.+)\.plist$/)[1]
+          puts "Disabling #{service_human_name}..."
+          Boxen::Util.sudo("/bin/launchctl", "unload", "-w", service)
+        end
+
+        exit
+      end
+
+      # --enable-services starts all services
+
+      if flags.enable_services?
+        Dir["/Library/LaunchDaemons/com.boxen.*.plist"]. each do |service|
+          service_human_name = service.match(/com\.boxen\.(.+)\.plist$/)[1]
+          puts "Enabling #{service_human_name}..."
+          Boxen::Util.sudo("/bin/launchctl", "load", "-w", service)
+        end
+
+        exit
+      end
+
+      # --list-services lists all services
+
+      if flags.list_services?
+        Dir["/Library/LaunchDaemons/com.boxen.*.plist"]. each do |service|
+          service_human_name = service.match(/com\.boxen\.(.+)\.plist$/)[1]
+          puts service_human_name
+        end
+
+        exit
+      end
+
       # Actually run Puppet and return its exit code.
 
       puppet.run
