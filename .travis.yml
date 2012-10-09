@@ -1,0 +1,5 @@
+---
+script: "./script/tests"
+gemfile: "this/does/not/exist"
+rvm:
+  - "1.8.7"

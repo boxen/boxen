@@ -20,15 +20,18 @@ module Boxen
     # parse immediately.
 
     def initialize(*args)
-      @args     = []
-      @debug    = false
-      @env      = false
-      @fde      = true
-      @help     = false
-      @pretend  = false
-      @profile  = false
-      @projects = false
-      @stealth  = false
+      @args             = []
+      @debug            = false
+      @env              = false
+      @fde              = true
+      @help             = false
+      @pretend          = false
+      @profile          = false
+      @projects         = false
+      @stealth          = false
+      @disable_services = false
+      @enable_services  = false
+      @list_services    = false
 
       @options = OptionParser.new do |o|
         o.banner = "Usage: #{File.basename $0} [options] [projects...]\n\n"
@@ -47,6 +50,18 @@ module Boxen
 
         o.on "--help", "-h", "-?", "Show help." do
           @help = true
+        end
+
+        o.on "--disable-services", "Disable Boxen services." do
+          @disable_services = true
+        end
+
+        o.on "--enable-services", "Enable Boxen services." do
+          @enable_services = true
+        end
+
+        o.on "--list-services", "List Boxen services." do
+          @list_services = true
         end
 
         o.on "--homedir DIR", "Boxen's home directory." do |homedir|
@@ -129,6 +144,18 @@ module Boxen
 
     def help?
       @help
+    end
+
+    def disable_services?
+      @disable_services
+    end
+
+    def enable_services?
+      @enable_services
+    end
+
+    def list_services?
+      @list_services
     end
 
     # Parse `args` as an array of CLI argument Strings. Raises
