@@ -30,6 +30,8 @@ class BoxenCLITest < Boxen::Test
     flags = Boxen::Flags.new('--help')
     cli   = Boxen::CLI.new(@config, flags)
     cli.runner.expects(:run).never
-    cli.run
+    assert_raises SystemExit do
+      cli.run
+    end
   end
 end
