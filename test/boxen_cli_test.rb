@@ -25,4 +25,11 @@ class BoxenCLITest < Boxen::Test
     @cli.runner.expects(:run)
     @cli.run
   end
+
+  def test_help
+    flags = Boxen::Flags.new('--help')
+    cli   = Boxen::CLI.new(@config, flags)
+    cli.runner.expects(:run).never
+    cli.run
+  end
 end

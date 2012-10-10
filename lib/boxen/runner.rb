@@ -26,10 +26,6 @@ module Boxen
 
       exec "env | grep ^BOXEN_ | sort" if flags.env?
 
-      # --help prints some CLI help and exits.
-
-      abort "#{flags}\n" if flags.help?
-
       # --projects prints a list of available projects and exits.
 
       if flags.projects?

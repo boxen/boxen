@@ -18,6 +18,7 @@ module Boxen
     end
 
     def run
+      abort "#{flags}\n" if flags.help?
       runner.run
     end
 
