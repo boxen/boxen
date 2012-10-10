@@ -66,9 +66,8 @@ module Boxen
       # --disable-services stops all services
 
       if flags.disable_services?
-        Dir["/Library/LaunchDaemons/com.boxen.*.plist"]. each do |service|
-          service_human_name = service.match(/com\.boxen\.(.+)\.plist$/)[1]
-          puts "Disabling #{service_human_name}..."
+        services.each do |service|
+          puts "Disabling #{service_human_name(service)}..."
           Boxen::Util.sudo("/bin/launchctl", "unload", "-w", service)
         end
 
@@ -78,9 +77,8 @@ module Boxen
       # --enable-services starts all services
 
       if flags.enable_services?
-        Dir["/Library/LaunchDaemons/com.boxen.*.plist"]. each do |service|
-          service_human_name = service.match(/com\.boxen\.(.+)\.plist$/)[1]
-          puts "Enabling #{service_human_name}..."
+        services.each do |service|
+          puts "Enabling #{service_human_name(service)}..."
           Boxen::Util.sudo("/bin/launchctl", "load", "-w", service)
         end
 
@@ -90,9 +88,8 @@ module Boxen
       # --list-services lists all services
 
       if flags.list_services?
-        Dir["/Library/LaunchDaemons/com.boxen.*.plist"]. each do |service|
-          service_human_name = service.match(/com\.boxen\.(.+)\.plist$/)[1]
-          puts service_human_name
+        services.collect do |service|
+          puts service_human_name(service)
         end
 
         exit
@@ -104,6 +101,17 @@ module Boxen
 
     def issues?
       !config.stealth? && !config.pretend? && checkout.master?
+    end
+
+
+    private
+
+    def services
+      Dir["/Library/LaunchDaemons/com.boxen.*.plist"]
+    end
+
+    def service_human_name(service)
+      service.match(/com\.boxen\.(.+)\.plist$/)[1]
     end
   end
 end
