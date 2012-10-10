@@ -26,6 +26,32 @@ module Boxen
 
       exec "env | grep ^BOXEN_ | sort" if flags.env?
 
+      process_flags
+
+      # Actually run Puppet and return its result
+
+      puppet.run
+    end
+
+    def run
+      report(process)
+    end
+
+    def report(result)
+      return result unless issues?
+
+      if result.success?
+        reporter.close_failures
+      else
+        warn "Sorry! Creating an issue on #{config.reponame}."
+        reporter.record_failure
+      end
+
+      result
+    end
+
+    def process_flags
+
       # --projects prints a list of available projects and exits.
 
       if flags.projects?
@@ -72,26 +98,6 @@ module Boxen
         exit
       end
 
-      # Actually run Puppet and return its result
-
-      puppet.run
-    end
-
-    def run
-      report(process)
-    end
-
-    def report(result)
-      return result unless issues?
-
-      if result.success?
-        reporter.close_failures
-      else
-        warn "Sorry! Creating an issue on #{config.reponame}."
-        reporter.record_failure
-      end
-
-      result
     end
 
     # Should the result of this run have any effect on GitHub issues?
