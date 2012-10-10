@@ -230,5 +230,9 @@ class BoxenReporterTest < Boxen::Test
     repo_info = RepoInfo.new(false)
     api.stubs(:repository).with(repo).returns(repo_info)
     refute @reporter.issues?
+
+    @config.stubs(:reponame)  # to ensure the returned value is nil
+    api.stubs(:repository).returns(RepoInfo.new(true))
+    refute @reporter.issues?
   end
 end

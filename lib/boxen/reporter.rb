@@ -94,6 +94,7 @@ module Boxen
     attr_writer :ongoing_label
 
     def issues?
+      return unless config.reponame
       config.api.repository(config.reponame).has_issues
     end
   end
