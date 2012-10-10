@@ -76,7 +76,7 @@ module Boxen
         exit
       end
 
-      # Actually run Puppet and return its exit code.
+      # Actually run Puppet and return its result
 
       puppet.run
     end
@@ -88,7 +88,7 @@ module Boxen
     def report(result)
       return result unless issues?
 
-      if self.class.successful_exit_code? result
+      if result.success?
         reporter.close_failures
       else
         warn "Sorry! Creating an issue on #{config.reponame}."
@@ -96,12 +96,6 @@ module Boxen
       end
 
       result
-    end
-
-    # Puppet's detailed exit codes reserves 2 for a successful run with changes
-
-    def self.successful_exit_code?(code)
-      [0, 2].member? code
     end
 
     # Should the result of this run have any effect on GitHub issues?

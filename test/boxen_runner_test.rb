@@ -66,7 +66,8 @@ class BoxenRunnerTest < Boxen::Test
 
   def test_report_failure
     @runner.stubs(:issues?).returns(true)
-    @runner.stubs(:process).returns(1)
+    status = stub('status', :success? => false)
+    @runner.stubs(:process).returns(status)
     @runner.stubs(:warn)
 
     @runner.reporter.expects(:record_failure)
@@ -77,17 +78,8 @@ class BoxenRunnerTest < Boxen::Test
 
   def test_run_success
     @runner.stubs(:issues?).returns(true)
-    @runner.stubs(:process).returns(0)
-
-    @runner.reporter.expects(:record_failure).never
-    @runner.reporter.expects(:close_failures)
-
-    @runner.run
-  end
-
-  def test_run_success_exit_code_2
-    @runner.stubs(:issues?).returns(true)
-    @runner.stubs(:process).returns(2)
+    status = stub('status', :success? => true)
+    @runner.stubs(:process).returns(status)
 
     @runner.reporter.expects(:record_failure).never
     @runner.reporter.expects(:close_failures)
@@ -97,7 +89,8 @@ class BoxenRunnerTest < Boxen::Test
 
   def test_run_failure_no_issues
     @runner.stubs(:issues?).returns(false)
-    @runner.stubs(:process).returns(1)
+    status = stub('status', :success? => false)
+    @runner.stubs(:process).returns(status)
 
     @runner.reporter.expects(:record_failure).never
     @runner.reporter.expects(:close_failures).never
@@ -107,17 +100,8 @@ class BoxenRunnerTest < Boxen::Test
 
   def test_run_success_no_issues
     @runner.stubs(:issues?).returns(false)
-    @runner.stubs(:process).returns(0)
-
-    @runner.reporter.expects(:record_failure).never
-    @runner.reporter.expects(:close_failures).never
-
-    @runner.run
-  end
-
-  def test_run_success_exit_code_2_no_issues
-    @runner.stubs(:issues?).returns(false)
-    @runner.stubs(:process).returns(2)
+    status = stub('status', :success? => true)
+    @runner.stubs(:process).returns(status)
 
     @runner.reporter.expects(:record_failure).never
     @runner.reporter.expects(:close_failures).never

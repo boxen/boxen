@@ -53,17 +53,11 @@ module Boxen
 
       # Run the postflight checks.
 
-      Boxen::Postflight.run config if successful_exit_code?(status)
+      Boxen::Postflight.run config if status.success?
 
       # Return Puppet's exit status.
 
-      return status
-    end
-
-    # Puppet's detailed exit codes reserves 2 for a successful run with changes
-
-    def self.successful_exit_code?(code)
-      [0, 2].member? code
+      return status.code
     end
   end
 end
