@@ -180,4 +180,19 @@ class BoxenReporterTest < Boxen::Test
 
     assert_equal issues.values_at(0,1,3), @reporter.failures
   end
+
+  RepoInfo = Struct.new(:has_issues)
+  def test_issues?
+    @config.reponame = repo = 'some/repo'
+
+    repo_info = RepoInfo.new(true)
+
+    @config.api = api = mock('api')
+    api.stubs(:repository).with(repo).returns(repo_info)
+    assert @reporter.issues?
+
+    repo_info = RepoInfo.new(false)
+    api.stubs(:repository).with(repo).returns(repo_info)
+    refute @reporter.issues?
+  end
 end
