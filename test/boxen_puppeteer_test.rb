@@ -75,4 +75,15 @@ class BoxenPuppeteerTest < Boxen::Test
 
     assert found, "Flags must include #{flag} #{value}."
   end
+
+  def test_status
+    status = Boxen::Puppeteer::Status.new(0)
+    assert status.success?
+
+    status = Boxen::Puppeteer::Status.new(2)
+    assert status.success?
+
+    status = Boxen::Puppeteer::Status.new(1)
+    refute status.success?
+  end
 end
