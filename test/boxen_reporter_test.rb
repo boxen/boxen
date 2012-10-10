@@ -49,6 +49,8 @@ class BoxenReporterTest < Boxen::Test
   end
 
   def test_record_failure
+    @reporter.stubs(:issues?).returns(true)
+
     details = 'Everything went wrong.'
     @reporter.stubs(:failure_details).returns(details)
 
@@ -59,6 +61,15 @@ class BoxenReporterTest < Boxen::Test
 
     @config.api = api = mock('api')
     api.expects(:create_issue).with(repo, "Failed for #{user}", details, :labels => [label])
+
+    @reporter.record_failure
+  end
+
+  def test_record_failure_no_issues
+    @reporter.stubs(:issues?).returns(false)
+
+    @config.api = api = mock('api')
+    api.expects(:create_issue).never
 
     @reporter.record_failure
   end
@@ -139,6 +150,8 @@ class BoxenReporterTest < Boxen::Test
   Label = Struct.new(:name)
 
   def test_close_failures
+    @reporter.stubs(:issues?).returns(true)
+
     @config.reponame = repo = 'some/repo'
 
     issues = Array.new(3) { |i|  Issue.new(i*2 + 2) }
@@ -156,7 +169,21 @@ class BoxenReporterTest < Boxen::Test
     @reporter.close_failures
   end
 
+  def test_close_failures_no_issues
+    @reporter.stubs(:issues?).returns(false)
+
+    @reporter.expects(:failures).never
+
+    @config.api = api = mock('api')
+    api.expects(:add_comment).never
+    api.expects(:close_issue).never
+
+    @reporter.close_failures
+  end
+
   def test_failures
+    @reporter.stubs(:issues?).returns(true)
+
     @config.reponame = repo = 'some/repo'
     @config.login    = user = 'hapless'
 
@@ -179,6 +206,15 @@ class BoxenReporterTest < Boxen::Test
     api.expects(:list_issues).with(repo, :state => 'open', :labels => fail_label, :creator => user).returns(issues)
 
     assert_equal issues.values_at(0,1,3), @reporter.failures
+  end
+
+  def test_failures_no_issues
+    @reporter.stubs(:issues?).returns(false)
+
+    @config.api = api = mock('api')
+    api.expects(:list_issues).never
+
+    assert_equal [], @reporter.failures
   end
 
   RepoInfo = Struct.new(:has_issues)
