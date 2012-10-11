@@ -25,4 +25,9 @@ class BoxenServiceTest < Boxen::Test
       '/Library/LaunchDaemons/com.boxen.thing.plist')
     service.disable
   end
+
+  def test_to_s
+    service = Boxen::Service.new('blam')
+    assert_equal service.name, service.to_s
+  end
 end
