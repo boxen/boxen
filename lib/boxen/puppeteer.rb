@@ -7,7 +7,7 @@ module Boxen
 
   class Puppeteer
 
-    Status = Struct.new(:code) do
+    class Status < Struct.new(:code)
       # Puppet's detailed exit codes reserves 2 for a successful run with changes
       def success?
         [0,2].include?(code)
