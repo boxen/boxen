@@ -66,9 +66,9 @@ module Boxen
       # --disable-services stops all services
 
       if flags.disable_services?
-        services.each do |service|
-          puts "Disabling #{service_human_name(service)}..."
-          Boxen::Util.sudo("/bin/launchctl", "unload", "-w", service)
+        Boxen::Service.list.each do |service|
+          puts "Disabling #{service}..."
+          service.disable
         end
 
         exit
@@ -77,9 +77,9 @@ module Boxen
       # --enable-services starts all services
 
       if flags.enable_services?
-        services.each do |service|
-          puts "Enabling #{service_human_name(service)}..."
-          Boxen::Util.sudo("/bin/launchctl", "load", "-w", service)
+        Boxen::Service.list.each do |service|
+          puts "Enabling #{service}..."
+          service.enable
         end
 
         exit
@@ -88,8 +88,8 @@ module Boxen
       # --list-services lists all services
 
       if flags.list_services?
-        services.collect do |service|
-          puts service_human_name(service)
+        Boxen::Service.list.each do |service|
+          puts service
         end
 
         exit

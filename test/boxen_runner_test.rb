@@ -114,16 +114,8 @@ class BoxenRunnerTest < Boxen::Test
     flags  = Boxen::Flags.new('--disable-services')
     runner = Boxen::Runner.new config, flags
 
-    Dir.expects(:[]).with("/Library/LaunchDaemons/com.boxen.*.plist").returns([
-      "/Library/LaunchDaemons/com.boxen.test.plist"
-    ])
-
-    Boxen::Util.expects(:sudo).with(
-      "/bin/launchctl",
-      "unload",
-      "-w",
-      "/Library/LaunchDaemons/com.boxen.test.plist"
-    ).returns(true)
+    services = Array.new(3) { mock('service', :disable => true) }
+    Boxen::Service.stubs(:list).returns(services)
 
     assert_raises(SystemExit) do
       runner.process
@@ -135,16 +127,8 @@ class BoxenRunnerTest < Boxen::Test
     flags  = Boxen::Flags.new('--enable-services')
     runner = Boxen::Runner.new config, flags
 
-    Dir.expects(:[]).with("/Library/LaunchDaemons/com.boxen.*.plist").returns([
-      "/Library/LaunchDaemons/com.boxen.test.plist"
-    ])
-
-    Boxen::Util.expects(:sudo).with(
-      "/bin/launchctl",
-      "load",
-      "-w",
-      "/Library/LaunchDaemons/com.boxen.test.plist"
-    ).returns(true)
+    services = Array.new(3) { mock('service', :enable => true) }
+    Boxen::Service.stubs(:list).returns(services)
 
     assert_raises(SystemExit) do
       runner.process
@@ -156,9 +140,7 @@ class BoxenRunnerTest < Boxen::Test
     flags  = Boxen::Flags.new('--list-services')
     runner = Boxen::Runner.new config, flags
 
-    Dir.expects(:[]).with("/Library/LaunchDaemons/com.boxen.*.plist").returns([
-      "/Library/LaunchDaemons/com.boxen.test.plist"
-    ])
+    Boxen::Service.expects(:list).returns(%w[a list of services])
 
     assert_raises(SystemExit) do
       runner.process
