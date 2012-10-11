@@ -119,8 +119,8 @@ module Boxen
 
       # Okay, we're gonna run Puppet. Let's make some dirs.
 
-      Boxen::Util.sudo("mkdir", "-p", config.homedir) &&
-        Boxen::Util.sudo("chown", "#{config.user}:staff", config.homedir)
+      Boxen::Util.sudo("/bin/mkdir", "-p", config.homedir) &&
+        Boxen::Util.sudo("/usr/sbin/chown", "#{config.user}:staff", config.homedir)
 
       # Save the config for Puppet (and next time).
 
