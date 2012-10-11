@@ -95,6 +95,8 @@ module Boxen
 
     def issues?
       return unless config.reponame
+      return if config.reponame == 'boxen/our-boxen'
+
       config.api.repository(config.reponame).has_issues
     end
   end

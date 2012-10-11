@@ -234,5 +234,9 @@ class BoxenReporterTest < Boxen::Test
     @config.stubs(:reponame)  # to ensure the returned value is nil
     api.stubs(:repository).returns(RepoInfo.new(true))
     refute @reporter.issues?
+
+    @config.stubs(:reponame).returns('boxen/our-boxen') # our main public repo
+    api.stubs(:repository).returns(RepoInfo.new(true))
+    refute @reporter.issues?
   end
 end
