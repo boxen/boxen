@@ -14,6 +14,10 @@ module Boxen
       @name = name
     end
 
+    def to_s
+      name
+    end
+
     def enable
       Boxen::Util.sudo('/bin/launchctl', 'load', '-w', location)
     end
