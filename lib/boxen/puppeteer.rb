@@ -6,6 +6,14 @@ module Boxen
   # Manages an invocation of puppet.
 
   class Puppeteer
+
+    class Status < Struct.new(:code)
+      # Puppet's detailed exit codes reserves 2 for a successful run with changes
+      def success?
+        [0,2].include?(code)
+      end
+    end
+
     attr_reader :config
 
     def initialize(config)
@@ -77,7 +85,7 @@ module Boxen
       warn command.join " " if config.debug?
       Boxen::Util.sudo *command
 
-      $?.exitstatus
+      Status.new($?.exitstatus)
     end
   end
 end
