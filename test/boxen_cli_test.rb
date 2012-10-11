@@ -27,6 +27,8 @@ class BoxenCLITest < Boxen::Test
   end
 
   def test_help
+    $stdout.stubs(:write)
+
     flags = Boxen::Flags.new('--help')
     cli   = Boxen::CLI.new(@config, flags)
     cli.runner.expects(:run).never
