@@ -146,4 +146,17 @@ class BoxenRunnerTest < Boxen::Test
       runner.process
     end
   end
+
+  def test_specify_project
+    fact = 'cli_boxen_projects'
+    refute Facter.value(fact)
+
+    project = 'some_project'
+    flags   = Boxen::Flags.new(project)
+
+    runner = Boxen::Runner.new(@config, flags)
+    runner.process
+
+    assert_equal project, Facter.value(fact)
+  end
 end
