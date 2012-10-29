@@ -102,16 +102,5 @@ module Boxen
     def issues?
       !config.stealth? && !config.pretend? && checkout.master?
     end
-
-
-    private
-
-    def services
-      Dir["/Library/LaunchDaemons/com.boxen.*.plist"]
-    end
-
-    def service_human_name(service)
-      service.match(/com\.boxen\.(.+)\.plist$/)[1]
-    end
   end
 end
