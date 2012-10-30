@@ -4,6 +4,7 @@ require "boxen/flags"
 require "boxen/puppeteer"
 require "boxen/reporter"
 require "boxen/util"
+require "facter"
 
 module Boxen
   class Runner
@@ -27,6 +28,8 @@ module Boxen
       exec "env | grep ^BOXEN_ | sort" if flags.env?
 
       process_flags
+
+      process_args
 
       # Actually run Puppet and return its result
 
@@ -95,6 +98,11 @@ module Boxen
         exit
       end
 
+    end
+
+    def process_args
+      projects = flags.args.join(',')
+      Facter.add('cli_boxen_projects') { setcode { projects } }
     end
 
     # Should the result of this run have any effect on GitHub issues?
