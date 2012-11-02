@@ -146,4 +146,32 @@ class BoxenRunnerTest < Boxen::Test
       runner.process
     end
   end
+
+  def test_specify_project
+    fact = 'cli_boxen_projects'
+    refute Facter.value(fact)
+
+    project = 'some_project'
+    flags   = Boxen::Flags.new(project)
+
+    runner = Boxen::Runner.new(@config, flags)
+    runner.process
+    assert_equal project, Facter.value(fact)
+
+
+    project = 'other_project'
+    flags   = Boxen::Flags.new('--debug', project)
+
+    runner = Boxen::Runner.new(@config, flags)
+    runner.process
+    assert_equal project, Facter.value(fact)
+
+
+    projects = %w[my cool projects]
+    flags    = Boxen::Flags.new('--noop', *projects)
+
+    runner = Boxen::Runner.new(@config, flags)
+    runner.process
+    assert_equal projects.join(','), Facter.value(fact)
+  end
 end
