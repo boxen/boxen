@@ -102,7 +102,10 @@ module Boxen
 
     def process_args
       projects = flags.args.join(',')
-      Facter.add('cli_boxen_projects') { setcode { projects } }
+      File.open("#{config.repodir}/.projects", "w+") do |f|
+        f.truncate 0
+        f.write projects
+      end
     end
 
     # Should the result of this run have any effect on GitHub issues?
