@@ -1,5 +1,5 @@
 /.bundle
-/.env.local.rb
+/.github-oauth-token
 /.rbenv-version
 /Gemfile.lock
 /bin
