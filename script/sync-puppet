@@ -1,16 +1,11 @@
 #!/usr/bin/env ruby
 # Make sure all boxen/puppet-* repos are cloned under ./puppet.
 
-require "fileutils"
 require "pathname"
 
-# Put us where we belong, in the root dir of boxen.
+# Put us where we belong, in the root dir of the boxen gem.
 
 Dir.chdir Pathname.new(__FILE__).realpath + "../.."
-
-# Load the local env in case creds are set there.
-
-load ".env.local.rb" if File.file? ".env.local.rb"
 
 # Make sure we're up to date.
 
@@ -18,14 +13,43 @@ abort "Bootstrap failed." unless system "script/bootstrap"
 
 require "rubygems"
 require "bundler/setup"
+require "highline"
 require "octokit"
 
-unless ENV["GITHUB_LOGIN"] && ENV["GITHUB_PASSWORD"]
-  abort "Please set the GITHUB_LOGIN and GITHUB_PASSWORD env vars."
-end
+tfile = ".github-oauth-token"
+token = File.read(tfile).chomp if File.exist? tfile
+api   = Octokit::Client.new :oauth_token => token
+valid = !!(api.user rescue nil)
 
-api = Octokit::Client.new \
-  :login => ENV["GITHUB_LOGIN"], :password => ENV["GITHUB_PASSWORD"]
+unless valid
+  console = HighLine.new
+
+  warn "Hey, I need to sign in to GitHub for you."
+
+  login = console.ask "GitHub login: " do |q|
+    q.default = ENV["USER"]
+  end
+
+  password = console.ask "GitHub password: " do |q|
+    q.echo = "*"
+  end
+
+  api = Octokit::Client.new :login => login, :password => password
+
+  unless (api.user rescue nil)
+    abort "Sorry, I can't sign in to GitHub.\n" +
+      "Please check your credentials and give it another try."
+  end
+
+  unless auth = api.authorizations.detect { |a| a.note == "Boxen Puppet Sync" }
+    auth = api.create_authorization \
+      :note => "Boxen Puppet Sync", :scopes => %w(repo user)
+  end
+
+  File.open tfile, "wb" do |f|
+    f.puts auth.token
+  end
+end
 
 # Gotta have a ./puppet dir.
 
@@ -36,7 +60,7 @@ FileUtils.mkdir_p "puppet"
 api.organization_repositories("boxen").each do |repo|
   next unless /^puppet-/ =~ repo.name
 
-  unless File.directory? dest = "puppet/#{repo.name}"
+  unless File.directory? dest = "puppet/#{repo.name[7..-1]}"
     system "git", "clone", repo.clone_url, dest
   end
 end

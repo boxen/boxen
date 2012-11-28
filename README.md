@@ -33,13 +33,6 @@ ignored by Git.
 
 [boxen]: https://github.com/boxen
 
-Because it uses the GitHub API, `script/sync-puppet` requires the
-`GITHUB_LOGIN` and `GITHUB_PASSWORD` environment variables to be set.
-If you don't want to provide them every time, you can set them in
-`.env.local.rb`, which is also ignored by Git. For example, your
-`.env.local.rb` might look like this:
-
-```ruby
-ENV["GITHUB_LOGIN"]    = "jbarnette"
-ENV["GITHUB_PASSWORD"] = "adventures"
-```
+Because it uses the GitHub API, `script/sync-puppet` will prompt you
+for your login and password. It'll use them to create an OAuth token
+and stash it in `.github-oauth-token` for future use.
