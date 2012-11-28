@@ -41,9 +41,9 @@ unless valid
       "Please check your credentials and give it another try."
   end
 
-  unless auth = api.authorizations.detect { |a| a.note == "Boxen Puppet Sync" }
+  unless auth = api.authorizations.detect { |a| a.app.url == "http://boxen.github.com" }
     auth = api.create_authorization \
-      :note => "Boxen Puppet Sync", :scopes => %w(repo user)
+      :note => "Boxen Puppet Sync", :note_url => "http://boxen.github.com", :scopes => %w(repo user)
   end
 
   File.open tfile, "wb" do |f|
