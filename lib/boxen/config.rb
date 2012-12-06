@@ -30,7 +30,7 @@ module Boxen
           end
         end
 
-        cmd = "security find-generic-password " +
+        cmd = "/usr/bin/security find-generic-password " +
           "-a #{config.user} -s '#{KEYCHAIN_SERVICE}' -w 2>/dev/null"
 
         password = `#{cmd}`.strip
