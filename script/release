@@ -14,7 +14,7 @@ gem build -q boxen.gemspec
 
 # Make sure we're on the master branch.
 
-(git branch | grep '* master') || {
+(git branch | grep -q '* master') || {
   echo "Only release from the master branch."
   exit 1
 }
@@ -27,7 +27,7 @@ tag=v`ls boxen-*.gem | sed 's/^boxen-\(.*\)\.gem$/\1/'`
 
 git fetch -t origin
 
-(git tag -l | grep "$tag") && {
+(git tag -l | grep -q "$tag") && {
   echo "Whoops, there's already a '${tag}' tag."
   exit 1
 }
