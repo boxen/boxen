@@ -10,8 +10,8 @@ Manage Mac development boxes with love (and Puppet).
 
 0. Suffix the Homebrew package's version, starting with `-boxen1`.
 
-0. Run as a launchd service in the `com.boxen` namespace, e.g.,
-   `com.boxen.dnsmasq`.
+0. Run as a launchd service in the `dev` namespace, e.g.,
+   `dev.dnsmasq`.
 
 0. Store config, data, and log files in
    `$BOXEN_HOME/{config,data,log}. This will normally require
