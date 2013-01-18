@@ -36,7 +36,9 @@ FileUtils.mkdir_p "puppet"
 api.organization_repositories("boxen").each do |repo|
   next unless /^puppet-/ =~ repo.name
 
-  unless File.directory? dest = "puppet/#{repo.name}"
+  dest = "puppet/" + repo.name[7..-1]
+
+  unless File.directory? dest
     system "git", "clone", repo.clone_url, dest
   end
 end
