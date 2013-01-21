@@ -3,9 +3,9 @@ require "boxen/service"
 
 class BoxenServiceTest < Boxen::Test
   def test_list
-    Dir.expects(:[]).with("/Library/LaunchDaemons/com.boxen.*.plist").returns([
-      "/Library/LaunchDaemons/com.boxen.test.plist",
-      "/Library/LaunchDaemons/com.boxen.other.plist"
+    Dir.expects(:[]).with("/Library/LaunchDaemons/dev.*.plist").returns([
+      "/Library/LaunchDaemons/dev.test.plist",
+      "/Library/LaunchDaemons/dev.other.plist"
     ])
 
     services = Boxen::Service.list
@@ -15,14 +15,14 @@ class BoxenServiceTest < Boxen::Test
   def test_enable
     service = Boxen::Service.new('blip')
     Boxen::Util.expects(:sudo).with('/bin/launchctl', 'load', '-w',
-      '/Library/LaunchDaemons/com.boxen.blip.plist')
+      '/Library/LaunchDaemons/dev.blip.plist')
     service.enable
   end
 
   def test_disable
     service = Boxen::Service.new('thing')
     Boxen::Util.expects(:sudo).with('/bin/launchctl', 'unload', '-w',
-      '/Library/LaunchDaemons/com.boxen.thing.plist')
+      '/Library/LaunchDaemons/dev.thing.plist')
     service.disable
   end
 

@@ -30,7 +30,7 @@ module Boxen
     private
 
     def location
-      "#{self.class.location}/com.boxen.#{name}.plist"
+      "#{self.class.location}/dev.#{name}.plist"
     end
 
     def self.location
@@ -38,11 +38,11 @@ module Boxen
     end
 
     def self.files
-      Dir["#{location}/com.boxen.*.plist"]
+      Dir["#{location}/dev.*.plist"]
     end
 
     def self.human_name(service)
-      service.match(/com\.boxen\.(.+)\.plist$/)[1]
+      service.match(/dev\.(.+)\.plist$/)[1]
     end
   end
 end
