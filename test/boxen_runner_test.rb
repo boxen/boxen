@@ -155,6 +155,7 @@ class BoxenRunnerTest < Boxen::Test
     flags   = Boxen::Flags.new(project)
 
     runner = Boxen::Runner.new(@config, flags)
+    runner.puppet.expects(:run).with().returns(true)
     runner.process
     assert_equal project, Facter.value(fact)
 
@@ -163,6 +164,7 @@ class BoxenRunnerTest < Boxen::Test
     flags   = Boxen::Flags.new('--debug', project)
 
     runner = Boxen::Runner.new(@config, flags)
+    runner.puppet.expects(:run).with().returns(true)
     runner.process
     assert_equal project, Facter.value(fact)
 
@@ -171,6 +173,7 @@ class BoxenRunnerTest < Boxen::Test
     flags    = Boxen::Flags.new('--noop', *projects)
 
     runner = Boxen::Runner.new(@config, flags)
+    runner.puppet.expects(:run).with().returns(true)
     runner.process
     assert_equal projects.join(','), Facter.value(fact)
   end
