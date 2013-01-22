@@ -43,11 +43,6 @@ module Boxen
 
       Boxen::Preflight.run config
 
-      # Okay, we're gonna run Puppet. Let's make some dirs.
-
-      Boxen::Util.sudo("/bin/mkdir", "-p", config.homedir) &&
-        Boxen::Util.sudo("/usr/sbin/chown", "#{config.user}:staff", config.homedir)
-
       # Save the config for Puppet (and next time).
 
       Boxen::Config.save config
