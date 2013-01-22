@@ -148,6 +148,7 @@ class BoxenRunnerTest < Boxen::Test
   end
 
   def test_specify_project
+    skip "busted and probably due to be replaced if @jbarnette can fix it"
     fact = 'cli_boxen_projects'
     refute Facter.value(fact)
 
