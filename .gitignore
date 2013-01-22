@@ -1,7 +1,10 @@
 /.bundle
 /.env.local.rb
+/.projects
 /.rbenv-version
+/.ruby-version
 /Gemfile.lock
 /bin
 /boxen-*.gem
+/log
 /puppet
