@@ -28,7 +28,7 @@ module Boxen
     end
 
     def run
-      call if enabled?
+      call if perform?
     end
   end
 end

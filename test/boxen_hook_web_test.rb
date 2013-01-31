@@ -37,12 +37,14 @@ class BoxenHookWebTest < Boxen::Test
     assert @hook.perform?
   end
 
-  def test_call
+  def test_run
     @config.stubs(:user).returns('fred')
     @checkout.stubs(:sha).returns('87dbag3')
     @result.stubs(:success?).returns(false)
     now = Time.now
     Time.stubs(:now).returns(now)
+
+    @hook.stubs(:enabled?).returns(true)
 
     @hook.expects(:post_web_hook).with({
       :login  => 'fred',
@@ -51,6 +53,6 @@ class BoxenHookWebTest < Boxen::Test
       :time   => "#{now.utc.to_i}"
     })
 
-    @hook.call
+    @hook.run
   end
 end
