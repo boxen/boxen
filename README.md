@@ -23,15 +23,13 @@ Sometimes it's not possible to follow these rules, but try hard.
 
 0. All hooks must be in the namespace `Boxen::Hook::MyThing`.
 
-0. All hooks must subclass from `Boxen::Hook::Base`
+0. All hooks must subclass from `Boxen::Hook`
 
 0. All hooks must provide an instance method `#enabled?`.
 
 0. The `#enabled?` method must be based off of a `BOXEN_` prefixed env var.
 
-0. All hooks must provide an instance method `#run`.
-
-0. All hooks must be instantiable with 4 args: config, checkout, puppet, result.
+0. All hooks must provide an instance method `#run`. It should do shit.
 
 ## Contributing
 
