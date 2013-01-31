@@ -20,7 +20,6 @@ module Boxen
         end
       end
 
-      private
       def compare_url
         return unless config.reponame
         "https://github.com/#{config.reponame}/compare/#{checkout.sha}...master"

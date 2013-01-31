@@ -1,6 +1,3 @@
-require "boxen/hook/github_issue"
-require "boxen/hook/web"
-
 module Boxen
   module Hook
     def self.all
@@ -24,12 +21,15 @@ module Boxen
       end
 
       def enabled?
-        raise "needs implemented"
+        raise NotImplementedError
       end
 
       def run
-        raise "needs implemented"
+        raise NotImplementedError
       end
     end
   end
 end
+
+require "boxen/hook/github_issue"
+require "boxen/hook/web"

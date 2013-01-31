@@ -24,7 +24,6 @@ module Boxen
         post_web_hook payload
       end
 
-      private
       def post_web_hook(payload)
         headers = { 'Content-Type' => 'application/json' }
 
