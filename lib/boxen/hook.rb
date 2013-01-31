@@ -21,7 +21,7 @@ module Boxen
 
     def enabled?
       required_vars = Array(required_environment_variables)
-      !required_vars.empty? && required_vars.all? do |var|
+      required_vars.any? && required_vars.all? do |var|
         ENV[var] && !ENV[var].empty?
       end
     end
