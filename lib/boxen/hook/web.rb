@@ -19,7 +19,7 @@ module Boxen
           :sha    => checkout.sha,
           :status => result.success? ? 'success' : 'failure',
           :time   => "#{Time.now.utc.to_i}"
-        }.to_json
+        }
 
         post_web_hook payload
       end
@@ -42,7 +42,7 @@ module Boxen
           request.basic_auth user, pass
         end
 
-        request.body = payload
+        request.body = payload.to_json
 
         response = Net::HTTP.new(host, port).start do |http|
           http.request(request)
