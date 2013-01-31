@@ -7,7 +7,7 @@ module Boxen
         enabled? && !config.stealth? && !config.pretend? && checkout.master?
       end
 
-      def run
+      def call
         if result.success?
           close_failures
         else

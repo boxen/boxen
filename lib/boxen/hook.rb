@@ -23,8 +23,12 @@ module Boxen
       required_environment_variables.all? { |e| ENV[e] && !ENV[e].empty? }
     end
 
+    def perform?
+      false
+    end
+
     def run
-      raise NotImplementedError
+      call if enabled?
     end
   end
 end

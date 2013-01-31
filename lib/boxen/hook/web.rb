@@ -9,7 +9,7 @@ module Boxen
         enabled?
       end
 
-      def run
+      def call
         payload = {
           :login  => config.user,
           :sha    => checkout.sha,
