@@ -32,8 +32,9 @@ class Boxen::Preflight::Creds < Boxen::Preflight
 
     config.login = console.ask "GitHub login: " do |q|
       q.default = config.login || config.user
+      q.validate = /\A[^@]+\Z/
     end
-
+  
     config.password = console.ask "GitHub password: " do |q|
       q.echo = "*"
     end
