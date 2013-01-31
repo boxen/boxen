@@ -9,10 +9,6 @@ module Boxen
         enabled?
       end
 
-      def enabled?
-        ENV['BOXEN_WEB_HOOK_URL'] && !ENV['BOXEN_WEB_HOOK_URL'].empty?
-      end
-
       def run
         payload = {
           :login  => config.user,
@@ -24,6 +20,7 @@ module Boxen
         post_web_hook payload
       end
 
+      private
       def post_web_hook(payload)
         headers = { 'Content-Type' => 'application/json' }
 
@@ -47,6 +44,10 @@ module Boxen
         response = Net::HTTP.new(host, port).start do |http|
           http.request(request)
         end
+      end
+
+      def required_environment_variables
+        ['BOXEN_WEB_HOOK_URL']
       end
     end
   end

@@ -7,10 +7,6 @@ module Boxen
         enabled? && !config.stealth? && !config.pretend? && checkout.master?
       end
 
-      def enabled?
-        ENV['BOXEN_ISSUES_ENABLED']
-      end
-
       def run
         if result.success?
           close_failures
@@ -108,6 +104,11 @@ module Boxen
         return if config.reponame == 'boxen/our-boxen'
 
         config.api.repository(config.reponame).has_issues
+      end
+
+      private
+      def required_environment_variables
+        ['BOXEN_ISSUES_ENABLED']
       end
     end
   end

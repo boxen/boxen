@@ -12,7 +12,6 @@ module Boxen
       ]
     end
 
-
     def initialize(config, checkout, puppet, result)
       @config   = config
       @checkout = checkout
@@ -21,7 +20,7 @@ module Boxen
     end
 
     def enabled?
-      raise NotImplementedError
+      required_environment_variables.all? { |e| ENV[e] && !ENV[e].empty? }
     end
 
     def run
