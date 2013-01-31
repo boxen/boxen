@@ -1,8 +1,8 @@
 require "boxen/hook"
 
 module Boxen
-  module Hook
-    class GitHubIssue < Base
+  class Hook
+    class GitHubIssue < Hook
       def perform?
         enabled? && !config.stealth? && !config.pretend? && checkout.master?
       end

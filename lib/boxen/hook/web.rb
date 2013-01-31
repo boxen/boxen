@@ -3,8 +3,8 @@ require "json"
 require "net/http"
 
 module Boxen
-  module Hook
-    class Web < Base
+  class Hook
+    class Web < Hook
       def perform?
         enabled?
       end

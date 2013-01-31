@@ -1,5 +1,10 @@
 module Boxen
-  module Hook
+  class Hook
+    attr_reader :config
+    attr_reader :checkout
+    attr_reader :puppet
+    attr_reader :result
+
     def self.all
       [
         Boxen::Hook::GitHubIssue,
@@ -7,26 +12,20 @@ module Boxen
       ]
     end
 
-    class Base
-      attr_reader :config
-      attr_reader :checkout
-      attr_reader :puppet
-      attr_reader :result
 
-      def initialize(config, checkout, puppet, result)
-        @config   = config
-        @checkout = checkout
-        @puppet   = puppet
-        @result   = result
-      end
+    def initialize(config, checkout, puppet, result)
+      @config   = config
+      @checkout = checkout
+      @puppet   = puppet
+      @result   = result
+    end
 
-      def enabled?
-        raise NotImplementedError
-      end
+    def enabled?
+      raise NotImplementedError
+    end
 
-      def run
-        raise NotImplementedError
-      end
+    def run
+      raise NotImplementedError
     end
   end
 end
