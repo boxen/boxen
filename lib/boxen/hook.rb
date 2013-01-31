@@ -20,7 +20,10 @@ module Boxen
     end
 
     def enabled?
-      required_environment_variables.all? { |e| ENV[e] && !ENV[e].empty? }
+      required_vars = Array(required_environment_variables)
+      !required_vars.empty? && required_vars.all? do |var|
+        ENV[var] && !ENV[var].empty?
+      end
     end
 
     def perform?
