@@ -19,6 +19,16 @@ Manage Mac development boxes with love (and Puppet).
 
 Sometimes it's not possible to follow these rules, but try hard.
 
+## Hooks
+
+0. All hooks must be in the namespace `Boxen::Hook::MyThing`.
+
+0. All hooks must subclass from `Boxen::Hook`
+
+0. All hooks must provide a private instance method `required_environment_variables` that returns an array with at least one entry.
+
+0. All hooks must provide a private instance method `#call`.
+
 ## Contributing
 
 Use the OS X system Ruby (1.8.7). Run `script/tests` often. Open PR's.

@@ -20,93 +20,24 @@ class BoxenRunnerTest < Boxen::Test
     assert_equal config, runner.config
     assert_equal flags,  runner.flags
     assert_equal config, runner.puppet.config
-
-    assert_equal config,          runner.reporter.config
-    assert_equal config,          runner.reporter.checkout.config
-    assert_equal runner.checkout, runner.reporter.checkout
-    assert_equal runner.puppet,   runner.reporter.puppet
   end
 
-  def test_issues?
-    @config.stealth = true
-    @config.pretend = true
-    @runner.checkout.stubs(:master?).returns(false)
-    assert !@runner.issues?
+  HookYes = Struct.new(:config, :checkout, :puppet, :result)
+  HookNo  = Struct.new(:config, :checkout, :puppet, :result)
+  def test_report
+    runner = Boxen::Runner.new(@config, @flags)
+    runner.stubs(:hooks).returns([HookYes, HookNo])
 
-    @config.stealth = false
-    @config.pretend = true
-    @runner.checkout.stubs(:master?).returns(false)
-    assert !@runner.issues?
+    hook_yes = stub('HookYes')
+    hook_no  = stub('HookNo')
 
-    @config.stealth = true
-    @config.pretend = false
-    @runner.checkout.stubs(:master?).returns(false)
-    assert !@runner.issues?
+    HookYes.stubs(:new).returns(hook_yes)
+    HookNo.stubs(:new).returns(hook_no)
 
-    @config.stealth = true
-    @config.pretend = true
-    @runner.checkout.stubs(:master?).returns(true)
-    assert !@runner.issues?
+    hook_yes.expects(:run).once
+    hook_no.expects(:run).once
 
-    @config.stealth = false
-    @config.pretend = true
-    @runner.checkout.stubs(:master?).returns(true)
-    assert !@runner.issues?
-
-    @config.stealth = true
-    @config.pretend = false
-    @runner.checkout.stubs(:master?).returns(true)
-    assert !@runner.issues?
-
-    @config.stealth = false
-    @config.pretend = false
-    @runner.checkout.stubs(:master?).returns(true)
-    assert @runner.issues?
-  end
-
-  def test_report_failure
-    @runner.stubs(:issues?).returns(true)
-    status = stub('status', :success? => false)
-    @runner.stubs(:process).returns(status)
-    @runner.stubs(:warn)
-
-    @runner.reporter.expects(:record_failure)
-    @runner.reporter.expects(:close_failures).never
-
-    @runner.run
-  end
-
-  def test_run_success
-    @runner.stubs(:issues?).returns(true)
-    status = stub('status', :success? => true)
-    @runner.stubs(:process).returns(status)
-
-    @runner.reporter.expects(:record_failure).never
-    @runner.reporter.expects(:close_failures)
-
-    @runner.run
-  end
-
-  def test_run_failure_no_issues
-    @runner.stubs(:issues?).returns(false)
-    status = stub('status', :success? => false)
-    @runner.stubs(:process).returns(status)
-
-    @runner.reporter.expects(:record_failure).never
-    @runner.reporter.expects(:close_failures).never
-
-    @runner.run
-  end
-
-  def test_run_success_no_issues
-    @runner.stubs(:issues?).returns(false)
-    status = stub('status', :success? => true)
-    @runner.stubs(:process).returns(status)
-
-    @runner.reporter.expects(:record_failure).never
-    @runner.reporter.expects(:close_failures).never
-
-    @runner.run
+    runner.report(stub('result'))
   end
 
   def test_disable_services

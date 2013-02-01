@@ -1,8 +1,8 @@
 require "boxen/checkout"
 require "boxen/config"
+require "boxen/hook"
 require "boxen/flags"
 require "boxen/puppeteer"
-require "boxen/reporter"
 require "boxen/util"
 require "facter"
 
@@ -12,14 +12,14 @@ module Boxen
     attr_reader :flags
     attr_reader :puppet
     attr_reader :checkout
-    attr_reader :reporter
+    attr_reader :hooks
 
     def initialize(config, flags)
-      @config = config
-      @flags  = flags
+      @config   = config
+      @flags    = flags
       @puppet   = Boxen::Puppeteer.new(@config)
       @checkout = Boxen::Checkout.new(@config)
-      @reporter = Boxen::Reporter.new(@config, @checkout, @puppet)
+      @hooks    = Boxen::Hook.all
     end
 
     def process
@@ -41,14 +41,7 @@ module Boxen
     end
 
     def report(result)
-      return result unless issues?
-
-      if result.success?
-        reporter.close_failures
-      else
-        warn "Sorry! Creating an issue on #{config.reponame}."
-        reporter.record_failure
-      end
+      hooks.each { |hook| hook.new(config, checkout, puppet, result).run }
 
       result
     end
@@ -106,12 +99,6 @@ module Boxen
         f.truncate 0
         f.write projects
       end
-    end
-
-    # Should the result of this run have any effect on GitHub issues?
-
-    def issues?
-      !config.stealth? && !config.pretend? && checkout.master?
     end
   end
 end
