@@ -41,11 +41,7 @@ module Boxen
     end
 
     def report(result)
-      hooks.each do |hook|
-        if instance = hook.new(config, checkout, puppet, result)
-          instance.run if instance.perform?
-        end
-      end
+      hooks.each { |hook| hook.new(config, checkout, puppet, result).run }
 
       result
     end

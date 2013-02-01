@@ -28,14 +28,14 @@ class BoxenRunnerTest < Boxen::Test
     runner = Boxen::Runner.new(@config, @flags)
     runner.stubs(:hooks).returns([HookYes, HookNo])
 
-    hook_yes = stub('HookYes', :perform? => true)
-    hook_no  = stub('HookNo',  :perform? => false)
+    hook_yes = stub('HookYes')
+    hook_no  = stub('HookNo')
 
     HookYes.stubs(:new).returns(hook_yes)
     HookNo.stubs(:new).returns(hook_no)
 
     hook_yes.expects(:run).once
-    hook_no.expects(:run).never
+    hook_no.expects(:run).once
 
     runner.report(stub('result'))
   end
