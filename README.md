@@ -25,11 +25,9 @@ Sometimes it's not possible to follow these rules, but try hard.
 
 0. All hooks must subclass from `Boxen::Hook`
 
-0. All hooks must provide an instance method `#enabled?`.
+0. All hooks must provide a private instance method `required_environment_variables` that returns an array with at least one entry.
 
-0. The `#enabled?` method must be based off of a `BOXEN_` prefixed env var.
-
-0. All hooks must provide an instance method `#run`. It should do shit.
+0. All hooks must provide a private instance method `#call`.
 
 ## Contributing
 
