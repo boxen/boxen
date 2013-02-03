@@ -50,6 +50,8 @@ module Boxen
       flags << "--no-report"
       flags << "--detailed-exitcodes"
 
+      flags << "--show_diff"
+
       if config.profile?
         flags << "--evaltrace"
         flags << "--summarize"
