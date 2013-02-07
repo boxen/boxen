@@ -3,6 +3,7 @@ require "boxen/config"
 require "boxen/hook"
 require "boxen/flags"
 require "boxen/puppeteer"
+require "boxen/service"
 require "boxen/util"
 require "facter"
 
