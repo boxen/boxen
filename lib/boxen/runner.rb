@@ -52,9 +52,10 @@ module Boxen
       # --projects prints a list of available projects and exits.
 
       if flags.projects?
+        puts "You can install any of these projects with `#{$0} <project-name>`:\n"
+
         config.projects.each do |project|
-          prefix = project.installed? ? "*" : " "
-          puts "#{prefix} #{project.name}"
+          puts "  #{project.name}"
         end
 
         exit

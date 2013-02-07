@@ -16,9 +16,5 @@ module Boxen
       @dir  = dir
       @name = File.basename @dir
     end
-
-    def installed?
-      File.directory? dir
-    end
   end
 end
