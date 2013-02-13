@@ -18,6 +18,7 @@ class BoxenFlagsTest < Boxen::Test
       expects(:srcdir=).with "srcdir"
       expects(:stealth=).with true
       expects(:user=).with "user"
+      expects(:color=).with true
     end
 
     # Do our best to frob every switch.
