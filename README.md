@@ -32,3 +32,4 @@ Sometimes it's not possible to follow these rules, but try hard.
 ## Contributing
 
 Use the OS X system Ruby (1.8.7). Run `script/tests` often. Open PR's.
+Use the CI.
