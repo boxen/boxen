@@ -19,6 +19,17 @@ Manage Mac development boxes with love (and Puppet).
 
 Sometimes it's not possible to follow these rules, but try hard.
 
+## Projects from the CLI
+
+We use a totally awful hack to do from-the-cli project installs of projects.
+We create a file in "$BOXEN_HOME/repodir" called .projects, with a single line.
+That line is made up of projects separated by commas.
+We then read that into a Puppet fact in Puppet-land, and that checks for
+classes that match those project names, and includes them in the catalog.
+
+We can't pass a `FACTER_` env var because sudo has `env_reset`
+and we can't just modify the sudoers file due to a chicken-egg problem.
+
 ## Hooks
 
 0. All hooks must be in the namespace `Boxen::Hook::MyThing`.
