@@ -14,7 +14,7 @@ Manage Mac development boxes with love (and Puppet).
    `dev.dnsmasq`.
 
 0. Store config, data, and log files in
-   `$BOXEN_HOME/{config,data,log}. This will normally require
+   `$BOXEN_HOME/{config,data,log}`. This will normally require
    customization of a service's Homebrew formula.
 
 Sometimes it's not possible to follow these rules, but try hard.
