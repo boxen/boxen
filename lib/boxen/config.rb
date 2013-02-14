@@ -12,11 +12,8 @@ module Boxen
 
     # The service name to use when loading/saving config in the Keychain.
 
-    KEYCHAIN_HELPER  = File.expand_path(
-      File.join(File.dirname(__FILE__), "..", "..", "script", "Boxen")
-    )
-
-    KEYCHAIN_SERVICE = "Boxen"
+    KEYCHAIN_HELPER  = File.expand_path "../../../script/Boxen", __FILE__
+    KEYCHAIN_SERVICE = "Boxen-GitHub.com-Password"
 
 
     # Load config. Yields config if `block` is given.
