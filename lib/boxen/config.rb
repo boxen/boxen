@@ -14,6 +14,7 @@ module Boxen
 
     KEYCHAIN_HELPER  = File.expand_path "../../../script/Boxen", __FILE__
     KEYCHAIN_SERVICE = "Boxen-GitHub.com-Password"
+    KEYCHAIN_TOKEN_SERVICE = "Boxen-GitHub.com-API-Token"
 
 
     # Load config. Yields config if `block` is given.
@@ -32,12 +33,25 @@ module Boxen
           end
         end
 
-        cmd = [ KEYCHAIN_HELPER, KEYCHAIN_SERVICE, config.user, '2>/dev/null' ]
+        # Grab our GitHub password out of the Keychain
+        password_cmd = [
+          KEYCHAIN_HELPER, KEYCHAIN_SERVICE, config.user, '2>/dev/null'
+        ].join(' ')
 
-        password = `#{cmd.join(' ')}`.strip
+        password = `#{password_cmd}`.strip
         password = nil unless $?.success?
 
+        # Grab our GitHub API token out of the Keychain
+        token_cmd = [
+          KEYCHAIN_HELPER, KEYCHAIN_TOKEN_SERVICE, config.user
+        ].join(' ')
+
+        token = `#{token_cmd}`.strip
+        token = nil unless $?.success?
+
+        # Set them in the config
         config.password = password
+        config.token    = token
 
         yield config if block_given?
       end
@@ -57,7 +71,6 @@ module Boxen
         :repodir   => config.repodir,
         :reponame  => config.reponame,
         :srcdir    => config.srcdir,
-        :token     => config.token,
         :user      => config.user
       }
 
@@ -68,10 +81,24 @@ module Boxen
         f.write JSON.generate Hash[attrs.reject { |k, v| v.nil? }]
       end
 
-      cmd = [ KEYCHAIN_HELPER, KEYCHAIN_SERVICE, config.user, config.password ]
+      # Write the GitHub.com password to the Keychain
 
-      unless system *cmd
-        raise Boxen::Error, "Can't save config in the Keychain."
+      password_cmd = [
+        KEYCHAIN_HELPER, KEYCHAIN_SERVICE, config.user, config.password
+      ]
+
+      unless system *password_cmd
+        raise Boxen::Error, "Can't save GitHub.com password in the Keychain."
+      end
+
+      # Write the GitHub.com API token to the Keychain
+
+      token_cmd = [
+        KEYCHAIN_HELPER, KEYCHAIN_TOKEN_SERVICE, config.user, config.token
+      ]
+
+      unless system *token_cmd
+        raise Boxen::Error, "Can't save GitHub.com API token in the Keychain."
       end
 
       config
