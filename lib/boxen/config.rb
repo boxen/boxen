@@ -12,7 +12,12 @@ module Boxen
 
     # The service name to use when loading/saving config in the Keychain.
 
+    KEYCHAIN_HELPER  = File.expand_path(
+      File.join(File.dirname(__FILE__), "..", "..", "script", "Boxen")
+    )
+
     KEYCHAIN_SERVICE = "Boxen"
+
 
     # Load config. Yields config if `block` is given.
 
@@ -30,10 +35,9 @@ module Boxen
           end
         end
 
-        cmd = "/usr/bin/security find-generic-password " +
-          "-a #{config.user} -s '#{KEYCHAIN_SERVICE}' -w 2>/dev/null"
+        cmd = [ KEYCHAIN_HELPER, KEYCHAIN_SERVICE, config.user, '2>/dev/null' ]
 
-        password = `#{cmd}`.strip
+        password = `#{cmd.join(' ')}`.strip
         password = nil unless $?.success?
 
         config.password = password
@@ -67,8 +71,7 @@ module Boxen
         f.write JSON.generate Hash[attrs.reject { |k, v| v.nil? }]
       end
 
-      cmd = ["security", "add-generic-password",
-             "-a", config.user, "-s", KEYCHAIN_SERVICE, "-U", "-w", config.password]
+      cmd = [ KEYCHAIN_HELPER, KEYCHAIN_SERVICE, config.user, config.password ]
 
       unless system *cmd
         raise Boxen::Error, "Can't save config in the Keychain."
