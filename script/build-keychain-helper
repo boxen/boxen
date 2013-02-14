@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -e
+
+cd $(dirname "$0")/..
+cc -g -O2 -Wall -framework Security -o script/Boxen src/keychain-helper.c
