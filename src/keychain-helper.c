@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <Security/Security.h>
 
-OSStatus key_exists_p(
+int key_exists_p(
   const char *service,
   const char *login,
   SecKeychainItemRef *item
