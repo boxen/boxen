@@ -13,7 +13,7 @@ module Boxen
     # The service name to use when loading/saving config in the Keychain.
 
     KEYCHAIN_HELPER  = File.expand_path "../../../script/Boxen", __FILE__
-    KEYCHAIN_SERVICE = "Boxen-GitHub.com-Password"
+    KEYCHAIN_PASSWORD_SERVICE = "Boxen-GitHub.com-Password"
     KEYCHAIN_TOKEN_SERVICE = "Boxen-GitHub.com-API-Token"
 
 
@@ -35,7 +35,7 @@ module Boxen
 
         # Grab our GitHub password out of the Keychain
         password_cmd = [
-          KEYCHAIN_HELPER, KEYCHAIN_SERVICE, config.user, '2>/dev/null'
+          KEYCHAIN_HELPER, KEYCHAIN_PASSWORD_SERVICE, config.user, '2>/dev/null'
         ].join(' ')
 
         password = `#{password_cmd}`.strip
@@ -84,7 +84,7 @@ module Boxen
       # Write the GitHub.com password to the Keychain
 
       password_cmd = [
-        KEYCHAIN_HELPER, KEYCHAIN_SERVICE, config.user, config.password
+        KEYCHAIN_HELPER, KEYCHAIN_PASSWORD_SERVICE, config.user, config.password
       ]
 
       unless system *password_cmd
