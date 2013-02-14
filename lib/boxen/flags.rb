@@ -32,6 +32,7 @@ module Boxen
       @disable_services = false
       @enable_services  = false
       @list_services    = false
+      @color            = true
 
       @options = OptionParser.new do |o|
         o.banner = "Usage: #{File.basename $0} [options] [projects...]\n\n"
@@ -107,6 +108,10 @@ module Boxen
         o.on "--user USER", "Your local user." do |user|
           @user = user
         end
+
+        o.on "--no-color", "Enable colors." do
+          @color = false
+        end
       end
 
       parse args.flatten.compact
@@ -126,6 +131,7 @@ module Boxen
       config.srcdir   = srcdir   if srcdir
       config.stealth  = stealth?
       config.user     = user     if user
+      config.color    = color?
 
       config
     end
@@ -184,6 +190,10 @@ module Boxen
 
     def stealth?
       @stealth
+    end
+
+    def color?
+      @color
     end
 
     def to_s

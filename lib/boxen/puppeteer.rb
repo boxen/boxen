@@ -60,6 +60,8 @@ module Boxen
       flags << "--debug" if config.debug?
       flags << "--noop"  if config.pretend?
 
+      flags << "--color=false" unless config.color?
+
       flags.flatten
     end
 

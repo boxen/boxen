@@ -16,6 +16,7 @@ class BoxenPuppeteerTest < Boxen::Test
       stubs(:repodir).returns "repodir"
       stubs(:debug?).returns true
       stubs(:pretend?).returns true
+      stubs(:color?).returns false
     end
 
     puppet = Boxen::Puppeteer.new config
@@ -27,6 +28,7 @@ class BoxenPuppeteerTest < Boxen::Test
     assert_flag "--no-report", flags
     assert_flag "--noop", flags
     assert_flag "--summarize", flags
+    assert_flag "--color=false", flags
 
     assert_flag_value "--confdir", :anything, flags
     assert_flag_value "--group", "admin", flags
@@ -48,6 +50,7 @@ class BoxenPuppeteerTest < Boxen::Test
       stubs(:profile?).returns false
       stubs(:puppetdir).returns "puppetdir"
       stubs(:repodir).returns "test/fixtures/repo"
+      stubs(:color?).returns true
     end
 
     puppet = Boxen::Puppeteer.new config
