@@ -1,7 +1,9 @@
+require "boxen/keychain"
+require "boxen/project"
 require "fileutils"
 require "json"
 require "octokit"
-require "boxen/project"
+require "shellwords"
 
 module Boxen
 
@@ -9,13 +11,6 @@ module Boxen
   # args, environment variables, config files, or the keychain.
 
   class Config
-
-    # The service name to use when loading/saving config in the Keychain.
-
-    KEYCHAIN_SERVICE = "Boxen"
-
-    # Load config. Yields config if `block` is given.
-
     def self.load(&block)
       new do |config|
         file = "#{config.homedir}/config/boxen/defaults.json"
@@ -30,13 +25,9 @@ module Boxen
           end
         end
 
-        cmd = "/usr/bin/security find-generic-password " +
-          "-a #{config.user} -s '#{KEYCHAIN_SERVICE}' -w 2>/dev/null"
-
-        password = `#{cmd}`.strip
-        password = nil unless $?.success?
-
-        config.password = password
+        keychain        = Boxen::Keychain.new config.user
+        config.password = keychain.password
+        config.token    = keychain.token
 
         yield config if block_given?
       end
@@ -56,7 +47,6 @@ module Boxen
         :repodir   => config.repodir,
         :reponame  => config.reponame,
         :srcdir    => config.srcdir,
-        :token     => config.token,
         :user      => config.user
       }
 
@@ -67,12 +57,9 @@ module Boxen
         f.write JSON.generate Hash[attrs.reject { |k, v| v.nil? }]
       end
 
-      cmd = ["security", "add-generic-password",
-             "-a", config.user, "-s", KEYCHAIN_SERVICE, "-U", "-w", config.password]
-
-      unless system *cmd
-        raise Boxen::Error, "Can't save config in the Keychain."
-      end
+      keychain          = Boxen::Keychain.new config.user
+      keychain.password = config.password
+      keychain.token    = config.token
 
       config
     end
