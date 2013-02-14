@@ -23,18 +23,14 @@ int key_exists_p(
 }
 
 int main(int argc, char **argv) {
-  if ((argc < 2) || (argc > 3)) {
+  if ((argc < 3) || (argc > 4)) {
     printf("Usage: %s <service> <account> [<password>]\n", argv[0]);
-    exit(1);
+    return 1;
   }
 
   const char *service  = argv[1];
   const char *login    = argv[2];
-  char *password       = NULL;
-
-  if (argc == 3) {
-    password = argv[3];
-  }
+  const char *password = argc == 4 ? argv[3] : NULL;
 
   void *buf;
   UInt32 len;
