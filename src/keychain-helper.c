@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <Security/Security.h>
 
-signed long key_exists(
+OSStatus key_exists(
   const char *service,
   const char *login,
   SecKeychainItemRef *item
@@ -10,9 +10,13 @@ signed long key_exists(
   void *buf;
   UInt32 len;
 
-  signed long ret = SecKeychainFindGenericPassword(
+  OSStatus ret = SecKeychainFindGenericPassword(
     NULL, strlen(service), service, strlen(login), login, &len, &buf, item
   );
+
+  if (ret) {
+    fprintf(stderr, "Encountered error code: %d\n", ret);
+  }
 
   return (ret == 0);
 }
@@ -42,7 +46,7 @@ int main(int argc, char **argv) {
     );
 
     if (createKey) {
-      printf("Error %d", createKey);
+      fprintf(stderr, "Encountered error code: %d\n", createKey);
       exit(1);
     }
 
@@ -51,7 +55,7 @@ int main(int argc, char **argv) {
       NULL, strlen(service), service, strlen(login), login, &len, &buf, &item);
 
     if (findKey) {
-      printf("Error %d", findKey);
+      fprintf(stderr, "Encountered error code: %d\n", findKey);
       exit(1);
     }
 
