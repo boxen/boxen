@@ -2,12 +2,27 @@
 #include <stdlib.h>
 #include <Security/Security.h>
 
-int main(int argc, char **argv) {
-  const char *service = argv[1];
-  const char *login   = argv[2];
-  const void *password = argv[3];
+signed long key_exists(
+  const char *service,
+  const char *login,
+  SecKeychainItemRef *item
+) {
+  void *buf;
+  UInt32 len;
 
-  if (!(service && login) || !password) {
+  signed long ret = SecKeychainFindGenericPassword(
+    NULL, strlen(service), service, strlen(login), login, &len, &buf, item
+  );
+
+  return (ret == 0);
+}
+
+int main(int argc, char **argv) {
+  const char *service  = argv[1];
+  const char *login    = argv[2];
+  const char *password = argv[3];
+
+  if (!(service && login)) {
     printf("Usage: %s <service> <account> [<password>]\n", argv[0]);
     exit(1);
   }
@@ -17,19 +32,26 @@ int main(int argc, char **argv) {
   SecKeychainItemRef item;
 
   if (password) {
-    int ret = SecKeychainAddGenericPassword(
+    if (key_exists(service, login, &item)) {
+      SecKeychainItemDelete(item);
+    }
+
+    OSStatus createKey = SecKeychainAddGenericPassword(
       NULL, strlen(service), service, strlen(login), login, strlen(password),
       password, &item
     );
 
-    if (ret) {
+    if (createKey) {
+      printf("Error %d", createKey);
       exit(1);
     }
+
   } else {
-    int ret = SecKeychainFindGenericPassword(
+    OSStatus findKey = SecKeychainFindGenericPassword(
       NULL, strlen(service), service, strlen(login), login, &len, &buf, &item);
 
-    if (ret) {
+    if (findKey) {
+      printf("Error %d", findKey);
       exit(1);
     }
 
