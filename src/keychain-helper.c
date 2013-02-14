@@ -14,29 +14,34 @@ int key_exists_p(
     NULL, strlen(service), service, strlen(login), login, &len, &buf, item
   );
 
-  if (ret) {
+  if (ret == 0) {
+    return 0;
+  } else {
     fprintf(stderr, "Encountered error code: %d\n", ret);
+    return ret;
   }
-
-  return (ret == 0);
 }
 
 int main(int argc, char **argv) {
-  const char *service  = argv[1];
-  const char *login    = argv[2];
-  const char *password = argv[3];
-
-  if (!(service && login)) {
+  if ((argc < 2) || (argc > 3)) {
     printf("Usage: %s <service> <account> [<password>]\n", argv[0]);
     exit(1);
+  }
+
+  const char *service  = argv[1];
+  const char *login    = argv[2];
+  char *password       = NULL;
+
+  if (argc == 3) {
+    password = argv[3];
   }
 
   void *buf;
   UInt32 len;
   SecKeychainItemRef item;
 
-  if (password) {
-    if (key_exists_p(service, login, &item)) {
+  if (password != NULL) {
+    if (key_exists_p(service, login, &item) == 0) {
       SecKeychainItemDelete(item);
     }
 
@@ -45,22 +50,22 @@ int main(int argc, char **argv) {
       password, &item
     );
 
-    if (create_key) {
+    if (create_key != 0) {
       fprintf(stderr, "Encountered error code: %d\n", create_key);
-      exit(1);
+      return 1;
     }
 
   } else {
     OSStatus find_key = SecKeychainFindGenericPassword(
       NULL, strlen(service), service, strlen(login), login, &len, &buf, &item);
 
-    if (find_key) {
+    if (find_key != 0) {
       fprintf(stderr, "Encountered error code: %d\n", find_key);
-      exit(1);
+      return 1;
     }
 
     fwrite(buf, 1, len, stdout);
   }
 
-  exit(0);
+  return 0;
 }
