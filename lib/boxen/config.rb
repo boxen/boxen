@@ -35,7 +35,7 @@ module Boxen
 
         # Grab our GitHub password out of the Keychain
         password_cmd = [
-          KEYCHAIN_HELPER, KEYCHAIN_PASSWORD_SERVICE, config.user, '2>/dev/null'
+          KEYCHAIN_HELPER, KEYCHAIN_PASSWORD_SERVICE, config.user
         ].join(' ')
 
         password = `#{password_cmd}`.strip
