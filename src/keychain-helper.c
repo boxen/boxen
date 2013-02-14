@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <Security/Security.h>
 
-OSStatus key_exists(
+int key_exists_p(
   const char *service,
   const char *login,
   SecKeychainItemRef *item
@@ -36,26 +36,26 @@ int main(int argc, char **argv) {
   SecKeychainItemRef item;
 
   if (password) {
-    if (key_exists(service, login, &item)) {
+    if (key_exists_p(service, login, &item)) {
       SecKeychainItemDelete(item);
     }
 
-    OSStatus createKey = SecKeychainAddGenericPassword(
+    OSStatus create_key = SecKeychainAddGenericPassword(
       NULL, strlen(service), service, strlen(login), login, strlen(password),
       password, &item
     );
 
-    if (createKey) {
-      fprintf(stderr, "Encountered error code: %d\n", createKey);
+    if (create_key) {
+      fprintf(stderr, "Encountered error code: %d\n", create_key);
       exit(1);
     }
 
   } else {
-    OSStatus findKey = SecKeychainFindGenericPassword(
+    OSStatus find_key = SecKeychainFindGenericPassword(
       NULL, strlen(service), service, strlen(login), login, &len, &buf, &item);
 
-    if (findKey) {
-      fprintf(stderr, "Encountered error code: %d\n", findKey);
+    if (find_key) {
+      fprintf(stderr, "Encountered error code: %d\n", find_key);
       exit(1);
     }
 
