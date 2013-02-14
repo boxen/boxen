@@ -41,21 +41,24 @@ module Boxen
     attr_reader :login
 
     def get(service)
-      raw = [HELPER, service, login]
-      cmd = raw.map { |s| Shellwords.shellescape s }.join " "
+      cmd = shellescape(HELPER, service, login)
 
       result = `#{cmd}`.strip
       $?.success? ? result : nil
     end
 
     def set(service, password)
-      cmd = [HELPER, service, login, password]
+      cmd = shellescape(HELPER, service, login, password)
 
       unless system *cmd
         raise Boxen::Error, "Can't save #{service} in the keychain."
       end
 
       password
+    end
+
+    def shellescape(*args)
+      args.map { |s| Shellwords.shellescape s }.join " "
     end
   end
 end
