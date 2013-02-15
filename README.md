@@ -1,4 +1,4 @@
-# Boxen
+# Boxen [![Build Status](https://travis-ci.org/boxen/boxen.png?branch=master)](https://travis-ci.org/boxen/boxen)
 
 Manage Mac development boxes with love (and Puppet).
 
