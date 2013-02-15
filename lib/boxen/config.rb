@@ -19,7 +19,7 @@ module Boxen
           attrs = JSON.parse File.read file
 
           attrs.each do |key, value|
-            if value && config.respond_to?(selector = "#{key}=")
+            if !value.nil? && config.respond_to?(selector = "#{key}=")
               config.send selector, value
             end
           end
@@ -40,6 +40,7 @@ module Boxen
     def self.save(config)
       attrs = {
         :email     => config.email,
+        :fde       => config.fde?,
         :homedir   => config.homedir,
         :login     => config.login,
         :name      => config.name,
