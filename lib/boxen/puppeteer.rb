@@ -81,7 +81,13 @@ module Boxen
 
         ENV["GITHUB_API_TOKEN"] = config.token
 
-        unless system librarian, "install", "--path=#{config.repodir}/shared"
+        command = []
+        command << librarian
+        command << "install"
+        command << "--path=#{config.repodir}/shared"
+        command << "--verbose" if config.debug?
+
+        unless system *command
           abort "Can't run Puppet, fetching dependencies with librarian failed."
         end
       end
