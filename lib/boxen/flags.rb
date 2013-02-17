@@ -109,7 +109,7 @@ module Boxen
           @user = user
         end
 
-        o.on "--no-color", "Enable colors." do
+        o.on "--no-color", "Disable colors." do
           @color = false
         end
       end
