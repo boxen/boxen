@@ -194,11 +194,27 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_srcdir
+    val = ENV['BOXEN_SRC_DIR']
+    ENV['BOXEN_SRC_DIR'] = nil
+
     @config.expects(:user).returns "foo"
     assert_equal "/Users/foo/src", @config.srcdir
 
     @config.srcdir = "elsewhere"
     assert_equal "elsewhere", @config.srcdir
+
+    ENV['BOXEN_SRC_DIR'] = val
+  end
+
+  def test_srcdir_env_var
+    @config.srcdir = nil
+
+    val = ENV['BOXEN_SRC_DIR']
+
+    ENV['BOXEN_SRC_DIR'] = 'Projects'
+    assert_equal 'Projects', @config.srcdir
+
+    ENV['BOXEN_SRC_DIR'] = val
   end
 
   def test_stealth?
