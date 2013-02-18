@@ -38,14 +38,19 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_homedir
+    val = ENV['BOXEN_HOME']
+    ENV['BOXEN_HOME'] = nil
+
     assert_equal "/opt/boxen", @config.homedir
 
     @config.homedir = "foo"
     assert_equal "foo", @config.homedir
+
+    ENV['BOXEN_HOME'] = val
   end
 
   def test_homedir_env_var_boxen_home
-    val = ENV['BOXEN_NO_FDE']
+    val = ENV['BOXEN_HOME']
 
     ENV['BOXEN_HOME'] = 'foo'
     assert_equal "foo", @config.homedir
