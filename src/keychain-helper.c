@@ -4,7 +4,7 @@
 
 bool debug_p() {
   char *ret = getenv("DEBUG");
-  return ret == NULL;
+  return ret != NULL;
 }
 
 int key_exists_p(
