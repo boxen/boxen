@@ -193,6 +193,25 @@ class BoxenConfigTest < Boxen::Test
     assert_equal "some-org/our-boxen", @config.reponame
   end
 
+  def test_repohost
+    @config.repohost = "git.foo.com"
+    assert_equal "git.foo.com", @config.repohost
+  end
+
+  def test_repohost_blank
+    @config.repohost = nil
+    assert_equal "github.com", @config.repohost
+  end
+
+  def test_repohost_env_var
+    val = ENV['BOXEN_REPO_HOST']
+
+    ENV['BOXEN_REPO_HOST'] = 'git.foo.com'
+    assert_equal "git.foo.com", @config.repohost
+
+    ENV['BOXEN_REPO_HOST'] = val
+  end
+
   def test_srcdir
     @config.expects(:user).returns "foo"
     assert_equal "/Users/foo/src", @config.srcdir

@@ -47,6 +47,7 @@ module Boxen
         :puppetdir => config.puppetdir,
         :repodir   => config.repodir,
         :reponame  => config.reponame,
+        :repohost  => config.repohost,
         :srcdir    => config.srcdir,
         :user      => config.user
       }
@@ -221,6 +222,17 @@ module Boxen
     end
 
     attr_writer :reponame
+
+    # The repository hostname to use
+
+    def repohost
+      override = @repohost || ENV["BOXEN_REPO_HOST"]
+      return override unless override.nil?
+
+      @repohost = "github.com"
+    end
+
+    attr_writer :repohost
 
     # The directory where repos live. Default is
     # `"/Users/#{user}/src"`.
