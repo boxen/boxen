@@ -47,6 +47,7 @@ module Boxen
         :puppetdir => config.puppetdir,
         :repodir   => config.repodir,
         :reponame  => config.reponame,
+        :repotmpl   => config.repotmpl,
         :srcdir    => config.srcdir,
         :user      => config.user
       }
@@ -221,6 +222,17 @@ module Boxen
     end
 
     attr_writer :reponame
+
+    # The git clone URL template to use when cloning our-boxen.
+    # %s will be replaced with the repository in `owner/repo`
+    # format. Defaults to http://github.com/%s. Respects the
+    # `BOXEN_REPO_URL_TEMPLATE` environment variable.
+
+    def repotmpl
+      @repotmpl || ENV["BOXEN_REPO_URL_TEMPLATE"] || "https://github.com/%s"
+    end
+
+    attr_writer :repotmpl
 
     # The directory where repos live. Default is
     # `"/Users/#{user}/src"`.
