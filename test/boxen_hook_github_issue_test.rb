@@ -56,9 +56,9 @@ class BoxenHookGitHubIssueTest < Boxen::Test
     assert_equal expected, @hook.compare_url
   end
 
-  def test_compare_url_ghhost
+  def test_compare_url_gheurl
     @config.reponame = repo = 'org/repo'
-    @config.ghhost = 'git.foo.com'
+    @config.ghurl = 'https://git.foo.com'
     sha = 'deadbeef'
     @checkout.expects(:sha).returns(sha)
 

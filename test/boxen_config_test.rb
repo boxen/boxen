@@ -130,39 +130,22 @@ class BoxenConfigTest < Boxen::Test
     ENV['BOXEN_PUPPET_DIR'] = val
   end
 
-  def test_ghhost
-    @config.ghhost = "git.foo.com"
-    assert_equal "git.foo.com", @config.ghhost
+  def test_ghurl
+    @config.ghurl = "https://git.foo.com"
+    assert_equal "https://git.foo.com", @config.ghurl
   end
 
-  def test_ghhost_blank
-    @config.ghhost = nil
-    assert_equal "github.com", @config.ghhost
+  def test_ghurl_blanks
+    assert_equal "https://github.com", @config.ghurl
   end
 
-  def test_ghhost_env_var
-    val = ENV['BOXEN_GH_HOST']
+  def test_gheurl_env_var
+    val = ENV['GITHUB_ENTERPRISE_URL']
 
-    ENV['BOXEN_GH_HOST'] = 'git.foo.com'
-    assert_equal "git.foo.com", @config.ghhost
+    ENV['GITHUB_ENTERPRISE_URL'] = 'https://git.foo.com'
+    assert_equal "https://git.foo.com", @config.ghurl
 
-    ENV['BOXEN_GH_HOST'] = val
-  end
-
-  def test_ghhostssl?
-    assert @config.ghhostssl?
-
-    @config.ghhostssl = false
-    refute @config.ghhostssl?
-  end
-
-  def test_ghhostssl_env_var
-    val = ENV['BOXEN_GH_HOST_NO_SSL']
-
-    ENV['BOXEN_GH_HOST_NO_SSL'] = '1'
-    refute @config.ghhostssl?
-
-    ENV['BOXEN_GH_HOST_NO_SSL'] = val
+    ENV['GITHUB_ENTERPRISE_URL'] = val
   end
 
   def test_repodir
@@ -205,8 +188,8 @@ class BoxenConfigTest < Boxen::Test
     assert_equal "some-org/our-boxen", @config.reponame
   end
 
-  def test_reponame_git_config_ghhost
-    @config.ghhost = 'git.foo.com'
+  def test_reponame_git_config_gheurl
+    @config.ghurl = 'https://git.foo.com'
     @config.expects(:"`").with("git config remote.origin.url").
       returns "https://git.foo.com/some-org/our-boxen\n"
 
@@ -220,8 +203,8 @@ class BoxenConfigTest < Boxen::Test
     assert_equal "some-org/our-boxen", @config.reponame
   end
 
-  def test_reponame_git_config_git_protocol_ghhost
-    @config.ghhost = 'git.foo.com'
+  def test_reponame_git_config_git_protocol_gheurl
+    @config.ghurl = 'https://git.foo.com'
     @config.expects(:"`").with("git config remote.origin.url").
       returns "git@git.foo.com:some-org/our-boxen.git\n"
 
@@ -259,45 +242,13 @@ class BoxenConfigTest < Boxen::Test
     assert_equal "some-org/our-boxen", @config.reponame
   end
 
-  def test_reponame_git_config_git_extension_ghhost
-    @config.ghhost = 'git.foo.com'
+  def test_reponame_git_config_git_extension_gheurl
+    @config.ghurl = 'https://git.foo.com'
     @config.expects(:"`").with("git config remote.origin.url").
       returns "https://git.foo.com/some-org/our-boxen.git\n"
     $?.expects(:success?).returns true
 
     assert_equal "some-org/our-boxen", @config.reponame
-  end
-
-  def test_ghweb
-    @config.ghhost = "git.foo.com"
-    assert_equal "https://git.foo.com", @config.ghweb
-  end
-
-  def test_ghweb_non_ssl
-    @config.ghhost = "git.foo.com"
-    @config.ghhostssl = false
-    assert_equal "http://git.foo.com", @config.ghweb
-  end
-
-  def test_ghweb_blank_ghhost
-    @config.ghhost = nil
-    assert_equal "https://github.com", @config.ghweb
-  end
-
-  def test_ghapi
-    @config.ghhost = "git.foo.com"
-    assert_equal "https://git.foo.com/api/v3", @config.ghapi
-  end
-
-  def test_ghapi_blank_ghhost
-    @config.ghhost = nil
-    assert_equal "https://api.github.com", @config.ghapi
-  end
-
-  def test_ghapi_non_ssl
-    @config.ghhost = "git.foo.com"
-    @config.ghhostssl = false
-    assert_equal "http://git.foo.com/api/v3", @config.ghapi
   end
 
   def test_srcdir
