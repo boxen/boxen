@@ -47,7 +47,7 @@ module Boxen
         :puppetdir => config.puppetdir,
         :repodir   => config.repodir,
         :reponame  => config.reponame,
-        :repotmpl   => config.repotmpl,
+        :repotmpl  => config.repotmpl,
         :srcdir    => config.srcdir,
         :user      => config.user
       }
