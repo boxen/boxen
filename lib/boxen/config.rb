@@ -32,8 +32,8 @@ module Boxen
         if config.ghurl != 'https://github.com'
           # configure to talk to GitHub Enterprise
           Octokit.configure do |c|
-            c.api_endpoint = "#{config.gheurl}/api/v3"
-            c.web_endpoint = config.gheurl
+            c.api_endpoint = "#{config.ghurl}/api/v3"
+            c.web_endpoint = config.ghurl
           end
         end
 

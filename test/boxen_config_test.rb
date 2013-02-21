@@ -135,7 +135,7 @@ class BoxenConfigTest < Boxen::Test
     assert_equal "https://git.foo.com", @config.ghurl
   end
 
-  def test_ghurl_blanks
+  def test_ghurl_blank
     assert_equal "https://github.com", @config.ghurl
   end
 
@@ -188,7 +188,7 @@ class BoxenConfigTest < Boxen::Test
     assert_equal "some-org/our-boxen", @config.reponame
   end
 
-  def test_reponame_git_config_gheurl
+  def test_reponame_git_config_ghurl
     @config.ghurl = 'https://git.foo.com'
     @config.expects(:"`").with("git config remote.origin.url").
       returns "https://git.foo.com/some-org/our-boxen\n"
@@ -203,7 +203,7 @@ class BoxenConfigTest < Boxen::Test
     assert_equal "some-org/our-boxen", @config.reponame
   end
 
-  def test_reponame_git_config_git_protocol_gheurl
+  def test_reponame_git_config_git_protocol_ghurl
     @config.ghurl = 'https://git.foo.com'
     @config.expects(:"`").with("git config remote.origin.url").
       returns "git@git.foo.com:some-org/our-boxen.git\n"
@@ -242,7 +242,7 @@ class BoxenConfigTest < Boxen::Test
     assert_equal "some-org/our-boxen", @config.reponame
   end
 
-  def test_reponame_git_config_git_extension_gheurl
+  def test_reponame_git_config_git_extension_ghurl
     @config.ghurl = 'https://git.foo.com'
     @config.expects(:"`").with("git config remote.origin.url").
       returns "https://git.foo.com/some-org/our-boxen.git\n"
