@@ -225,7 +225,7 @@ module Boxen
 
     # The git clone URL template to use when cloning our-boxen.
     # %s will be replaced with the repository in `owner/repo`
-    # format. Defaults to http://github.com/%s. Respects the
+    # format. Defaults to https://github.com/%s. Respects the
     # `BOXEN_REPO_URL_TEMPLATE` environment variable.
 
     def repotmpl
