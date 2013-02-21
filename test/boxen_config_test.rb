@@ -29,7 +29,7 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_fde_env_var
-    val = ENV['BOXEN_NO_SSL']
+    val = ENV['BOXEN_NO_FDE']
 
     ENV['BOXEN_NO_FDE'] = '1'
     refute @config.fde?
