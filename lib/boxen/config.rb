@@ -29,6 +29,11 @@ module Boxen
         config.password = keychain.password
         config.token    = keychain.token
 
+        Octokit.configure do |c|
+          c.api_endpoint = config.ghapi
+          c.web_endpoint = config.ghweb
+        end
+
         yield config if block_given?
       end
     end
@@ -47,6 +52,8 @@ module Boxen
         :puppetdir => config.puppetdir,
         :repodir   => config.repodir,
         :reponame  => config.reponame,
+        :ghhost    => config.ghhost,
+        :ghhostssl => config.ghhostssl?,
         :srcdir    => config.srcdir,
         :user      => config.user
       }
@@ -70,6 +77,7 @@ module Boxen
     def initialize(&block)
       @fde  = true
       @pull = true
+      @ghhostssl = true
 
       yield self if block_given?
     end
@@ -213,14 +221,43 @@ module Boxen
 
       if File.directory? repodir
         url = Dir.chdir(repodir) { `git config remote.origin.url`.strip }
-
-        if $?.success? && %r|github\.com[/:]([^/]+/[^/]+)| =~ url
+        repo_exp = Regexp.new Regexp.escape(ghhost) + "[/:]([^/]+/[^/]+)"
+        if $?.success? && repo_exp.match(url)
           @reponame = $1.sub /\.git$/, ""
         end
       end
     end
 
     attr_writer :reponame
+
+    # GitHub location (public GitHub or your local Enterprise instance)
+
+    def ghhost
+      @ghhost || ENV["BOXEN_GH_HOST"] || "github.com"
+    end
+
+    attr_writer :ghhost
+
+    def ghhostssl?
+      !ENV["BOXEN_GH_HOST_NO_SSL"] && @ghhostssl
+    end
+
+    attr_writer :ghhostssl
+
+    def ghweb
+      protocol = ghhostssl? ? "https" : "http"
+      "#{protocol}://#{ghhost}"
+    end
+
+    def ghapi
+      if ghhost == "github.com"
+        "https://api.github.com"
+      else
+        # GitHub Enterprise
+        protocol = ghhostssl? ? "https" : "http"
+        "#{protocol}://#{ghhost}/api/v3"
+      end
+    end
 
     # The directory where repos live. Default is
     # `"/Users/#{user}/src"`.
