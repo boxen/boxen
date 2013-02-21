@@ -18,7 +18,7 @@ module Boxen
 
       def compare_url
         return unless config.reponame
-        "https://github.com/#{config.reponame}/compare/#{checkout.sha}...master"
+        "#{config.ghweb}/#{config.reponame}/compare/#{checkout.sha}...master"
       end
 
       def hostname
