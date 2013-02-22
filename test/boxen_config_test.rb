@@ -140,12 +140,12 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_gheurl_env_var
-    val = ENV['GITHUB_ENTERPRISE_URL']
+    val = ENV['BOXEN_GITHUB_ENTERPRISE_URL']
 
-    ENV['GITHUB_ENTERPRISE_URL'] = 'https://git.foo.com'
+    ENV['BOXEN_GITHUB_ENTERPRISE_URL'] = 'https://git.foo.com'
     assert_equal "https://git.foo.com", @config.ghurl
 
-    ENV['GITHUB_ENTERPRISE_URL'] = val
+    ENV['BOXEN_GITHUB_ENTERPRISE_URL'] = val
   end
 
   def test_repodir

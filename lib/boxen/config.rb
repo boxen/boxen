@@ -236,7 +236,7 @@ module Boxen
     # GitHub location (public or GitHub Enterprise)
 
     def ghurl
-      @ghurl || ENV["GITHUB_ENTERPRISE_URL"] || "https://github.com"
+      @ghurl || ENV["BOXEN_GITHUB_ENTERPRISE_URL"] || "https://github.com"
     end
 
     attr_writer :ghurl
