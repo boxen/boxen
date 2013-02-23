@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <Security/Security.h>
+#include <CoreFoundation/CFString.h>
+
+#define REPORT_KEYCHAIN_ERROR(err_val) \
+fprintf(stderr, "Boxen Keychain Helper: Encountered error code: %d\n", err_val); \
+fprintf(stderr, "Error: %s\n", CFStringGetCStringPtr(SecCopyErrorMessageString(err_val, NULL), kCFStringEncodingMacRoman));
 
 int key_exists_p(
   const char *service,
@@ -17,7 +22,10 @@ int key_exists_p(
   if (ret == 0) {
     return 0;
   } else {
-    fprintf(stderr, "Boxen Keychain Helper: Encountered error code: %d\n", ret);
+    if (ret != errSecItemNotFound) {
+       // Item not found is not an error in predicate method context.
+       REPORT_KEYCHAIN_ERROR(ret)
+    }
     return ret;
   }
 }
@@ -47,7 +55,7 @@ int main(int argc, char **argv) {
     );
 
     if (create_key != 0) {
-      fprintf(stderr, "Boxen Keychain Helper: Encountered error code: %d\n", create_key);
+      REPORT_KEYCHAIN_ERROR(create_key)
       return 1;
     }
 
@@ -56,7 +64,7 @@ int main(int argc, char **argv) {
       NULL, strlen(service), service, strlen(login), login, &len, &buf, &item);
 
     if (find_key != 0) {
-      fprintf(stderr, "Boxen Keychain Helper: Encountered error code: %d\n", find_key);
+      REPORT_KEYCHAIN_ERROR(find_key)
       return 1;
     }
 
