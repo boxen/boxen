@@ -45,6 +45,6 @@ and we can't just modify the sudoers file due to a chicken-egg problem.
 Use the OS X system Ruby (1.8.7). Run `script/tests` often. Open PR's.
 Use the CI.
 
-## Help
+## Halp!
 
 Use Issues or #boxen on irc.freenode.net.
