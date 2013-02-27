@@ -226,7 +226,7 @@ module Boxen
     # `"/Users/#{user}/src"`.
 
     def srcdir
-      @srcdir || "/Users/#{user}/src"
+      @srcdir || ENV["BOXEN_SRC_DIR"] || "/Users/#{user}/src"
     end
 
     attr_writer :srcdir
