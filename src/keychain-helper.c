@@ -3,9 +3,10 @@
 #include <Security/Security.h>
 #include <CoreFoundation/CFString.h>
 
-#define REPORT_KEYCHAIN_ERROR(err_val) \
+#define REPORT_KEYCHAIN_ERROR(err_val)  do { \
 fprintf(stderr, "Boxen Keychain Helper: Encountered error code: %d\n", err_val); \
-fprintf(stderr, "Error: %s\n", CFStringGetCStringPtr(SecCopyErrorMessageString(err_val, NULL), kCFStringEncodingMacRoman));
+fprintf(stderr, "Error: %s\n", CFStringGetCStringPtr(SecCopyErrorMessageString(err_val, NULL), kCFStringEncodingMacRoman)); \
+} while(0)
 
 int key_exists_p(
   const char *service,
@@ -24,7 +25,7 @@ int key_exists_p(
   } else {
     if (ret != errSecItemNotFound) {
        // Item not found is not an error in predicate method context.
-       REPORT_KEYCHAIN_ERROR(ret)
+       REPORT_KEYCHAIN_ERROR(ret);
     }
     return ret;
   }
@@ -55,7 +56,7 @@ int main(int argc, char **argv) {
     );
 
     if (create_key != 0) {
-      REPORT_KEYCHAIN_ERROR(create_key)
+      REPORT_KEYCHAIN_ERROR(create_key);
       return 1;
     }
 
@@ -64,7 +65,7 @@ int main(int argc, char **argv) {
       NULL, strlen(service), service, strlen(login), login, &len, &buf, &item);
 
     if (find_key != 0) {
-      REPORT_KEYCHAIN_ERROR(find_key)
+      REPORT_KEYCHAIN_ERROR(find_key);
       return 1;
     }
 
