@@ -198,6 +198,23 @@ class BoxenConfigTest < Boxen::Test
     assert_equal "some-org/our-boxen", @config.reponame
   end
 
+  def test_repotmpl
+    @config.repotmpl = nil
+    assert_equal "https://github.com/%s", @config.repotmpl
+
+    @config.repotmpl = "git@github.com:%s"
+    assert_equal "git@github.com:%s", @config.repotmpl
+  end
+
+  def test_repotmpl_env_var
+    val = ENV['BOXEN_REPO_URL_TEMPLATE']
+
+    ENV['BOXEN_REPO_URL_TEMPLATE'] = 'git@github.com:%s'
+    assert_equal 'git@github.com:%s', @config.repotmpl
+
+    ENV['BOXEN_REPO_URL_TEMPLATE'] = val
+  end
+
   def test_srcdir
     val = ENV["BOXEN_SRC_DIR"]
     ENV["BOXEN_SRC_DIR"] = nil
