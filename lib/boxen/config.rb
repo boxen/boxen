@@ -25,7 +25,7 @@ module Boxen
           end
         end
 
-        keychain        = Boxen::Keychain.new config.user
+        keychain        = Boxen::Keychain.new config.user, config.debug?
         config.password = keychain.password
         config.token    = keychain.token
 
@@ -58,7 +58,7 @@ module Boxen
         f.write JSON.generate Hash[attrs.reject { |k, v| v.nil? }]
       end
 
-      keychain          = Boxen::Keychain.new config.user
+      keychain          = Boxen::Keychain.new config.user, config.debug?
       keychain.password = config.password
       keychain.token    = config.token
 

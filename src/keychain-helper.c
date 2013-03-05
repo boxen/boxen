@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <Security/Security.h>
 
+bool debug_p() {
+  char *ret = getenv("DEBUG");
+  return ret != NULL;
+}
+
 int key_exists_p(
   const char *service,
   const char *login,
@@ -17,7 +22,9 @@ int key_exists_p(
   if (ret == 0) {
     return 0;
   } else {
-    fprintf(stderr, "Boxen Keychain Helper: Encountered error code: %d\n", ret);
+    if (debug_p()) {
+      fprintf(stderr, "Boxen Keychain Helper: Encountered error code: %d\n", ret);
+    }
     return ret;
   }
 }
@@ -47,7 +54,9 @@ int main(int argc, char **argv) {
     );
 
     if (create_key != 0) {
-      fprintf(stderr, "Boxen Keychain Helper: Encountered error code: %d\n", create_key);
+      if (debug_p()) {
+        fprintf(stderr, "Boxen Keychain Helper: Encountered error code: %d\n", create_key);
+      }
       return 1;
     }
 
@@ -56,7 +65,9 @@ int main(int argc, char **argv) {
       NULL, strlen(service), service, strlen(login), login, &len, &buf, &item);
 
     if (find_key != 0) {
-      fprintf(stderr, "Boxen Keychain Helper: Encountered error code: %d\n", find_key);
+      if (debug_p()) {
+        fprintf(stderr, "Boxen Keychain Helper: Encountered error code: %d\n", find_key);
+      }
       return 1;
     }
 

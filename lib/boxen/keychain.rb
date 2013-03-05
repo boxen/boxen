@@ -16,8 +16,9 @@ module Boxen
 
     TOKEN_SERVICE = "GitHub API Token"
 
-    def initialize(login)
+    def initialize(login, debug = false)
       @login = login
+      @debug = debug
     end
 
     def password
@@ -36,19 +37,23 @@ module Boxen
       set TOKEN_SERVICE, token
     end
 
+    def debug
+      debug ? "DEBUG=1" : ""
+    end
+
     protected
 
     attr_reader :login
 
     def get(service)
-      cmd = shellescape(HELPER, service, login)
+      cmd = shellescape(debug, HELPER, service, login)
 
       result = `#{cmd}`.strip
       $?.success? ? result : nil
     end
 
     def set(service, password)
-      cmd = shellescape(HELPER, service, login, password)
+      cmd = shellescape(debug, HELPER, service, login, password)
 
       unless system *cmd
         raise Boxen::Error, "Can't save #{service} in the keychain."
