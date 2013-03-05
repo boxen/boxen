@@ -29,28 +29,33 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_fde_env_var
-    val = ENV['BOXEN_NO_FDE']
+    val = ENV["BOXEN_NO_FDE"]
 
-    ENV['BOXEN_NO_FDE'] = '1'
+    ENV["BOXEN_NO_FDE"] = "1"
     refute @config.fde?
 
-    ENV['BOXEN_NO_FDE'] = val
+    ENV["BOXEN_NO_FDE"] = val
   end
 
   def test_homedir
+    val = ENV["BOXEN_HOME"]
+    ENV["BOXEN_HOME"] = nil
+
     assert_equal "/opt/boxen", @config.homedir
 
     @config.homedir = "foo"
     assert_equal "foo", @config.homedir
+
+    ENV["BOXEN_HOME"] = val
   end
 
   def test_homedir_env_var_boxen_home
-    val = ENV['BOXEN_NO_FDE']
+    val = ENV["BOXEN_HOME"]
 
-    ENV['BOXEN_HOME'] = 'foo'
+    ENV["BOXEN_HOME"] = "foo"
     assert_equal "foo", @config.homedir
 
-    ENV['BOXEN_HOME'] = val
+    ENV["BOXEN_HOME"] = val
   end
 
   def test_initialize
@@ -69,12 +74,12 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_logfile_env_var
-    val = ENV['BOXEN_LOG_FILE']
+    val = ENV["BOXEN_LOG_FILE"]
 
-    ENV['BOXEN_LOG_FILE'] = 'foo'
+    ENV["BOXEN_LOG_FILE"] = "foo"
     assert_equal "foo", @config.logfile
 
-    ENV['BOXEN_LOG_FILE'] = val
+    ENV["BOXEN_LOG_FILE"] = val
   end
 
   def test_login
@@ -122,12 +127,12 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_puppetdir_env_var
-    val = ENV['BOXEN_PUPPET_DIR']
+    val = ENV["BOXEN_PUPPET_DIR"]
 
-    ENV['BOXEN_PUPPET_DIR'] = 'foo'
+    ENV["BOXEN_PUPPET_DIR"] = "foo"
     assert_equal "foo", @config.puppetdir
 
-    ENV['BOXEN_PUPPET_DIR'] = val
+    ENV["BOXEN_PUPPET_DIR"] = val
   end
 
   def test_repodir
@@ -141,12 +146,12 @@ class BoxenConfigTest < Boxen::Test
   def test_repodir_env_var
     @config.repodir = nil
 
-    val = ENV['BOXEN_REPO_DIR']
+    val = ENV["BOXEN_REPO_DIR"]
 
-    ENV['BOXEN_REPO_DIR'] = 'foo'
+    ENV["BOXEN_REPO_DIR"] = "foo"
     assert_equal "foo", @config.repodir
 
-    ENV['BOXEN_REPO_DIR'] = val
+    ENV["BOXEN_REPO_DIR"] = val
   end
 
   def test_reponame
@@ -155,12 +160,12 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_reponame_env_var
-    val = ENV['BOXEN_REPO_NAME']
+    val = ENV["BOXEN_REPO_NAME"]
 
-    ENV['BOXEN_REPO_NAME'] = 'env/var'
+    ENV["BOXEN_REPO_NAME"] = "env/var"
     assert_equal "env/var", @config.reponame
 
-    ENV['BOXEN_REPO_NAME'] = val
+    ENV["BOXEN_REPO_NAME"] = val
   end
 
   def test_reponame_git_config
@@ -194,11 +199,27 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_srcdir
+    val = ENV["BOXEN_SRC_DIR"]
+    ENV["BOXEN_SRC_DIR"] = nil
+
     @config.expects(:user).returns "foo"
     assert_equal "/Users/foo/src", @config.srcdir
 
     @config.srcdir = "elsewhere"
     assert_equal "elsewhere", @config.srcdir
+
+    ENV["BOXEN_SRC_DIR"] = val
+  end
+
+  def test_srcdir_env_var
+    @config.srcdir = nil
+
+    val = ENV["BOXEN_SRC_DIR"]
+
+    ENV["BOXEN_SRC_DIR"] = "Projects"
+    assert_equal "Projects", @config.srcdir
+
+    ENV["BOXEN_SRC_DIR"] = val
   end
 
   def test_stealth?
@@ -209,12 +230,12 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_stealth_env_var
-    val = ENV['BOXEN_NO_ISSUE']
+    val = ENV["BOXEN_NO_ISSUE"]
 
-    ENV['BOXEN_NO_ISSUE'] = '1'
+    ENV["BOXEN_NO_ISSUE"] = "1"
     assert @config.stealth?
 
-    ENV['BOXEN_NO_ISSUE'] = val
+    ENV["BOXEN_NO_ISSUE"] = val
   end
 
   def test_token
@@ -225,7 +246,7 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_user
-    ENV['USER'] = 'foo'
+    ENV["USER"] = "foo"
     assert_equal "foo", @config.user
 
     @config.user = "bar"
@@ -233,8 +254,8 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_api
-    @config.login    = login = 'someuser'
-    @config.password = pass  = 's3kr!7'
+    @config.login    = login = "someuser"
+    @config.password = pass  = "s3kr!7"
 
     api = Object.new
     Octokit::Client.expects(:new).with(:login => login, :password => pass).once.returns(api)
