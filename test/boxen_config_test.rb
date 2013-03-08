@@ -157,7 +157,7 @@ class BoxenConfigTest < Boxen::Test
     assert_equal 'https://github.com/%s', @config.repourl
   end
 
-  def test_repourltemplate_env_var
+  def test_repourl_env_var
     val = ENV['BOXEN_REPO_URL_TEMPLATE']
 
     ENV['BOXEN_REPO_URL_TEMPLATE'] = 'https://git.foo.com/%s'
