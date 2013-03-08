@@ -57,7 +57,8 @@ module Boxen
         :reponame  => config.reponame,
         :ghurl     => config.ghurl,
         :srcdir    => config.srcdir,
-        :user      => config.user
+        :user      => config.user,
+        :repourl   => config.repourl
       }
 
       file = "#{config.homedir}/config/boxen/defaults.json"
@@ -240,6 +241,14 @@ module Boxen
     end
 
     attr_writer :ghurl
+
+    # Repository URL template (required for GitHub Enterprise)
+
+    def repourl
+      @repourl || ENV["BOXEN_REPO_URL_TEMPLATE"] || 'https://github.com/%s'
+    end
+
+    attr_writer :repourl
 
     # The directory where repos live. Default is
     # `"/Users/#{user}/src"`.

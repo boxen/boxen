@@ -148,6 +148,24 @@ class BoxenConfigTest < Boxen::Test
     ENV['BOXEN_GITHUB_ENTERPRISE_URL'] = val
   end
 
+  def test_repourl
+    @config.repourl = 'https://git.foo.com/%s'
+    assert_equal 'https://git.foo.com/%s', @config.repourl
+  end
+
+  def test_repourl_blank
+    assert_equal 'https://github.com/%s', @config.repourl
+  end
+
+  def test_repourltemplate_env_var
+    val = ENV['BOXEN_REPO_URL_TEMPLATE']
+
+    ENV['BOXEN_REPO_URL_TEMPLATE'] = 'https://git.foo.com/%s'
+    assert_equal 'https://git.foo.com/%s', @config.repourl
+
+    ENV['BOXEN_REPO_URL_TEMPLATE'] = val
+  end
+
   def test_repodir
     @config.repodir = nil
     assert_equal Dir.pwd, @config.repodir
