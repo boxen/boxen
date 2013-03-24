@@ -27,6 +27,7 @@ module Boxen
       @help             = false
       @pretend          = false
       @profile          = false
+      @report           = false
       @projects         = false
       @stealth          = false
       @disable_services = false
@@ -43,6 +44,10 @@ module Boxen
 
         o.on "--pretend", "--noop", "Don't make changes." do
           @pretend = true
+        end
+
+        o.on "--report", "Enable puppet reports." do
+          @report = true
         end
 
         o.on "--env", "Show useful environment variables." do
@@ -128,6 +133,7 @@ module Boxen
       config.password = password if password
       config.pretend  = pretend?
       config.profile  = profile?
+      config.report   = report?
       config.srcdir   = srcdir   if srcdir
       config.stealth  = stealth?
       config.user     = user     if user
@@ -182,6 +188,10 @@ module Boxen
 
     def profile?
       @profile
+    end
+
+    def report?
+      @report
     end
 
     def projects?

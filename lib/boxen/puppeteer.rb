@@ -47,7 +47,7 @@ module Boxen
       # For some reason Puppet tries to set up a bunch of rrd stuff
       # (user, group) unless reports are completely disabled.
 
-      flags << "--no-report"
+      flags << "--no-report" unless config.report?
       flags << "--detailed-exitcodes"
 
       flags << "--show_diff"
