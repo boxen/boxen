@@ -70,6 +70,8 @@ module Boxen
 
       FileUtils.rm_f config.logfile
 
+      FileUtils.rm_rf "#{config.puppetdir}/var/reports" if config.report?
+
       FileUtils.mkdir_p File.dirname config.logfile
       FileUtils.touch config.logfile
 
