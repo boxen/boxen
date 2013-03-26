@@ -47,7 +47,7 @@ module Boxen
       # For some reason Puppet tries to set up a bunch of rrd stuff
       # (user, group) unless reports are completely disabled.
 
-      flags << "--no-report"
+      flags << "--no-report" unless config.report?
       flags << "--detailed-exitcodes"
 
       flags << "--show_diff"
@@ -69,6 +69,8 @@ module Boxen
       FileUtils.mkdir_p config.puppetdir
 
       FileUtils.rm_f config.logfile
+
+      FileUtils.rm_rf "#{config.puppetdir}/var/reports" if config.report?
 
       FileUtils.mkdir_p File.dirname config.logfile
       FileUtils.touch config.logfile
