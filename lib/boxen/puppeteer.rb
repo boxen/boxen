@@ -96,6 +96,8 @@ module Boxen
         end
       end
 
+      warn command.join(" ") if config.debug?
+
       Boxen::Util.sudo *command
 
       Status.new($?.exitstatus)
