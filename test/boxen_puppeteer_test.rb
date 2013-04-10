@@ -38,6 +38,8 @@ class BoxenPuppeteerTest < Boxen::Test
     assert_flag_value "--manifestdir", :anything, flags
     assert_flag_value "--modulepath", :anything, flags
 
+    assert_flag_value "--hiera_config", "/dev/null", flags
+
     assert_flag_value "--logdest", "logfile", flags
     assert_flag_value "--logdest", "console", flags
   end

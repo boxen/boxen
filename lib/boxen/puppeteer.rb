@@ -39,6 +39,10 @@ module Boxen
       flags << ["--manifestdir", "#{config.repodir}/manifests"]
       flags << ["--modulepath",  "#{config.repodir}/modules:#{config.repodir}/shared"]
 
+      # Don't ever complain about Hiera to me
+
+      flags << ["--hiera_config", "/dev/null"]
+
       # Log to both the console and a file.
 
       flags << ["--logdest", config.logfile]
