@@ -32,6 +32,7 @@ module Boxen
       @stealth          = false
       @disable_services = false
       @enable_services  = false
+      @restart_services = false
       @list_services    = false
       @color            = true
 
@@ -64,6 +65,10 @@ module Boxen
 
         o.on "--enable-services", "Enable Boxen services." do
           @enable_services = true
+        end
+
+        o.on "--restart-services", "Restart Boxen services." do
+          @restart_services = true
         end
 
         o.on "--list-services", "List Boxen services." do
@@ -164,6 +169,10 @@ module Boxen
 
     def enable_services?
       @enable_services
+    end
+
+    def restart_services?
+      @restart_services
     end
 
     def list_services?
