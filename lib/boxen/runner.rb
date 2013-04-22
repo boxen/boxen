@@ -93,6 +93,18 @@ module Boxen
         exit
       end
 
+      # --restart-services restarts all services
+
+      if flags.restart_services?
+        Boxen::Service.list.each do |service|
+          puts "Restarting #{service}..."
+          service.disable
+          service.enable
+        end
+
+        exit
+      end
+
     end
 
     def process_args
