@@ -66,6 +66,23 @@ class BoxenRunnerTest < Boxen::Test
     end
   end
 
+  def test_restart_services
+    config = Boxen::Config.new
+    flags  = Boxen::Flags.new('--restart-services')
+    runner = Boxen::Runner.new config, flags
+
+    services = Array.new(3) { mock('service') }
+    services.each do |service|
+      service.expects(:disable).once
+      service.expects(:enable).once
+    end
+    Boxen::Service.stubs(:list).returns(services)
+
+    assert_raises(SystemExit) do
+      runner.process
+    end
+  end
+
   def test_list_services
     config = Boxen::Config.new
     flags  = Boxen::Flags.new('--list-services')

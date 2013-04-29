@@ -27,10 +27,12 @@ module Boxen
       @help             = false
       @pretend          = false
       @profile          = false
+      @report           = false
       @projects         = false
       @stealth          = false
       @disable_services = false
       @enable_services  = false
+      @restart_services = false
       @list_services    = false
       @color            = true
 
@@ -43,6 +45,10 @@ module Boxen
 
         o.on "--pretend", "--noop", "Don't make changes." do
           @pretend = true
+        end
+
+        o.on "--report", "Enable puppet reports." do
+          @report = true
         end
 
         o.on "--env", "Show useful environment variables." do
@@ -59,6 +65,10 @@ module Boxen
 
         o.on "--enable-services", "Enable Boxen services." do
           @enable_services = true
+        end
+
+        o.on "--restart-services", "Restart Boxen services." do
+          @restart_services = true
         end
 
         o.on "--list-services", "List Boxen services." do
@@ -128,6 +138,7 @@ module Boxen
       config.password = password if password
       config.pretend  = pretend?
       config.profile  = profile?
+      config.report   = report?
       config.srcdir   = srcdir   if srcdir
       config.stealth  = stealth?
       config.user     = user     if user
@@ -160,6 +171,10 @@ module Boxen
       @enable_services
     end
 
+    def restart_services?
+      @restart_services
+    end
+
     def list_services?
       @list_services
     end
@@ -182,6 +197,10 @@ module Boxen
 
     def profile?
       @profile
+    end
+
+    def report?
+      @report
     end
 
     def projects?
