@@ -39,6 +39,10 @@ module Boxen
       flags << ["--manifestdir", "#{config.repodir}/manifests"]
       flags << ["--modulepath",  "#{config.repodir}/modules:#{config.repodir}/shared"]
 
+      # Don't ever complain about Hiera to me
+
+      flags << ["--hiera_config", "/dev/null"]
+
       # Log to both the console and a file.
 
       flags << ["--logdest", config.logfile]
@@ -47,7 +51,7 @@ module Boxen
       # For some reason Puppet tries to set up a bunch of rrd stuff
       # (user, group) unless reports are completely disabled.
 
-      flags << "--no-report"
+      flags << "--no-report" unless config.report?
       flags << "--detailed-exitcodes"
 
       flags << "--show_diff"
@@ -70,6 +74,8 @@ module Boxen
 
       FileUtils.rm_f config.logfile
 
+      FileUtils.rm_rf "#{config.puppetdir}/var/reports" if config.report?
+
       FileUtils.mkdir_p File.dirname config.logfile
       FileUtils.touch config.logfile
 
@@ -89,6 +95,8 @@ module Boxen
           abort "Can't run Puppet, fetching dependencies with librarian failed."
         end
       end
+
+      warn command.join(" ") if config.debug?
 
       Boxen::Util.sudo *command
 

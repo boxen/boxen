@@ -175,6 +175,14 @@ module Boxen
 
     attr_writer :profile
 
+    # Enable puppet reports ? Default is `false`.
+
+    def report?
+      !!@report
+    end
+
+    attr_writer :report
+
     # An Array of Boxen::Project entries, one for each project Boxen
     # knows how to manage.
     #
@@ -254,7 +262,7 @@ module Boxen
     # `"/Users/#{user}/src"`.
 
     def srcdir
-      @srcdir || "/Users/#{user}/src"
+      @srcdir || ENV["BOXEN_SRC_DIR"] || "/Users/#{user}/src"
     end
 
     attr_writer :srcdir
