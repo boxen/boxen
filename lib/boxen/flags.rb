@@ -16,6 +16,10 @@ module Boxen
     attr_reader :srcdir
     attr_reader :user
 
+    attr_reader :disable_service
+    attr_reader :enable_service
+    attr_reader :restart_service
+
     # Create a new instance, optionally providing CLI `args` to
     # parse immediately.
 
@@ -30,6 +34,9 @@ module Boxen
       @report           = false
       @projects         = false
       @stealth          = false
+      @disable_service  = false
+      @enable_service   = false
+      @restart_service  = false
       @disable_services = false
       @enable_services  = false
       @restart_services = false
@@ -59,15 +66,27 @@ module Boxen
           @help = true
         end
 
-        o.on "--disable-services", "Disable Boxen services." do
+        o.on "--disable-service SERVICE", "Disable a Boxen service." do |service|
+          @disable_service = service
+        end
+
+        o.on "--enable-service SERVICE", "Enable a Boxen service." do |service|
+          @enable_service = service
+        end
+
+        o.on "--restart-service SERVICE", "Restart a Boxen service." do |service|
+          @restart_service = service
+        end
+
+        o.on "--disable-services", "Disable all Boxen services." do
           @disable_services = true
         end
 
-        o.on "--enable-services", "Enable Boxen services." do
+        o.on "--enable-services", "Enable all Boxen services." do
           @enable_services = true
         end
 
-        o.on "--restart-services", "Restart Boxen services." do
+        o.on "--restart-services", "Restart all Boxen services." do
           @restart_services = true
         end
 
@@ -169,6 +188,18 @@ module Boxen
 
     def enable_services?
       @enable_services
+    end
+
+    def disable_service?
+      @disable_service
+    end
+
+    def enable_service?
+      @enable_service
+    end
+
+    def restart_service?
+      @restart_service
     end
 
     def restart_services?

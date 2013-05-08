@@ -83,6 +83,37 @@ module Boxen
         exit
       end
 
+      # --disable-service [name] stops a service
+
+      if flags.disable_service?
+        service = Boxen::Service.new(flags.disable_service)
+        puts "Disabling #{service}..."
+        service.disable
+
+        exit
+      end
+
+      # --enable-service [name] starts a service
+
+      if flags.enable_service?
+        service = Boxen::Service.new(flags.enable_service)
+        puts "Enabling #{service}..."
+        service.enable
+
+        exit
+      end
+
+      # --restart-service [name] starts a service
+
+      if flags.restart_service?
+        service = Boxen::Service.new(flags.restart_service)
+        puts "Restarting #{service}..."
+        service.disable
+        service.enable
+
+        exit
+      end
+
       # --list-services lists all services
 
       if flags.list_services?
