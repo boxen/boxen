@@ -162,20 +162,20 @@ class BoxenConfigTest < Boxen::Test
     assert @config.enterprise? == false
   end
 
-  def test_repourl
-    @config.repourl = 'https://git.foo.com/%s'
-    assert_equal 'https://git.foo.com/%s', @config.repourl
+  def test_repotemplate
+    @config.repotemplate = 'https://git.foo.com/%s'
+    assert_equal 'https://git.foo.com/%s', @config.repotemplate
   end
 
-  def test_repourl_blank
-    assert_equal 'https://github.com/%s', @config.repourl
+  def test_repotemplate_blank
+    assert_equal 'https://github.com/%s', @config.repotemplate
   end
 
-  def test_repourl_env_var
+  def test_repotemplate_env_var
     val = ENV['BOXEN_REPO_URL_TEMPLATE']
 
     ENV['BOXEN_REPO_URL_TEMPLATE'] = 'https://git.foo.com/%s'
-    assert_equal 'https://git.foo.com/%s', @config.repourl
+    assert_equal 'https://git.foo.com/%s', @config.repotemplate
 
     ENV['BOXEN_REPO_URL_TEMPLATE'] = val
   end

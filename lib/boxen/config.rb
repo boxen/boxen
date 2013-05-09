@@ -47,18 +47,18 @@ module Boxen
 
     def self.save(config)
       attrs = {
-        :email     => config.email,
-        :fde       => config.fde?,
-        :homedir   => config.homedir,
-        :login     => config.login,
-        :name      => config.name,
-        :puppetdir => config.puppetdir,
-        :repodir   => config.repodir,
-        :reponame  => config.reponame,
-        :ghurl     => config.ghurl,
-        :srcdir    => config.srcdir,
-        :user      => config.user,
-        :repourl   => config.repourl
+        :email        => config.email,
+        :fde          => config.fde?,
+        :homedir      => config.homedir,
+        :login        => config.login,
+        :name         => config.name,
+        :puppetdir    => config.puppetdir,
+        :repodir      => config.repodir,
+        :reponame     => config.reponame,
+        :ghurl        => config.ghurl,
+        :srcdir       => config.srcdir,
+        :user         => config.user,
+        :repotemplate => config.repotemplate
       }
 
       file = "#{config.homedir}/config/boxen/defaults.json"
@@ -252,11 +252,12 @@ module Boxen
 
     # Repository URL template (required for GitHub Enterprise)
 
-    def repourl
-      @repourl || ENV["BOXEN_REPO_URL_TEMPLATE"] || 'https://github.com/%s'
+    def repotemplate
+      default = 'https://github.com/%s'
+      @repotemplate || ENV["BOXEN_REPO_URL_TEMPLATE"] || default
     end
 
-    attr_writer :repourl
+    attr_writer :repotemplate
 
     # Does this Boxen use a GitHub Enterprise instance?
 
