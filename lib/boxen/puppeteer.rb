@@ -82,7 +82,7 @@ module Boxen
       if File.file? "Puppetfile"
         librarian = "#{config.repodir}/bin/librarian-puppet"
 
-        if config.ghurl == 'https://github.com'
+        unless config.enterprise?
           # Set an environment variable for librarian-puppet's
           # github_tarball source strategy.
           ENV["GITHUB_API_TOKEN"] = config.token

@@ -153,6 +153,15 @@ class BoxenConfigTest < Boxen::Test
     ENV['BOXEN_GITHUB_ENTERPRISE_URL'] = val
   end
 
+  def test_enterprise_true
+    @config.ghurl = "https://git.foo.com"
+    assert @config.enterprise?
+  end
+
+  def test_enterprise_false
+    assert @config.enterprise? == false
+  end
+
   def test_repourl
     @config.repourl = 'https://git.foo.com/%s'
     assert_equal 'https://git.foo.com/%s', @config.repourl

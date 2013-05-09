@@ -29,7 +29,7 @@ module Boxen
         config.password = keychain.password
         config.token    = keychain.token
 
-        if config.ghurl != 'https://github.com'
+        if config.enterprise?
           # configure to talk to GitHub Enterprise
           Octokit.configure do |c|
             c.api_endpoint = "#{config.ghurl}/api/v3"
@@ -257,6 +257,12 @@ module Boxen
     end
 
     attr_writer :repourl
+
+    # Does this Boxen use a GitHub Enterprise instance?
+
+    def enterprise?
+      ghurl != "https://github.com"
+    end
 
     # The directory where repos live. Default is
     # `"/Users/#{user}/src"`.
