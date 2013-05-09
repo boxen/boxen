@@ -82,10 +82,11 @@ module Boxen
       if File.file? "Puppetfile"
         librarian = "#{config.repodir}/bin/librarian-puppet"
 
-        # Set an environment variable for librarian-puppet's
-        # github_tarball source strategy.
-
-        ENV["GITHUB_API_TOKEN"] = config.token
+        unless config.enterprise?
+          # Set an environment variable for librarian-puppet's
+          # github_tarball source strategy.
+          ENV["GITHUB_API_TOKEN"] = config.token
+        end
 
         librarian_command = [librarian, "install", "--path=#{config.repodir}/shared"]
         librarian_command << "--verbose" if config.debug?
