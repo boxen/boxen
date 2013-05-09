@@ -230,10 +230,11 @@ module Boxen
       return override unless override.nil?
 
       if File.directory? repodir
-        %r|https?://(.*)| =~ ghurl
-        domain = $1
+        ghuri = URI(ghurl)
         url = Dir.chdir(repodir) { `git config remote.origin.url`.strip }
-        repo_exp = Regexp.new Regexp.escape(domain) + "[/:]([^/]+/[^/]+)"
+
+        # find the path and strip off the .git suffix
+        repo_exp = Regexp.new Regexp.escape(ghuri.host) + "[/:]([^/]+/[^/]+)"
         if $?.success? && repo_exp.match(url)
           @reponame = $1.sub /\.git$/, ""
         end
