@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |gem|
   gem.name          = "boxen"
-  gem.version       = "1.1.2"
+  gem.version       = "1.1.3"
   gem.authors       = ["John Barnette", "Will Farrington"]
   gem.email         = ["jbarnette@github.com", "wfarr@github.com"]
   gem.description   = "Manage Mac development boxes with love (and Puppet)."
