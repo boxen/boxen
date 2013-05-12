@@ -27,6 +27,14 @@ module Boxen
       [puppet, "apply", flags, manifest].flatten
     end
 
+    def hiera_config
+      if File.exist? "#{config.repodir}/config/hiera.yaml"
+        "#{config.repodir}/config/hiera.yaml"
+      else
+        "/dev/null"
+      end
+    end
+
     def flags
       flags = []
       root  = File.expand_path "../../..", __FILE__
@@ -40,8 +48,7 @@ module Boxen
       flags << ["--modulepath",  "#{config.repodir}/modules:#{config.repodir}/shared"]
 
       # Don't ever complain about Hiera to me
-
-      flags << ["--hiera_config", "/dev/null"]
+      flags << ["--hiera_config", hiera_config]
 
       # Log to both the console and a file.
 
