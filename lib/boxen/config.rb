@@ -29,6 +29,14 @@ module Boxen
         config.password = keychain.password
         config.token    = keychain.token
 
+        if config.enterprise?
+          # configure to talk to GitHub Enterprise
+          Octokit.configure do |c|
+            c.api_endpoint = "#{config.ghurl}/api/v3"
+            c.web_endpoint = config.ghurl
+          end
+        end
+
         yield config if block_given?
       end
     end
@@ -39,16 +47,18 @@ module Boxen
 
     def self.save(config)
       attrs = {
-        :email     => config.email,
-        :fde       => config.fde?,
-        :homedir   => config.homedir,
-        :login     => config.login,
-        :name      => config.name,
-        :puppetdir => config.puppetdir,
-        :repodir   => config.repodir,
-        :reponame  => config.reponame,
-        :srcdir    => config.srcdir,
-        :user      => config.user
+        :email        => config.email,
+        :fde          => config.fde?,
+        :homedir      => config.homedir,
+        :login        => config.login,
+        :name         => config.name,
+        :puppetdir    => config.puppetdir,
+        :repodir      => config.repodir,
+        :reponame     => config.reponame,
+        :ghurl        => config.ghurl,
+        :srcdir       => config.srcdir,
+        :user         => config.user,
+        :repotemplate => config.repotemplate
       }
 
       file = "#{config.homedir}/config/boxen/defaults.json"
@@ -220,15 +230,41 @@ module Boxen
       return override unless override.nil?
 
       if File.directory? repodir
+        ghuri = URI(ghurl)
         url = Dir.chdir(repodir) { `git config remote.origin.url`.strip }
 
-        if $?.success? && %r|github\.com[/:]([^/]+/[^/]+)| =~ url
+        # find the path and strip off the .git suffix
+        repo_exp = Regexp.new Regexp.escape(ghuri.host) + "[/:]([^/]+/[^/]+)"
+        if $?.success? && repo_exp.match(url)
           @reponame = $1.sub /\.git$/, ""
         end
       end
     end
 
     attr_writer :reponame
+
+    # GitHub location (public or GitHub Enterprise)
+
+    def ghurl
+      @ghurl || ENV["BOXEN_GITHUB_ENTERPRISE_URL"] || "https://github.com"
+    end
+
+    attr_writer :ghurl
+
+    # Repository URL template (required for GitHub Enterprise)
+
+    def repotemplate
+      default = 'https://github.com/%s'
+      @repotemplate || ENV["BOXEN_REPO_URL_TEMPLATE"] || default
+    end
+
+    attr_writer :repotemplate
+
+    # Does this Boxen use a GitHub Enterprise instance?
+
+    def enterprise?
+      ghurl != "https://github.com"
+    end
 
     # The directory where repos live. Default is
     # `"/Users/#{user}/src"`.

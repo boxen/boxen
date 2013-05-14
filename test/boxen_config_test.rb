@@ -135,6 +135,51 @@ class BoxenConfigTest < Boxen::Test
     ENV["BOXEN_PUPPET_DIR"] = val
   end
 
+  def test_ghurl
+    @config.ghurl = "https://git.foo.com"
+    assert_equal "https://git.foo.com", @config.ghurl
+  end
+
+  def test_ghurl_blank
+    assert_equal "https://github.com", @config.ghurl
+  end
+
+  def test_gheurl_env_var
+    val = ENV['BOXEN_GITHUB_ENTERPRISE_URL']
+
+    ENV['BOXEN_GITHUB_ENTERPRISE_URL'] = 'https://git.foo.com'
+    assert_equal "https://git.foo.com", @config.ghurl
+
+    ENV['BOXEN_GITHUB_ENTERPRISE_URL'] = val
+  end
+
+  def test_enterprise_true
+    @config.ghurl = "https://git.foo.com"
+    assert @config.enterprise?
+  end
+
+  def test_enterprise_false
+    assert @config.enterprise? == false
+  end
+
+  def test_repotemplate
+    @config.repotemplate = 'https://git.foo.com/%s'
+    assert_equal 'https://git.foo.com/%s', @config.repotemplate
+  end
+
+  def test_repotemplate_blank
+    assert_equal 'https://github.com/%s', @config.repotemplate
+  end
+
+  def test_repotemplate_env_var
+    val = ENV['BOXEN_REPO_URL_TEMPLATE']
+
+    ENV['BOXEN_REPO_URL_TEMPLATE'] = 'https://git.foo.com/%s'
+    assert_equal 'https://git.foo.com/%s', @config.repotemplate
+
+    ENV['BOXEN_REPO_URL_TEMPLATE'] = val
+  end
+
   def test_repodir
     @config.repodir = nil
     assert_equal Dir.pwd, @config.repodir
@@ -175,6 +220,29 @@ class BoxenConfigTest < Boxen::Test
     assert_equal "some-org/our-boxen", @config.reponame
   end
 
+  def test_reponame_git_config_ghurl
+    @config.ghurl = 'https://git.foo.com'
+    @config.expects(:"`").with("git config remote.origin.url").
+      returns "https://git.foo.com/some-org/our-boxen\n"
+
+    assert_equal "some-org/our-boxen", @config.reponame
+  end
+
+  def test_reponame_git_config_git_protocol
+    @config.expects(:"`").with("git config remote.origin.url").
+      returns "git@github.com:some-org/our-boxen.git\n"
+
+    assert_equal "some-org/our-boxen", @config.reponame
+  end
+
+  def test_reponame_git_config_git_protocol_ghurl
+    @config.ghurl = 'https://git.foo.com'
+    @config.expects(:"`").with("git config remote.origin.url").
+      returns "git@git.foo.com:some-org/our-boxen.git\n"
+
+    assert_equal "some-org/our-boxen", @config.reponame
+  end
+
   def test_reponame_git_config_bad_exit
     @config.expects(:"`").with("git config remote.origin.url").returns ""
     $?.expects(:success?).returns false
@@ -190,9 +258,26 @@ class BoxenConfigTest < Boxen::Test
     assert_nil @config.reponame
   end
 
+  def test_reponame_git_config_bad_url_git_protocol
+    @config.expects(:"`").with("git config remote.origin.url").
+      returns "git@spumco.com:some-org/our-boxen.git\n"
+    $?.expects(:success?).returns true
+
+    assert_nil @config.reponame
+  end
+
   def test_reponame_git_config_git_extension
     @config.expects(:"`").with("git config remote.origin.url").
       returns "https://github.com/some-org/our-boxen.git\n"
+    $?.expects(:success?).returns true
+
+    assert_equal "some-org/our-boxen", @config.reponame
+  end
+
+  def test_reponame_git_config_git_extension_ghurl
+    @config.ghurl = 'https://git.foo.com'
+    @config.expects(:"`").with("git config remote.origin.url").
+      returns "https://git.foo.com/some-org/our-boxen.git\n"
     $?.expects(:success?).returns true
 
     assert_equal "some-org/our-boxen", @config.reponame
