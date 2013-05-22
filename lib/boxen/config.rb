@@ -175,6 +175,14 @@ module Boxen
 
     attr_writer :profile
 
+    # Enable the Puppet future parser? Default is `false`.
+
+    def future_parser?
+      !!@future_parser
+    end
+
+    attr_writer :future_parser
+
     # Enable puppet reports ? Default is `false`.
 
     def report?

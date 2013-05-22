@@ -12,6 +12,7 @@ class BoxenPuppeteerTest < Boxen::Test
       stubs(:homedir).returns "homedir"
       stubs(:logfile).returns "logfile"
       stubs(:profile?).returns true
+      stubs(:future_parser?).returns true
       stubs(:puppetdir).returns "puppetdir"
       stubs(:repodir).returns "repodir"
       stubs(:debug?).returns true
@@ -30,6 +31,7 @@ class BoxenPuppeteerTest < Boxen::Test
     assert_flag "--noop", flags
     assert_flag "--summarize", flags
     assert_flag "--color=false", flags
+    assert_flag "--parser=future", flags
 
     assert_flag_value "--confdir", :anything, flags
     assert_flag_value "--group", "admin", flags
@@ -51,6 +53,7 @@ class BoxenPuppeteerTest < Boxen::Test
       stubs(:logfile).returns "logfile"
       stubs(:pretend?).returns false
       stubs(:profile?).returns false
+      stubs(:future_parser?).returns false
       stubs(:report?).returns false
       stubs(:puppetdir).returns "puppetdir"
       stubs(:repodir).returns "test/fixtures/repo"

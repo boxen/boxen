@@ -117,6 +117,13 @@ class BoxenConfigTest < Boxen::Test
     assert @config.profile?
   end
 
+  def test_future_parser?
+    refute @config.future_parser?
+
+    @config.future_parser = true
+    assert @config.future_parser?
+  end
+
   def test_projects
     files = Dir["#{@config.repodir}/modules/projects/manifests/*.pp"]
     assert_equal files.size, @config.projects.size

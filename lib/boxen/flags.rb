@@ -107,6 +107,10 @@ module Boxen
           @profile = true
         end
 
+        o.on "--future-parser", "Enable the Puppet future parser" do
+          @future_parser = true
+        end
+
         o.on "--projects", "Show available projects." do
           @projects = true
         end
@@ -130,19 +134,20 @@ module Boxen
     # Apply these flags to `config`. Returns `config`.
 
     def apply(config)
-      config.debug    = debug?
-      config.fde      = fde?     if config.fde?
-      config.homedir  = homedir  if homedir
-      config.logfile  = logfile  if logfile
-      config.login    = login    if login
-      config.password = password if password
-      config.pretend  = pretend?
-      config.profile  = profile?
-      config.report   = report?
-      config.srcdir   = srcdir   if srcdir
-      config.stealth  = stealth?
-      config.user     = user     if user
-      config.color    = color?
+      config.debug         = debug?
+      config.fde           = fde?     if config.fde?
+      config.homedir       = homedir  if homedir
+      config.logfile       = logfile  if logfile
+      config.login         = login    if login
+      config.password      = password if password
+      config.pretend       = pretend?
+      config.profile       = profile?
+      config.future_parser = future_parser?
+      config.report        = report?
+      config.srcdir        = srcdir   if srcdir
+      config.stealth       = stealth?
+      config.user          = user     if user
+      config.color         = color?
 
       config
     end
@@ -197,6 +202,10 @@ module Boxen
 
     def profile?
       @profile
+    end
+
+    def future_parser?
+      @future_parser
     end
 
     def report?

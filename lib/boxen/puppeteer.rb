@@ -68,6 +68,10 @@ module Boxen
         flags << "--summarize"
       end
 
+      if config.future_parser?
+        flags << "--parser=future"
+      end
+
       flags << "--debug" if config.debug?
       flags << "--noop"  if config.pretend?
 

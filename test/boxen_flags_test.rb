@@ -15,6 +15,7 @@ class BoxenFlagsTest < Boxen::Test
       expects(:password=).with "password"
       expects(:pretend=).with true
       expects(:profile=).with true
+      expects(:future_parser=).with true
       expects(:report=).with true
       expects(:srcdir=).with "srcdir"
       expects(:stealth=).with true
@@ -26,8 +27,9 @@ class BoxenFlagsTest < Boxen::Test
 
     flags = Boxen::Flags.new "--debug", "--help", "--login", "login",
       "--no-fde", "--no-pull", "--no-issue", "--noop", "--password", "password",
-      "--pretend", "--profile", "--report", "--projects", "--user", "user", "--homedir",
-      "homedir", "--srcdir", "srcdir", "--logfile", "logfile"
+      "--pretend", "--profile", "--future-parser", "--report", "--projects",
+      "--user", "user", "--homedir", "homedir", "--srcdir", "srcdir",
+      "--logfile", "logfile"
 
     assert_same config, flags.apply(config)
   end
@@ -161,6 +163,11 @@ class BoxenFlagsTest < Boxen::Test
   def test_profile
     refute flags.profile?
     assert flags("--profile").profile?
+  end
+
+  def test_future_parser
+    refute flags.future_parser?
+    assert flags("--future-parser").future_parser?
   end
 
   def test_report
