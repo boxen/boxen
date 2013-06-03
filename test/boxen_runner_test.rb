@@ -40,6 +40,48 @@ class BoxenRunnerTest < Boxen::Test
     runner.report(stub('result'))
   end
 
+  def test_disable_service
+    config = Boxen::Config.new
+    flags  = Boxen::Flags.new('--disable-service', 'test')
+    runner = Boxen::Runner.new config, flags
+
+    service = mock('service', :disable => true)
+    Boxen::Service.stubs(:new).returns(service)
+
+    assert_raises(SystemExit) do
+      runner.process
+    end
+  end
+
+  def test_enable_service
+    config = Boxen::Config.new
+    flags  = Boxen::Flags.new('--enable-service', 'test')
+    runner = Boxen::Runner.new config, flags
+
+    service = mock('service', :enable => true)
+    Boxen::Service.stubs(:new).returns(service)
+
+    assert_raises(SystemExit) do
+      runner.process
+    end
+  end
+
+  def test_restart_service
+    config = Boxen::Config.new
+    flags  = Boxen::Flags.new('--restart-service', 'test')
+    runner = Boxen::Runner.new config, flags
+
+    service = mock('service')
+    service.expects(:disable).once
+    service.expects(:enable).once
+
+    Boxen::Service.stubs(:new).returns(service)
+
+    assert_raises(SystemExit) do
+      runner.process
+    end
+  end
+
   def test_disable_services
     config = Boxen::Config.new
     flags  = Boxen::Flags.new('--disable-services')
