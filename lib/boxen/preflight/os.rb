@@ -2,7 +2,7 @@ require "boxen/preflight"
 
 class Boxen::Preflight::OS < Boxen::Preflight
   def ok?
-    `sw_vers -productVersion`.start_with? "10.8"
+    `sw_vers -productVersion` =~ /10.8|10.9/
   end
 
   def run
