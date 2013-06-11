@@ -19,7 +19,7 @@ class Boxen::Preflight::OS < Boxen::Preflight
 
   def supported_release?
     SUPPORTED_RELEASES.any? do |r|
-      current_release.starts_with? r
+      current_release.start_with? r
     end
   end
 
