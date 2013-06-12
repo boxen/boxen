@@ -14,7 +14,7 @@ class Boxen::Preflight::OS < Boxen::Preflight
   private
 
   def osx?
-    `uname -s` == "Darwin"
+    `uname -s`.chomp == "Darwin"
   end
 
   def supported_release?
