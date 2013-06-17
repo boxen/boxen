@@ -64,6 +64,9 @@ int main(int argc, char **argv) {
     OSStatus find_key = SecKeychainFindGenericPassword(
       NULL, strlen(service), service, strlen(login), login, &len, &buf, &item);
 
+    if (find_key == errSecItemNotFound) {
+      return find_key;
+    }
     if (find_key != 0) {
       REPORT_KEYCHAIN_ERROR(find_key);
       return 1;
