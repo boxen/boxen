@@ -26,7 +26,9 @@ module Boxen
         end
 
         keychain        = Boxen::Keychain.new config.user
-        config.password = keychain.password
+        # Stop using passwords. Start using Personal Access Tokens 
+        # (https://github.com/blog/1509-personal-api-tokens)
+        keychain.password = "" if keychain.password
         config.token    = keychain.token
 
         if config.enterprise?
@@ -69,7 +71,8 @@ module Boxen
       end
 
       keychain          = Boxen::Keychain.new config.user
-      keychain.password = config.password
+      # Make sure the password is deleted.
+      keychain.password = ""
       keychain.token    = config.token
 
       config
@@ -88,7 +91,7 @@ module Boxen
     # instance is created any time `login` or `password` change.
 
     def api
-      @api ||= Octokit::Client.new :login => login, :password => password
+      @api ||= Octokit::Client.new :login => login, :password => token
     end
 
     # Spew a bunch of debug logging? Default is `false`.
@@ -150,13 +153,10 @@ module Boxen
 
     attr_accessor :name
 
-    # A GitHub user password. Default is `nil`.
-
-    attr_reader :password
-
-    def password=(password)
-      @api = nil
-      @password = password
+    # Because other code will still be asking for password, return the token
+    # since it can be used as a password.
+    def password
+      token
     end
 
     # Just go through the motions? Default is `false`.

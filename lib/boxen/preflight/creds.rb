@@ -8,21 +8,13 @@ require "octokit"
 HighLine.track_eof = false
 
 class Boxen::Preflight::Creds < Boxen::Preflight
-  def basic?
-    config.api.user rescue nil
-  end
-
   def ok?
-    basic? && token?
+    token?
   end
 
   def token?
     return unless config.token
-
-    tapi = Octokit::Client.new \
-      :login => config.login, :oauth_token => config.token
-
-    tapi.user rescue nil
+    api.user rescue nil
   end
 
   def run
@@ -35,26 +27,17 @@ class Boxen::Preflight::Creds < Boxen::Preflight
       q.validate = /\A[^@]+\Z/
     end
   
-    config.password = console.ask "GitHub password: " do |q|
+    puts "Instead of using a password, use a Personal Access Token. You can create one by going to https://github.com/settings/applications"
+    config.token = console.ask "GitHub Persoanl Access Token: " do |q|
       q.echo = "*"
+      q.validate = /\A[a-zA-Z0-9]{40}\z/
     end
 
-    unless basic?
+    unless token?
       puts # i <3 vertical whitespace
 
       abort "Sorry, I can't auth you on GitHub.",
         "Please check your credentials and teams and give it another try."
     end
-
-    # Okay, the basic creds are good, let's deal with an OAuth token.
-
-    unless auth = config.api.authorizations.detect { |a| a.note == "Boxen" }
-      auth = config.api.create_authorization \
-        :note => "Boxen", :scopes => %w(repo user)
-    end
-
-    # Reset the token for later.
-
-    config.token = auth.token
   end
 end
