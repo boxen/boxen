@@ -25,11 +25,11 @@ module Boxen
           end
         end
 
-        keychain        = Boxen::Keychain.new config.user
+        keychain = Boxen::Keychain.new config.user
         # Stop using passwords. Start using Personal Access Tokens 
         # (https://github.com/blog/1509-personal-api-tokens)
         keychain.password = "" if keychain.password
-        config.token    = keychain.token
+        config.token = keychain.token
 
         if config.enterprise?
           # configure to talk to GitHub Enterprise
@@ -91,7 +91,7 @@ module Boxen
     # instance is created any time `login` or `password` change.
 
     def api
-      @api ||= Octokit::Client.new :login => login, :password => token
+      @api ||= Octokit::Client.new :login => login, :oauth_token => token
     end
 
     # Spew a bunch of debug logging? Default is `false`.

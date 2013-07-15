@@ -17,6 +17,18 @@ class Boxen::Preflight::Creds < Boxen::Preflight
     config.api.user rescue nil
   end
 
+  def token_from_password(password)
+    tapi = Octokit::Client.new :login => config.login, :password => password
+    auth = tapi.create_authorization :note => "Boxen", :scopes => %w(repo user)
+    auth.token
+  rescue
+    nil
+  end
+
+  def looks_like_token?(token)
+    token =~ /\A[a-zA-Z0-9]{40}\z/
+  end
+
   def run
     console = HighLine.new
 
@@ -27,11 +39,16 @@ class Boxen::Preflight::Creds < Boxen::Preflight
       q.validate = /\A[^@]+\Z/
     end
   
-    puts "Instead of using a password, use a Personal Access Token. You can create one by going to https://github.com/settings/applications"
-    config.token = console.ask "GitHub Persoanl Access Token: " do |q|
+    puts "You can use your password, or a Personal API Token which can be created here: https:///settings/applications"
+    password_or_token = console.ask "GitHub Password or Persoanl Access Token: " do |q|
       q.echo = "*"
-      q.validate = /\A[a-zA-Z0-9]{40}\z/
     end
+
+    config.token = if looks_like_token?(password_or_token)
+                     password_or_token
+                   else
+                     token_from_password(password_or_token) || password_or_token
+                   end
 
     unless token?
       puts # i <3 vertical whitespace
