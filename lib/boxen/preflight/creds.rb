@@ -14,7 +14,7 @@ class Boxen::Preflight::Creds < Boxen::Preflight
 
   def token?
     return unless config.token
-    api.user rescue nil
+    config.api.user rescue nil
   end
 
   def run
