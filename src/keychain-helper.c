@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
   UInt32 len;
   SecKeychainItemRef item;
 
-  if (password != NULL) {
+  if (password != NULL && strlen(password) != 0) {
     if (key_exists_p(service, login, &item) == 0) {
       SecKeychainItemDelete(item);
     }
@@ -59,7 +59,10 @@ int main(int argc, char **argv) {
       REPORT_KEYCHAIN_ERROR(create_key);
       return 1;
     }
-
+  } else if(password != NULL && strlen(password) == 0) {
+    if (key_exists_p(service, login, &item) == 0) {
+      SecKeychainItemDelete(item);
+    }
   } else {
     OSStatus find_key = SecKeychainFindGenericPassword(
       NULL, strlen(service), service, strlen(login), login, &len, &buf, &item);
