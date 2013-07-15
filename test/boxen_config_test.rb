@@ -96,13 +96,6 @@ class BoxenConfigTest < Boxen::Test
     assert_equal "foo", @config.name
   end
 
-  def test_password
-    assert_nil @config.password
-
-    @config.password = "foo"
-    assert_equal "foo", @config.password
-  end
-
   def test_pretend?
     refute @config.pretend?
 
@@ -347,10 +340,10 @@ class BoxenConfigTest < Boxen::Test
 
   def test_api
     @config.login    = login = "someuser"
-    @config.password = pass  = "s3kr!7"
+    @config.token = token  = "a" * 40
 
     api = Object.new
-    Octokit::Client.expects(:new).with(:login => login, :password => pass).once.returns(api)
+    Octokit::Client.expects(:new).with(:login => login, :password => token).once.returns(api)
 
     assert_equal api, @config.api
     assert_equal api, @config.api  # This extra call plus the `once` on the expectation is for the ivar cache.
