@@ -343,7 +343,7 @@ class BoxenConfigTest < Boxen::Test
     @config.token = token  = "a" * 40
 
     api = Object.new
-    Octokit::Client.expects(:new).with(:login => login, :password => token).once.returns(api)
+    Octokit::Client.expects(:new).with(:login => login, :oauth_token => token).once.returns(api)
 
     assert_equal api, @config.api
     assert_equal api, @config.api  # This extra call plus the `once` on the expectation is for the ivar cache.
