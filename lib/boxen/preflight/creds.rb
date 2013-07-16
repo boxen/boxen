@@ -25,10 +25,6 @@ class Boxen::Preflight::Creds < Boxen::Preflight
     nil
   end
 
-  def looks_like_token?(token)
-    token =~ /\A[a-zA-Z0-9]{40}\z/
-  end
-
   def run
     console = HighLine.new
 
@@ -44,11 +40,7 @@ class Boxen::Preflight::Creds < Boxen::Preflight
       q.echo = "*"
     end
 
-    config.token = if looks_like_token?(password_or_token)
-                     password_or_token
-                   else
-                     token_from_password(password_or_token) || password_or_token
-                   end
+    config.token = token_from_password(password_or_token) || password_or_token
 
     unless token?
       puts # i <3 vertical whitespace
