@@ -35,7 +35,7 @@ class Boxen::Preflight::Creds < Boxen::Preflight
       q.validate = /\A[^@]+\Z/
     end
   
-    puts "You can use your password, or a Personal API Token which can be created here: https://#{config.ghurl}/settings/applications"
+    puts "You can use your password, or a Personal API Token which can be created here: #{config.ghurl}/settings/applications"
     password_or_token = console.ask "GitHub Password or Persoanl Access Token: " do |q|
       q.echo = "*"
     end
