@@ -22,13 +22,13 @@ Dir["#{config.homedir}/config/facts/*.json"].each do |file|
   facts.merge! JSON.parse File.read file
 end
 
-if File.exist? dot_boxen
-  if File.directory?(dot_boxen) && File.file?(user_config)
-    facts.merge! JSON.parse(File.read(user_config))
-  else
-    warn "DEPRECATION: ~/.boxen is deprecated and will be removed in 2.0; use ~/.boxen/config.json instead!"
-    facts.merge! JSON.parse(File.read(dot_boxen))
-  end
+if File.directory?(dot_boxen) && File.file?(user_config)
+  facts.merge! JSON.parse(File.read(user_config))
+end
+
+if File.file?(dot_boxen)
+  warn "DEPRECATION: ~/.boxen is deprecated and will be removed in 2.0; use ~/.boxen/config.json instead!"
+  facts.merge! JSON.parse(File.read(dot_boxen))
 end
 
 facts.each { |k, v| Facter.add(k) { setcode { v } } }
