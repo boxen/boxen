@@ -8,21 +8,57 @@ require "octokit"
 HighLine.track_eof = false
 
 class Boxen::Preflight::Creds < Boxen::Preflight
-  def basic?
-    config.api.user rescue nil
-  end
+  attr :otp
+  attr :password
 
   def ok?
-    basic? && token?
+    true if config.token && config.api.user
+  rescue
+    nil
   end
 
-  def token?
-    return unless config.token
+  def tmp_api
+    @tmp_api ||= Octokit::Client.new :login => config.login, :password => password, :auto_paginate => true
+  end
 
-    tapi = Octokit::Client.new \
-      :login => config.login, :oauth_token => config.token
+  def headers
+    otp.nil? ? {} : {"X-GitHub-OTP" => otp}
+  end
 
-    tapi.user rescue nil
+  def get_otp
+    console = HighLine.new
+
+    # junk API call to send OTP until we implement PUT
+    tmp_api.create_authorization rescue nil
+
+    @otp = console.ask "One time password (via SMS or device):" do |q|
+      q.echo = '*'
+    end
+  end
+
+  # Attempt to use the username+password to get a list of the user's OAuth
+  # authorizations from the API. If it fails because of 2FA, ask the user for
+  # her OTP and try again.
+  #
+  # Returns a list of authorizations
+  def get_tokens
+    begin
+      tmp_api.authorizations(:headers => headers)
+    rescue Octokit::Unauthorized => e
+      puts
+      if e.message =~ /OTP/
+        if otp.nil?
+          warn "It looks like you have two-factor auth enabled."
+        else
+          warn "That one time password didn't work. Let's try again."
+        end
+        get_otp
+        get_tokens
+      else
+        abort "Sorry, I can't auth you on GitHub.",
+          "Please check your credentials and teams and give it another try."
+      end
+    end
   end
 
   def run
@@ -34,27 +70,26 @@ class Boxen::Preflight::Creds < Boxen::Preflight
       q.default = config.login || config.user
       q.validate = /\A[^@]+\Z/
     end
-  
-    config.password = console.ask "GitHub password: " do |q|
+
+    @password = console.ask "GitHub password: " do |q|
       q.echo = "*"
     end
 
-    unless basic?
-      puts # i <3 vertical whitespace
+    tokens = get_tokens
 
-      abort "Sorry, I can't auth you on GitHub.",
-        "Please check your credentials and teams and give it another try."
+    unless auth = tokens.detect { |a| a.note == "Boxen" }
+      auth = tmp_api.create_authorization \
+        :note => "Boxen",
+        :scopes => %w(repo user),
+        :headers => headers
     end
-
-    # Okay, the basic creds are good, let's deal with an OAuth token.
-
-    unless auth = config.api.authorizations.detect { |a| a.note == "Boxen" }
-      auth = config.api.create_authorization \
-        :note => "Boxen", :scopes => %w(repo user)
-    end
-
-    # Reset the token for later.
 
     config.token = auth.token
+
+    unless ok?
+      puts
+      abort "Something went terribly wrong.",
+        "I was able to get your OAuth token, but was unable to use it."
+    end
   end
 end

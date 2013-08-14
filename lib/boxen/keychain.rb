@@ -18,14 +18,8 @@ module Boxen
 
     def initialize(login)
       @login = login
-    end
-
-    def password
-      get PASSWORD_SERVICE
-    end
-
-    def password=(password)
-      set PASSWORD_SERVICE, password
+      # Clear the password. We're storing tokens now.
+      set PASSWORD_SERVICE, ""
     end
 
     def token
@@ -47,14 +41,14 @@ module Boxen
       $?.success? ? result : nil
     end
 
-    def set(service, password)
-      cmd = shellescape(HELPER, service, login, password)
+    def set(service, token)
+      cmd = shellescape(HELPER, service, login, token)
 
       unless system *cmd
         raise Boxen::Error, "Can't save #{service} in the keychain."
       end
 
-      password
+      token
     end
 
     def shellescape(*args)
