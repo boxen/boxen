@@ -8,8 +8,30 @@ require "octokit"
 HighLine.track_eof = false
 
 class Boxen::Preflight::Creds < Boxen::Preflight
+
+  attr :otp
+
   def basic?
-    config.api.user rescue nil
+    begin
+      config.api.user
+    rescue Octokit::Unauthorized => e
+      basic_with_otp? if e.message =~ /OTP/
+    end
+  end
+
+  def basic_with_otp?
+    console = HighLine.new
+
+    # junk API call to send OTP until we implement PUT
+    config.api.create_authorization rescue nil
+
+    warn "It looks like you have two-factor auth enabled."
+    puts
+    @otp = console.ask "One time password (via SMS or device):" do |q|
+      q.echo = '*'
+    end
+
+    config.api.user(:headers => {"X-GitHub-OTP" => otp}) rescue nil
   end
 
   def ok?
@@ -19,8 +41,7 @@ class Boxen::Preflight::Creds < Boxen::Preflight
   def token?
     return unless config.token
 
-    tapi = Octokit::Client.new \
-      :login => config.login, :oauth_token => config.token
+    tapi = Octokit::Client.new :oauth_token => config.token
 
     tapi.user rescue nil
   end
@@ -34,7 +55,7 @@ class Boxen::Preflight::Creds < Boxen::Preflight
       q.default = config.login || config.user
       q.validate = /\A[^@]+\Z/
     end
-  
+
     config.password = console.ask "GitHub password: " do |q|
       q.echo = "*"
     end
@@ -48,9 +69,15 @@ class Boxen::Preflight::Creds < Boxen::Preflight
 
     # Okay, the basic creds are good, let's deal with an OAuth token.
 
-    unless auth = config.api.authorizations.detect { |a| a.note == "Boxen" }
+    headers = {}
+    headers["X-GitHub-OTP"] = otp unless otp.nil?
+
+    tokens = config.api.authorizations(:headers => headers)
+    unless auth = tokens.detect { |a| a.note == "Boxen" }
       auth = config.api.create_authorization \
-        :note => "Boxen", :scopes => %w(repo user)
+        :note => "Boxen",
+        :scopes => %w(repo user),
+        :headers => headers
     end
 
     # Reset the token for later.
