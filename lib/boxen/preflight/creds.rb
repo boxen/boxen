@@ -8,7 +8,8 @@ require "octokit"
 HighLine.track_eof = false
 
 class Boxen::Preflight::Creds < Boxen::Preflight
-  attr :otp, :password
+  attr :otp
+  attr :password
 
   def ok?
     true if config.token && config.api.user
@@ -17,7 +18,7 @@ class Boxen::Preflight::Creds < Boxen::Preflight
   end
 
   def tmp_api
-    @tmp_api ||= Octokit::Client.new :login => config.login, :password => password
+    @tmp_api ||= Octokit::Client.new :login => config.login, :password => password, :auto_paginate => true
   end
 
   def headers
