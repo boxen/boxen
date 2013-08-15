@@ -12,7 +12,6 @@ module Boxen
     attr_reader :homedir
     attr_reader :logfile
     attr_reader :login
-    attr_reader :password
     attr_reader :srcdir
     attr_reader :user
 
@@ -118,10 +117,6 @@ module Boxen
           @stealth = true
         end
 
-        o.on "--password PASSWORD", "Your GitHub password." do |password|
-          @password = password
-        end
-
         o.on "--profile", "Profile the Puppet run." do
           @profile = true
         end
@@ -158,7 +153,6 @@ module Boxen
       config.homedir       = homedir  if homedir
       config.logfile       = logfile  if logfile
       config.login         = login    if login
-      config.password      = password if password
       config.pretend       = pretend?
       config.profile       = profile?
       config.future_parser = future_parser?

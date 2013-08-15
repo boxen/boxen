@@ -6,16 +6,6 @@ class BoxenKeychainTest < Boxen::Test
     @keychain = Boxen::Keychain.new('test')
   end
 
-  def test_get_password
-    @keychain.expects(:get).with('GitHub Password').returns('foobar')
-    assert_equal 'foobar', @keychain.password
-  end
-
-  def test_set_password
-    @keychain.expects(:set).with('GitHub Password', 'foobar').returns('foobar')
-    assert_equal 'foobar', @keychain.password=('foobar')
-  end
-
   def test_get_token
     @keychain.expects(:get).with('GitHub API Token').returns('foobar')
     assert_equal 'foobar', @keychain.token
