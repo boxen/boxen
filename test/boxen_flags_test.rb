@@ -13,6 +13,7 @@ class BoxenFlagsTest < Boxen::Test
       expects(:logfile=).with "logfile"
       expects(:login=).with "login"
       expects(:password=).with "password"
+      expects(:token=).with "token"
       expects(:pretend=).with true
       expects(:profile=).with true
       expects(:future_parser=).with true
@@ -29,7 +30,7 @@ class BoxenFlagsTest < Boxen::Test
       "--no-fde", "--no-pull", "--no-issue", "--noop", "--password", "password",
       "--pretend", "--profile", "--future-parser", "--report", "--projects",
       "--user", "user", "--homedir", "homedir", "--srcdir", "srcdir",
-      "--logfile", "logfile"
+      "--logfile", "logfile", "--token", "token"
 
     assert_same config, flags.apply(config)
   end
@@ -149,6 +150,19 @@ class BoxenFlagsTest < Boxen::Test
   def test_password_missing_value
     ex = assert_raises Boxen::Error do
       flags "--password"
+    end
+
+    assert_match "missing argument", ex.message
+  end
+
+  def test_token
+    assert_nil flags.token
+    assert_equal "foo", flags("--token", "foo").token
+  end
+
+  def test_token_missing_value
+    ex = assert_raises Boxen::Error do
+      flags "--token"
     end
 
     assert_match "missing argument", ex.message
