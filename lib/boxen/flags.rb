@@ -12,6 +12,7 @@ module Boxen
     attr_reader :homedir
     attr_reader :logfile
     attr_reader :login
+    attr_reader :token
     attr_reader :srcdir
     attr_reader :user
 
@@ -105,6 +106,10 @@ module Boxen
           @login = login
         end
 
+        o.on "--token TOKEN", "Your GitHub OAuth token." do |token|
+          @token = token
+        end
+
         o.on "--no-fde", "Don't require full disk encryption." do
           @fde = false
         end
@@ -153,6 +158,7 @@ module Boxen
       config.homedir       = homedir  if homedir
       config.logfile       = logfile  if logfile
       config.login         = login    if login
+      config.token         = token    if token
       config.pretend       = pretend?
       config.profile       = profile?
       config.future_parser = future_parser?
