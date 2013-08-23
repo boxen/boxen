@@ -13,6 +13,7 @@ module Boxen
     attr_reader :logfile
     attr_reader :login
     attr_reader :password
+    attr_reader :token
     attr_reader :srcdir
     attr_reader :user
 
@@ -122,6 +123,10 @@ module Boxen
           @password = password
         end
 
+        o.on "--token TOKEN", "Your GitHub OAuth token." do |token|
+          @token = token
+        end
+
         o.on "--profile", "Profile the Puppet run." do
           @profile = true
         end
@@ -159,6 +164,7 @@ module Boxen
       config.logfile       = logfile  if logfile
       config.login         = login    if login
       config.password      = password if password
+      config.token         = token    if token
       config.pretend       = pretend?
       config.profile       = profile?
       config.future_parser = future_parser?
