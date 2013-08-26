@@ -31,6 +31,7 @@ class BoxenHookGitHubIssueTest < Boxen::Test
     @config.stubs(:stealth?).returns(true)
     @config.stubs(:pretend?).returns(true)
     @checkout.stubs(:master?).returns(false)
+    @config.stubs(:login).returns(nil)
 
     refute @hook.perform?
 
@@ -44,6 +45,12 @@ class BoxenHookGitHubIssueTest < Boxen::Test
     refute @hook.perform?
 
     @checkout.stubs(:master?).returns(true)
+    refute @hook.perform?
+
+    @config.stubs(:login).returns('')
+    refute @hook.perform?
+
+    @config.stubs(:login).returns('somelogin')
     assert @hook.perform?
   end
 
