@@ -6,6 +6,7 @@ module Boxen
       def perform?
         enabled? &&
         !config.stealth? && !config.pretend? &&
+        !config.login.to_s.empty? &&
         checkout.master?
       end
 
