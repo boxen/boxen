@@ -4,7 +4,9 @@ module Boxen
   class Hook
     class GitHubIssue < Hook
       def perform?
-        enabled? && !config.stealth? && !config.pretend? && checkout.master?
+        enabled? &&
+        !config.stealth? && !config.pretend? &&
+        checkout.master?
       end
 
       def call
