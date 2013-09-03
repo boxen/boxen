@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
   } else if (password != NULL && strlen(password) == 0) {
     if (key_exists_p(service, login, &item) == 0) {
       OSStatus ret = SecKeychainItemDelete(item);
-      if (ret != errSecSuccess){
+      if (ret != errSecSuccess) {
         REPORT_KEYCHAIN_ERROR(ret);
       }
     }
