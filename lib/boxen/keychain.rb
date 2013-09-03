@@ -46,7 +46,7 @@ module Boxen
 
       result = `#{cmd} 2>&1`.strip
       unless $?.success?
-        raise Boxen::Error, "Can't save #{service} in the keychain.\nCommand: #{cmd}\nError: #{result}"
+        raise Boxen::Error, "Can't save #{service} in the keychain.\nCommand: #{cmd}\nShell: #{ENV['SHELL']}\nError: #{result}"
       end
 
       token
