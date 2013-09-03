@@ -18,6 +18,8 @@ module Boxen
 
     def initialize(login)
       @login = login
+      # Clear the password. We're storing tokens now.
+      set PASSWORD_SERVICE, ""
     end
 
     def token
