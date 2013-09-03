@@ -44,8 +44,7 @@ module Boxen
     def set(service, token)
       cmd = shellescape(HELPER, service, login, token)
 
-      result = `#{cmd} 2>&1`
-      unless $?.success?
+      unless system *cmd
         raise Boxen::Error, "Can't save #{service} in the keychain.\nError: #{result}"
       end
 

@@ -3,6 +3,7 @@
 
 cd "$(dirname $0)"/..
 
+script/build-keychain-helper &&
 script/bootstrap &&
   ruby -rubygems -Ilib:test \
     -e 'require "bundler/setup"' \
