@@ -45,7 +45,7 @@ module Boxen
       cmd = shellescape(HELPER, service, login, token)
 
       unless system *cmd
-        raise Boxen::Error, "Can't save #{service} in the keychain.\nError: #{result}"
+        raise Boxen::Error, "Can't save #{service} in the keychain."
       end
 
       token
