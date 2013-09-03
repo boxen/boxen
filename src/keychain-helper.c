@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
       REPORT_KEYCHAIN_ERROR(create_key);
       return 1;
     }
-  } else if(password != NULL && strlen(password) == 0) {
+  } else if (password != NULL && strlen(password) == 0) {
     if (key_exists_p(service, login, &item) == 0) {
       SecKeychainItemDelete(item);
     }
