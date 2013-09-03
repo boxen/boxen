@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
     if (key_exists_p(service, login, &item) == 0) {
       OSStatus ret = SecKeychainItemDelete(item);
       if (ret != errSecSuccess) {
-        REPORT_KEYCHAIN_ERROR(ret);
+        fprintf(stderr, "Error code: %d\n", ret);
       }
     }
   } else {
