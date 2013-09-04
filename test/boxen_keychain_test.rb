@@ -3,7 +3,7 @@ require "boxen/keychain"
 
 class BoxenKeychainTest < Boxen::Test
   def setup
-    @keychain = Boxen::Keychain.new('test')
+    @keychain = Boxen::Keychain.new('test') if osx?
   end
 
   def osx?
