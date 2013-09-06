@@ -26,7 +26,6 @@ module Boxen
         end
 
         keychain        = Boxen::Keychain.new config.user
-        config.password = keychain.password
         config.token    = keychain.token
 
         if config.enterprise?
@@ -69,7 +68,6 @@ module Boxen
       end
 
       keychain          = Boxen::Keychain.new config.user
-      keychain.password = config.password
       keychain.token    = config.token
 
       config
@@ -85,10 +83,10 @@ module Boxen
     end
 
     # Create an API instance using the current user creds. A new
-    # instance is created any time `login` or `password` change.
+    # instance is created any time `token` changes.
 
     def api
-      @api ||= Octokit::Client.new :login => login, :password => password
+      @api ||= Octokit::Client.new :login => token, :password => 'x-oauth-basic'
     end
 
     # Spew a bunch of debug logging? Default is `false`.
@@ -139,25 +137,11 @@ module Boxen
 
     # A GitHub user login. Default is `nil`.
 
-    attr_reader :login
-
-    def login=(login)
-      @api = nil
-      @login = login
-    end
+    attr_accessor :login
 
     # A GitHub user's profile name.
 
     attr_accessor :name
-
-    # A GitHub user password. Default is `nil`.
-
-    attr_reader :password
-
-    def password=(password)
-      @api = nil
-      @password = password
-    end
 
     # Just go through the motions? Default is `false`.
 
@@ -294,7 +278,12 @@ module Boxen
 
     # A GitHub OAuth token. Default is `nil`.
 
-    attr_accessor :token
+    attr_reader :token
+
+    def token=(token)
+      @token = token
+      @api = nil
+    end
 
     # A local user login. Default is the `USER` environment variable.
 
