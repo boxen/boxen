@@ -71,8 +71,8 @@ class Boxen::Preflight::Creds < Boxen::Preflight
     
     if ENV['PROMPT_GITHUB_LOGIN'] || ENV['PROMPT_GITHUB_PASSWORD']
       warn "Oh, looks like you've provided your username and password as environmental variables..."
+      config.login = ENV['PROMPT_GITHUB_LOGIN']
       @password = ENV['PROMPT_GITHUB_PASSWORD']
-      @username ENV['PROMPT_GITHUB_LOGIN']
     else
       warn "Hey, I need your current GitHub credentials to continue."
 
