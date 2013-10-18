@@ -49,20 +49,18 @@ class Boxen::Preflight::Creds < Boxen::Preflight
   def get_tokens
     begin
       tmp_api.authorizations(:headers => headers)
-    rescue Octokit::Unauthorized => e
+    rescue Octokit::Unauthorized
+      abort "Sorry, I can't auth you on GitHub.",
+        "Please check your credentials and teams and give it another try."
+    rescue Octokit::OneTimePasswordRequired
       puts
-      if e.message =~ /OTP/
-        if otp.nil?
-          warn "It looks like you have two-factor auth enabled."
-        else
-          warn "That one time password didn't work. Let's try again."
-        end
-        get_otp
-        get_tokens
+      if otp.nil?
+        warn "It looks like you have two-factor auth enabled."
       else
-        abort "Sorry, I can't auth you on GitHub.",
-          "Please check your credentials and teams and give it another try."
+        warn "That one time password didn't work. Let's try again."
       end
+      get_otp
+      get_tokens
     end
   end
 

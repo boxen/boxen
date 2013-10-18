@@ -24,7 +24,7 @@ class BoxenPreflightCredsTest < Boxen::Test
     blank_opt = {:headers => {}}
     good_otp  = {:headers => {"X-GitHub-OTP" => "123456"}}
 
-    error = Octokit::Unauthorized.new
+    error = Octokit::OneTimePasswordRequired.new
     error.stubs(:message).returns("OTP")
 
     preflight.tmp_api.expects(:authorizations).with(blank_opt).raises(error)
@@ -37,5 +37,4 @@ class BoxenPreflightCredsTest < Boxen::Test
     preflight.get_tokens
     assert_equal "123456", preflight.otp
   end
-
 end
