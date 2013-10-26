@@ -175,6 +175,14 @@ module Boxen
 
     attr_writer :report
 
+    # Enable generation of dependency graphs.
+
+    def graph?
+      !!@graph
+    end
+
+    attr_writer :graph
+
     # An Array of Boxen::Project entries, one for each project Boxen
     # knows how to manage.
     #
