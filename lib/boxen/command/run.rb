@@ -34,6 +34,7 @@ class Boxen::Command::Run < Boxen::Command
             --report                Generate graphs and catalog data from Puppet.
             --profile               Display very high-level performance details from the Puppet run.
             --future-parser         Use Puppet's upcoming future parser
+            --graph                 Enable puppet dependency graph output
 
     boxen run:noop [options]
 
@@ -69,6 +70,10 @@ EOS
 
   def future_parser?
     @args.include? '--future-parser'
+  end
+
+  def graph?
+    @args.include? '--graph'
   end
 
   private
@@ -142,6 +147,7 @@ EOS
     end
 
     _flags << "--parser=future" if future_parser?
+    _flags << "--graph" if graph?
 
     _flags << "--debug" if config.debug?
     _flags << "--noop"  if noop
