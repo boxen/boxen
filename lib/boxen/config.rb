@@ -291,12 +291,12 @@ module Boxen
       @user || ENV["USER"]
     end
 
-    attr_writer :color
+    attr_writer :user
 
     def color?
       @color
     end
 
-    attr_writer :user
+    attr_writer :color
   end
 end
