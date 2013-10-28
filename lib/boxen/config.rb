@@ -57,7 +57,9 @@ module Boxen
         :ghurl        => config.ghurl,
         :srcdir       => config.srcdir,
         :user         => config.user,
-        :repotemplate => config.repotemplate
+        :repotemplate => config.repotemplate,
+        :s3host       => config.s3host,
+        :s3bucket     => config.s3bucket
       }
 
       file = "#{config.homedir}/config/boxen/defaults.json"
@@ -291,12 +293,30 @@ module Boxen
       @user || ENV["USER"]
     end
 
-    attr_writer :color
+    attr_writer :user
 
     def color?
       @color
     end
 
-    attr_writer :user
+    attr_writer :color
+
+    # The S3 host name. Default is `"s3.amazonaws.com"`.
+    # Respects the `BOXEN_S3_HOST` environment variable.
+
+    def s3host
+      @s3host || ENV["BOXEN_S3_HOST"] || "s3.amazonaws.com"
+    end
+
+    attr_writer :s3host
+
+    # The S3 bucket name. Default is `"boxen-downloads"`.
+    # Respects the `BOXEN_S3_BUCKET` environment variable.
+
+    def s3bucket
+      @s3bucket || ENV["BOXEN_S3_BUCKET"] || "boxen-downloads"
+    end
+
+    attr_writer :s3bucket
   end
 end

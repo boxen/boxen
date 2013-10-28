@@ -347,4 +347,47 @@ class BoxenConfigTest < Boxen::Test
     assert_equal api, @config.api
     assert_equal api, @config.api  # This extra call plus the `once` on the expectation is for the ivar cache.
   end
+
+  def test_s3host
+    val = ENV["BOXEN_S3_HOST"]
+    ENV["BOXEN_S3_HOST"] = nil
+
+    assert_equal "s3.amazonaws.com", @config.s3host
+
+    @config.s3host = "example.com"
+    assert_equal "example.com", @config.s3host
+  ensure
+    ENV["BOXEN_S3_HOST"] = val
+  end
+
+  def test_s3host_env_var
+    val = ENV["BOXEN_S3_HOST"]
+
+    ENV["BOXEN_S3_HOST"] = "example.com"
+    assert_equal "example.com", @config.s3host
+
+  ensure
+    ENV["BOXEN_S3_HOST"] = val
+  end
+
+  def test_s3bucket
+    val = ENV["BOXEN_S3_BUCKET"]
+    ENV["BOXEN_S3_BUCKET"] = nil
+
+    assert_equal "boxen-downloads", @config.s3bucket
+
+    @config.s3bucket = "my-bucket"
+    assert_equal "my-bucket", @config.s3bucket
+  ensure
+    ENV["BOXEN_S3_BUCKET"] = val
+  end
+
+  def test_s3host_env_var
+    val = ENV["BOXEN_S3_BUCKET"]
+
+    ENV["BOXEN_S3_BUCKET"] = "my-bucket"
+    assert_equal "my-bucket", @config.s3bucket
+  ensure
+    ENV["BOXEN_S3_BUCKET"] = val
+  end
 end
