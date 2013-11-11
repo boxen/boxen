@@ -69,10 +69,10 @@ class Boxen::Preflight::Creds < Boxen::Preflight
   def run
     console = HighLine.new
     
-    if ENV['PROMPT_GITHUB_LOGIN'] || ENV['PROMPT_GITHUB_PASSWORD']
+    if ENV['BOXEN_GITHUB_LOGIN'] || ENV['BOXEN_GITHUB_PASSWORD']
       warn "Oh, looks like you've provided your username and password as environmental variables..."
-      config.login = ENV['PROMPT_GITHUB_LOGIN']
-      @password = ENV['PROMPT_GITHUB_PASSWORD']
+      config.login = ENV['BOXEN_GITHUB_LOGIN']
+      @password = ENV['BOXEN_GITHUB_PASSWORD']
     else
       warn "Hey, I need your current GitHub credentials to continue."
 
