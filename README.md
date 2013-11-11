@@ -42,7 +42,7 @@ and we can't just modify the sudoers file due to a chicken-egg problem.
 
 ## Contributing
 
-Use the OS X system Ruby (1.8.7). Run `script/tests` often. Open PR's.
+Use the OS X system Ruby (1.8.7 or 2.0.0). Run `script/tests` often. Open PR's.
 Use the CI.
 
 ## Halp!
