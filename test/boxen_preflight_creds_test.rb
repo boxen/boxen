@@ -18,6 +18,25 @@ class BoxenPreflightCredsTest < Boxen::Test
     refute preflight.ok?
   end
 
+  def test_basic_with_env_credentials
+    ENV['BOXEN_GITHUB_LOGIN'] = 'ENVsekr3t!'
+    ENV['BOXEN_GITHUB_PASSWORD'] = 'ENVmojombo'
+
+    preflight = Boxen::Preflight::Creds.new @config
+
+    error = Octokit::Unauthorized.new
+    preflight.tmp_api.expects(:authorizations).raises(error)
+    preflight.tmp_api.expects(:create_authorization).raises(error)
+
+    preflight.expects(:warn)
+    preflight.expects(:warn)
+
+    preflight.run
+
+    assert_equal "mojomboENV", @config.login
+    assert_equal "sekr3t!ENV", preflight.password
+  end
+
   def test_basic_with_otp_challenge
     preflight = Boxen::Preflight::Creds.new @config
 
