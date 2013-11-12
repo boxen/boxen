@@ -66,18 +66,24 @@ class Boxen::Preflight::Creds < Boxen::Preflight
 
   def run
     console = HighLine.new
+    
+    if ENV['BOXEN_GITHUB_LOGIN'] || ENV['BOXEN_GITHUB_PASSWORD']
+      warn "Oh, looks like you've provided your username and password as environmental variables..."
+      config.login = ENV['BOXEN_GITHUB_LOGIN']
+      @password = ENV['BOXEN_GITHUB_PASSWORD']
+    else
+      warn "Hey, I need your current GitHub credentials to continue."
 
-    warn "Hey, I need your current GitHub credentials to continue."
+      config.login = console.ask "GitHub login: " do |q|
+        q.default = config.login || config.user
+        q.validate = /\A[^@]+\Z/
+      end
 
-    config.login = console.ask "GitHub login: " do |q|
-      q.default = config.login || config.user
-      q.validate = /\A[^@]+\Z/
+      @password = console.ask "GitHub password: " do |q|
+        q.echo = "*"
+      end
     end
-
-    @password = console.ask "GitHub password: " do |q|
-      q.echo = "*"
-    end
-
+    
     tokens = get_tokens
 
     unless auth = tokens.detect { |a| a.note == "Boxen" }
