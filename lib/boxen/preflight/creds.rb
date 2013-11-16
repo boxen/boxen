@@ -65,25 +65,7 @@ class Boxen::Preflight::Creds < Boxen::Preflight
   end
 
   def run
-    console = HighLine.new
-    
-    if ENV['BOXEN_GITHUB_LOGIN'] || ENV['BOXEN_GITHUB_PASSWORD']
-      warn "Oh, looks like you've provided your username and password as environmental variables..."
-      config.login = ENV['BOXEN_GITHUB_LOGIN']
-      @password = ENV['BOXEN_GITHUB_PASSWORD']
-    else
-      warn "Hey, I need your current GitHub credentials to continue."
-
-      config.login = console.ask "GitHub login: " do |q|
-        q.default = config.login || config.user
-        q.validate = /\A[^@]+\Z/
-      end
-
-      @password = console.ask "GitHub password: " do |q|
-        q.echo = "*"
-      end
-    end
-    
+    fetch_login_and_password
     tokens = get_tokens
 
     unless auth = tokens.detect { |a| a.note == "Boxen" }
@@ -100,5 +82,27 @@ class Boxen::Preflight::Creds < Boxen::Preflight
       abort "Something went terribly wrong.",
         "I was able to get your OAuth token, but was unable to use it."
     end
+  end
+
+  private
+
+  def fetch_login_and_password
+    console = HighLine.new
+
+    config.login = fetch_from_env("login") || console.ask("GitHub login: ") do |q|
+      q.default = config.login || config.user
+      q.validate = /\A[^@]+\Z/
+    end
+
+    @password = fetch_from_env("password") || console.ask("GitHub password: ") do |q|
+      q.echo = "*"
+    end
+  end
+
+  def fetch_from_env(thing)
+    key = "BOXEN_GITHUB_#{thing.upcase}"
+    return unless found = ENV[key]
+    warn "Oh, looks like you've provided your #{thing} as environmental variable..."
+    found
   end
 end
