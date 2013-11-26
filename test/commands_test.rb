@@ -1,10 +1,32 @@
 require "boxen/commands"
 
+class Failing < Boxen::Check
+  def initialize; end
+  def ok?; false; end
+  def run; warn "lol this fails in ur face"; end
+end
+
 module Boxen
   module Commands
     class Foo < Command
       def run
         puts "foo"
+      end
+    end
+
+    class Barnette < Command
+      preflight Failing
+
+      def run
+        puts "bar"
+      end
+    end
+
+    class Atmos < Command
+      postflight Failing
+
+      def run
+        puts "hello, cindarella"
       end
     end
   end
@@ -19,5 +41,27 @@ describe Boxen::Commands do
     end
 
     assert_match "foo", stdout
+  end
+
+  it "executes preflight hooks" do
+    Boxen::Commands.register :barnette, Boxen::Commands::Barnette
+
+    stdout, stderr = capture_io do
+      Boxen::Commands.invoke :barnette
+    end
+
+    assert_match "lol this fails in ur face", stderr
+    refute_match "bar", stdout
+  end
+
+  it "executes postflight hooks" do
+    Boxen::Commands.register :atmos, Boxen::Commands::Atmos
+
+    stdout, stderr = capture_io do
+      Boxen::Commands.invoke :atmos
+    end
+
+    assert_match "lol this fails in ur face", stderr
+    assert_match "hello, cindarella", stdout
   end
 end

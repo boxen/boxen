@@ -10,7 +10,7 @@ module Boxen
 
     def self.invoke(name, *args)
       if @commands && @commands.has_key?(name)
-        @commands[name].new(*args).run
+        @commands[name].new(*args).invoke
       else
         raise "Could not find command #{name}!"
       end
