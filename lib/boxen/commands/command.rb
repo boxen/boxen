@@ -22,6 +22,10 @@ module Boxen
         end
       end
 
+      def initialize(*args)
+        @args = args
+      end
+
       def invoke
         if self.class.preflight.all? { |p| p = p.new; p.run unless p.ok? }
           self.run

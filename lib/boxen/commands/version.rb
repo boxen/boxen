@@ -5,6 +5,10 @@ require "boxen/version"
 module Boxen
   module Commands
     class Version < Command
+      def self.help
+        "Displays the current version of Boxen"
+      end
+
       def run
         puts "Boxen #{version}"
       end
