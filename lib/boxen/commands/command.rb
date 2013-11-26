@@ -5,6 +5,7 @@ require "boxen/flags"
 module Boxen
   module Commands
     class Command
+      attr_reader :config, :flags
 
       class << self
         def preflight(*klasses)
