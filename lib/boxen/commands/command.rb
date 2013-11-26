@@ -5,6 +5,21 @@ require "boxen/flags"
 module Boxen
   module Commands
     class Command
+
+      class Status < Struct.new(:code)
+        def success?
+          if defined?(@successful)
+            @successful.include?(code)
+          else
+            0 == code
+          end
+        end
+
+        def successful_on(*args)
+          @successful = args
+        end
+      end
+
       attr_reader :config, :flags
 
       class << self
