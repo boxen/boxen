@@ -1,8 +1,12 @@
 # -*- encoding: utf-8 -*-
 
+lib = File.expand_path("./lib", File.dirname(__FILE__))
+$:.unshift lib
+require "boxen/version"
+
 Gem::Specification.new do |gem|
   gem.name          = "boxen"
-  gem.version       = "2.1.0"
+  gem.version       = Boxen::VERSION
   gem.authors       = ["John Barnette", "Will Farrington"]
   gem.email         = ["jbarnette@github.com", "wfarr@github.com"]
   gem.description   = "Manage Mac development boxes with love (and Puppet)."
