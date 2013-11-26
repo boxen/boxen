@@ -23,19 +23,19 @@ module Boxen
       attr_reader :config, :flags
 
       def self.preflight(*klasses)
-        if defined?(@preflight)
-          @preflight += klasses
-        else
-          @preflight = klasses
-        end
+        preflights.replace preflights | klasses.flatten
+      end
+
+      def self.preflights
+        @preflights ||= []
       end
 
       def self.postflight(*klasses)
-        if defined?(@postflight)
-          @postflight += klasses
-        else
-          @postflight = klasses
-        end
+        postflights.replace preflights | klasses.flatten
+      end
+
+      def self.postflights
+        @postflights ||= []
       end
 
       def initialize(*args)
@@ -45,9 +45,9 @@ module Boxen
       end
 
       def invoke
-        if self.class.preflight.all? { |p| p = p.new(@config); p.run unless p.ok? }
+        if self.class.preflights.all? { |p| p = p.new(@config); p.run unless p.ok? }
           self.run
-          self.class.postflight.each { |p| p = p.new(@config); p.run unless p.ok? }
+          self.class.postflights.each { |p| p = p.new(@config); p.run unless p.ok? }
         end
       end
 
