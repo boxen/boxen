@@ -4,7 +4,7 @@ require "boxen/version"
 
 module Boxen
   module Commands
-    class VersionCommand < Command
+    class Version < Command
       def run
         puts "Boxen #{version}"
       end
@@ -15,3 +15,5 @@ module Boxen
     end
   end
 end
+
+Boxen::Commands.register :version, Boxen::Commands::Version
