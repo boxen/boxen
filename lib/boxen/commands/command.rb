@@ -22,21 +22,19 @@ module Boxen
 
       attr_reader :config, :flags
 
-      class << self
-        def preflight(*klasses)
-          if defined?(@preflight)
-            @preflight += klasses
-          else
-            @preflight = klasses
-          end
+      def self.preflight(*klasses)
+        if defined?(@preflight)
+          @preflight += klasses
+        else
+          @preflight = klasses
         end
+      end
 
-        def postflight(*klasses)
-          if defined?(@postflight)
-            @postflight += klasses
-          else
-            @postflight = klasses
-          end
+      def self.postflight(*klasses)
+        if defined?(@postflight)
+          @postflight += klasses
+        else
+          @postflight = klasses
         end
       end
 
