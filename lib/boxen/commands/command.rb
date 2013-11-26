@@ -1,4 +1,6 @@
 require "boxen/commands"
+require "boxen/config"
+require "boxen/flags"
 
 module Boxen
   module Commands
@@ -23,13 +25,15 @@ module Boxen
       end
 
       def initialize(*args)
-        @args = args
+        @config = Boxen::Config.load
+        @flags  = Boxen::Flags.new(args).apply(@config)
+        @args   = args
       end
 
       def invoke
-        if self.class.preflight.all? { |p| p = p.new; p.run unless p.ok? }
+        if self.class.preflight.all? { |p| p = p.new(@config); p.run unless p.ok? }
           self.run
-          self.class.postflight.each { |p| p = p.new; p.run unless p.ok? }
+          self.class.postflight.each { |p| p = p.new(@config); p.run unless p.ok? }
         end
       end
 

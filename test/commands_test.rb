@@ -1,7 +1,7 @@
 require "boxen/commands"
 
 class Failing < Boxen::Check
-  def initialize; end
+  def initialize(*args); end
   def ok?; false; end
   def run; warn "lol this fails in ur face"; end
 end
