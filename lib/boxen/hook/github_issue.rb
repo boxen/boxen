@@ -80,11 +80,6 @@ module Boxen
           body << "\n\n"
         end
 
-        body << "### Puppet Command"
-        body << "\n\n"
-        body << "```\n#{puppet.command.join(' ')}\n```"
-        body << "\n\n"
-
         body << "### Output (from #{config.logfile})"
         body << "\n\n"
         body << "```\n#{log}\n```\n"

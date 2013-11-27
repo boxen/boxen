@@ -9,9 +9,8 @@ class BoxenHookGitHubIssueTest < Boxen::Test
   def setup
     @config   = Boxen::Config.new
     @checkout = Boxen::Checkout.new(@config)
-    @puppet   = mock 'puppeteer'
     @result   = stub 'result', :success? => true
-    @hook = Boxen::Hook::GitHubIssue.new @config, @checkout, @puppet, @result
+    @hook = Boxen::Hook::GitHubIssue.new @config, @checkout, @result
   end
 
   def test_enabled
@@ -79,10 +78,9 @@ class BoxenHookGitHubIssueTest < Boxen::Test
   end
 
   def test_initialize
-    hook = Boxen::Hook::GitHubIssue.new :config, :checkout, :puppet, :result
+    hook = Boxen::Hook::GitHubIssue.new :config, :checkout, :result
     assert_equal :config,   hook.config
     assert_equal :checkout, hook.checkout
-    assert_equal :puppet,   hook.puppet
     assert_equal :result,   hook.result
   end
 
@@ -165,10 +163,6 @@ class BoxenHookGitHubIssueTest < Boxen::Test
     changes = 'so many changes'
     @checkout.stubs(:changes).returns(changes)
 
-    commands = %w[/path/to/puppet apply stuff_and_things]
-    @puppet.stubs(:command).returns(commands)
-    command = commands.join(' ')
-
     @config.logfile = logfile = '/path/to/logfile.txt'
 
     details = @hook.failure_details
@@ -179,7 +173,6 @@ class BoxenHookGitHubIssueTest < Boxen::Test
     assert_match os,       details
     assert_match compare,  details
     assert_match changes,  details
-    assert_match command,  details
     assert_match logfile,  details
     assert_match log,      details
   end

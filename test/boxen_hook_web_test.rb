@@ -9,9 +9,8 @@ class BoxenHookWebTest < Boxen::Test
   def setup
     @config   = Boxen::Config.new
     @checkout = Boxen::Checkout.new(@config)
-    @puppet   = mock 'puppeteer'
     @result   = stub 'result', :success? => true
-    @hook = Boxen::Hook::Web.new @config, @checkout, @puppet, @result
+    @hook = Boxen::Hook::Web.new @config, @checkout, @result
   end
 
   def test_enabled

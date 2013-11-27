@@ -2,7 +2,6 @@ module Boxen
   class Hook
     attr_reader :config
     attr_reader :checkout
-    attr_reader :puppet
     attr_reader :result
 
     def self.all
@@ -12,10 +11,9 @@ module Boxen
       ]
     end
 
-    def initialize(config, checkout, puppet, result)
+    def initialize(config, checkout, result)
       @config   = config
       @checkout = checkout
-      @puppet   = puppet
       @result   = result
     end
 

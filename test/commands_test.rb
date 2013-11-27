@@ -11,6 +11,7 @@ module Boxen
     class Foo < Command
       def run
         puts "foo"
+        Boxen::CommandStatus.new(0)
       end
     end
 
@@ -19,6 +20,7 @@ module Boxen
 
       def run
         puts "bar"
+        Boxen::CommandStatus.new(0)
       end
     end
 
@@ -27,6 +29,7 @@ module Boxen
 
       def run
         puts "hello, cindarella"
+        Boxen::CommandStatus.new(0)
       end
     end
   end

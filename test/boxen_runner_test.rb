@@ -19,11 +19,10 @@ class BoxenRunnerTest < Boxen::Test
 
     assert_equal config, runner.config
     assert_equal flags,  runner.flags
-    assert_equal config, runner.puppet.config
   end
 
-  HookYes = Struct.new(:config, :checkout, :puppet, :result)
-  HookNo  = Struct.new(:config, :checkout, :puppet, :result)
+  HookYes = Struct.new(:config, :checkout, :result)
+  HookNo  = Struct.new(:config, :checkout, :result)
   def test_report
     runner = Boxen::Runner.new(@config, @flags)
     runner.stubs(:hooks).returns([HookYes, HookNo])
@@ -146,7 +145,6 @@ class BoxenRunnerTest < Boxen::Test
     flags   = Boxen::Flags.new(project)
 
     runner = Boxen::Runner.new(@config, flags)
-    runner.puppet.expects(:run).with().returns(true)
     runner.process
     assert_equal project, Facter.value(fact)
 
@@ -155,7 +153,6 @@ class BoxenRunnerTest < Boxen::Test
     flags   = Boxen::Flags.new('--debug', project)
 
     runner = Boxen::Runner.new(@config, flags)
-    runner.puppet.expects(:run).with().returns(true)
     runner.process
     assert_equal project, Facter.value(fact)
 
@@ -164,7 +161,6 @@ class BoxenRunnerTest < Boxen::Test
     flags    = Boxen::Flags.new('--noop', *projects)
 
     runner = Boxen::Runner.new(@config, flags)
-    runner.puppet.expects(:run).with().returns(true)
     runner.process
     assert_equal projects.join(','), Facter.value(fact)
   end
