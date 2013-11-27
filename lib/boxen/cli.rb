@@ -27,13 +27,10 @@ module Boxen
       runner.run
     end
 
-    # Run Boxen by wiring together the command-line flags, config,
-    # preflights, Puppet execution, and postflights. Returns Puppet's
-    # exit code.
-
     def self.run(*args)
       cmd, cmd_args = args.flatten
       status = Boxen::Commands.invoke cmd, *cmd_args
+
       return status.code
     end
   end
