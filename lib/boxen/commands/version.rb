@@ -11,6 +11,7 @@ module Boxen
 
       def run
         puts "Boxen #{version}"
+        Status.new(0)
       end
 
       def version

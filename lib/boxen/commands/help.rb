@@ -13,6 +13,8 @@ module Boxen
             end
           end
         end
+
+        Status.new(0)
       end
 
       def display_help_for_command(name)
