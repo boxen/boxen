@@ -1,24 +1,10 @@
 require "boxen/commands"
+require "boxen/command_status"
 require "boxen/config"
 require "boxen/flags"
 
 module Boxen
   class Command
-
-    class Status < Struct.new(:code)
-      def success?
-        if defined?(@successful)
-          @successful.include?(code)
-        else
-          0 == code
-        end
-      end
-
-      def successful_on(*args)
-        @successful = args
-      end
-    end
-
     attr_reader :config, :flags
 
     def self.preflight(*klasses)
@@ -45,8 +31,13 @@ module Boxen
 
     def invoke
       if self.class.preflights.all? { |p| p = p.new(@config); p.run unless p.ok? }
-        self.run
-        self.class.postflights.each { |p| p = p.new(@config); p.run unless p.ok? }
+        cmd_status = self.run
+
+        if cmd_status.success?
+          self.class.postflights.each { |p| p = p.new(@config); p.run unless p.ok? }
+        end
+
+        cmd_status
       end
     end
 

@@ -17,11 +17,13 @@ module Boxen
     end
 
     def self.invoke(name, *args)
-      if @commands && @commands.has_key?(name)
-        @commands[name].new(*args).invoke
+      if @commands && @commands.has_key?(name.to_sym)
+        @commands[name.to_sym].new(*args).invoke
       else
         raise "Could not find command #{name}!"
       end
     end
   end
 end
+
+Dir["#{File.expand_path('../commands', __FILE__)}/*"].each { |f| load f }

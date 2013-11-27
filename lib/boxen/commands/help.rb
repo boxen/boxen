@@ -3,6 +3,7 @@ require "boxen/commands/command"
 module Boxen
   module Commands
     class Help < Command
+
       def run
         if @args.any?
           display_help_for_command @args.first.to_s
@@ -14,7 +15,7 @@ module Boxen
           end
         end
 
-        Status.new(0)
+        Boxen::CommandStatus.new(0)
       end
 
       def display_help_for_command(name)

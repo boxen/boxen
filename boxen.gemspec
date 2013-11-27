@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
-load "lib/boxen/version.rb"
+$:.unshift File.expand_path("../lib", __FILE__)
+require "boxen/version"
 
 Gem::Specification.new do |gem|
   gem.name          = "boxen"
