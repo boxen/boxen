@@ -19,6 +19,24 @@ class Boxen::Command::Run < Boxen::Command
     "run Boxen's managed puppet environment"
   end
 
+  def self.detailed_help
+    <<-EOS
+
+    boxen run [options]
+
+        Runs Puppet via Boxen's environment.
+
+        Some options you may find useful:
+
+            --debug                 Be really, really verbose. Like incredibly verbose.
+            --no-issue              Don't file an issue if the Boxen run fails.
+            --no-color              Don't output any colored text to the tty.
+            --report                Generate graphs and catalog data from Puppet.
+            --profile               Display very high-level performance details from the Puppet run.
+
+EOS
+  end
+
   def run
     puts "Updating librarian-puppet modules"
     create_clean_working_environment

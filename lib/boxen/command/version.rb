@@ -6,6 +6,16 @@ class Boxen::Command::Version < Boxen::Command
     "Displays the current version of Boxen"
   end
 
+  def self.detailed_help
+    <<-EOS
+
+    boxen version
+
+        Display the current version of the Boxen gem.
+
+EOS
+  end
+
   def run
     puts "Boxen #{version}"
     Boxen::CommandStatus.new(0)

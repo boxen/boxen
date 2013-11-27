@@ -5,9 +5,21 @@ class Boxen::Command::Help < Boxen::Command
     "Displays help, obviously"
   end
 
+  def self.detailed_help
+    <<-EOS
+
+    boxen help [<command>]
+
+        With no arguments, displays short help information for all commands.
+
+        Given a command name as an argument, displays detailed help about that command.
+
+EOS
+  end
+
   def run
     if @args.any?
-      display_help_for_command @args.first.to_s
+      puts Boxen::Command.all[@args.first.to_sym].detailed_help
     else
       Boxen::Command.all.each do |name, _|
         display_help_for_command name

@@ -11,6 +11,14 @@ require "boxen/postflight"
 class Boxen::Command
   attr_reader :config, :flags
 
+  def self.help
+    raise "You should define this"
+  end
+
+  def self.detailed_help
+    raise "You should definitely define this"
+  end
+
   def self.preflight(*klasses)
     preflights.replace preflights | klasses.flatten
   end
@@ -106,3 +114,5 @@ require "boxen/command/help"
 require "boxen/command/version"
 require "boxen/command/run"
 require "boxen/command/noop"
+require "boxen/command/project"
+require "boxen/command/service"

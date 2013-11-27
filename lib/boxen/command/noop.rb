@@ -16,7 +16,25 @@ class Boxen::Command::Noop < Boxen::Command::Run
     Boxen::Postflight::Env
 
   def self.help
-    "noop a run of Boxen's managed puppet environment"
+    "Noop a run of Boxen's managed puppet environment"
+  end
+
+  def self.detailed_help
+    <<-EOS
+
+    boxen noop [options]
+
+        Noops Puppet via Boxen's environment.
+
+        Some options you may find useful:
+
+            --debug                 Be really, really verbose. Like incredibly verbose.
+            --no-issue              Don't file an issue if the Boxen run fails.
+            --no-color              Don't output any colored text to the tty.
+            --report                Generate graphs and catalog data from Puppet.
+            --profile               Display very high-level performance details from the Puppet run.
+
+EOS
   end
 
   def noop
