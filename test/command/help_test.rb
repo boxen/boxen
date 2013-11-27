@@ -1,6 +1,10 @@
 require "boxen/command/help"
 
 class FooBar
+  def self.detailed_help
+    "okay fine I'll help you"
+  end
+
   def self.help
     "help yourself"
   end
@@ -33,11 +37,11 @@ describe Boxen::Command::Help do
     assert_match "    bar_baz          no you", stdout
   end
 
-  it "can write help for a single command" do
+  it "can write detailed help for a single command" do
     stdout, stderr = capture_io do
       Boxen::Command.invoke(:help, "foo_bar")
     end
 
-    assert_match "    foo_bar          help yourself", stdout
+    assert_match "okay fine I'll help you", stdout
   end
 end
