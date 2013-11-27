@@ -113,6 +113,5 @@ end
 require "boxen/command/help"
 require "boxen/command/version"
 require "boxen/command/run"
-require "boxen/command/noop"
 require "boxen/command/project"
 require "boxen/command/service"
