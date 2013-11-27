@@ -30,7 +30,10 @@ EOS
   end
 
   def display_help_for_command(name)
-    puts "    #{name.to_s.ljust(16)} #{Boxen::Command.all[name.to_sym].help}"
+    # only shows top-level commands, not subcommands
+    unless name =~ /:/
+      puts "    #{name.to_s.ljust(16)} #{Boxen::Command.all[name.to_sym].help}"
+    end
   end
 end
 
