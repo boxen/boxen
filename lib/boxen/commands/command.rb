@@ -52,7 +52,7 @@ module Boxen
       end
 
       def run
-        raise NotImplementedError
+        raise "So your command #{self.class.name} hasn't defined a run method, so we dunno what to do. Sorry."
       end
     end
   end
