@@ -19,7 +19,7 @@ class Boxen::Command::Service < Boxen::Command
 
     boxen service:restart <service1> [<service2> ...]
 
-        Disable and stop a Boxen-managed service.
+        Restart a Boxen-managed service.
 
     boxen service:enable_all
 
