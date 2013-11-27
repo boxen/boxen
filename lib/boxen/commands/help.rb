@@ -3,15 +3,16 @@ require "boxen/commands/command"
 module Boxen
   module Commands
     class Help < Command
+      def self.help
+        "Displays help, obviously"
+      end
 
       def run
         if @args.any?
           display_help_for_command @args.first.to_s
         else
           Boxen::Commands.all.each do |name, _|
-            unless name == :help
-              display_help_for_command name
-            end
+            display_help_for_command name
           end
         end
 
