@@ -1,5 +1,5 @@
 require "boxen/config"
-require "boxen/commands"
+require "boxen/command"
 require "boxen/flags"
 require "boxen/postflight"
 require "boxen/preflight"
@@ -29,7 +29,7 @@ module Boxen
 
     def self.run(*args)
       cmd, cmd_args = args.flatten
-      status = Boxen::Commands.invoke cmd, *cmd_args
+      status = Boxen::Command.invoke cmd, *cmd_args
 
       return status.code
     end

@@ -1,4 +1,4 @@
-require "boxen/commands/help"
+require "boxen/command/help"
 
 class FooBar
   def self.help
@@ -12,21 +12,21 @@ class BarBaz
   end
 end
 
-describe Boxen::Commands::Help do
+describe Boxen::Command::Help do
   before do
-    Boxen::Commands.reset!
-    Boxen::Commands.register :foo_bar, FooBar
-    Boxen::Commands.register :bar_baz, BarBaz
-    Boxen::Commands.register :help, Boxen::Commands::Help
+    Boxen::Command.reset!
+    Boxen::Command.register :foo_bar, FooBar
+    Boxen::Command.register :bar_baz, BarBaz
+    Boxen::Command.register :help, Boxen::Command::Help
   end
 
   after do
-    Boxen::Commands.reset!
+    Boxen::Command.reset!
   end
 
   it "can write help for all commands" do
     stdout, stderr = capture_io do
-      Boxen::Commands.invoke(:help)
+      Boxen::Command.invoke(:help)
     end
 
     assert_match "    foo_bar          help yourself", stdout
@@ -35,7 +35,7 @@ describe Boxen::Commands::Help do
 
   it "can write help for a single command" do
     stdout, stderr = capture_io do
-      Boxen::Commands.invoke(:help, "foo_bar")
+      Boxen::Command.invoke(:help, "foo_bar")
     end
 
     assert_match "    foo_bar          help yourself", stdout

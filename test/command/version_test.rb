@@ -1,7 +1,7 @@
-require "boxen/commands/version"
+require "boxen/command/version"
 
-describe Boxen::Commands::Version do
-  let(:instance) { Boxen::Commands::Version.new }
+describe Boxen::Command::Version do
+  let(:instance) { Boxen::Command::Version.new }
 
   it "writes the boxen version to standard out, duh" do
     instance.stubs(:version).returns("100.0.0")
