@@ -34,6 +34,10 @@ class Boxen::Command::Run < Boxen::Command
             --report                Generate graphs and catalog data from Puppet.
             --profile               Display very high-level performance details from the Puppet run.
 
+    boxen run:noop [options]
+
+        The same thing as run, but acts as a dry run where no changes are made.
+
 EOS
   end
 
@@ -137,4 +141,26 @@ EOS
   end
 end
 
+class Boxen::Command::Run::Noop < Boxen::Command::Run
+  preflight \
+    Boxen::Preflight::Creds,
+    Boxen::Preflight::Directories,
+    Boxen::Preflight::EtcMyCnf,
+    Boxen::Preflight::Homebrew,
+    Boxen::Preflight::Identity,
+    Boxen::Preflight::OS,
+    Boxen::Preflight::Rbenv,
+    Boxen::Preflight::RVM
+
+  postflight \
+    Boxen::Postflight::Active,
+    Boxen::Postflight::Env
+
+  def noop
+    true
+  end
+
+end
+
 Boxen::Command.register :run, Boxen::Command::Run
+Boxen::Command.register :"run:noop", Boxen::Command::Run::Noop
