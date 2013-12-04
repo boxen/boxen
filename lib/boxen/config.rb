@@ -25,9 +25,6 @@ module Boxen
           end
         end
 
-        keychain        = Boxen::Keychain.new config.user
-        config.token    = keychain.token
-
         if config.enterprise?
           # configure to talk to GitHub Enterprise
           Octokit.configure do |c|
@@ -82,6 +79,14 @@ module Boxen
       @pull = true
 
       yield self if block_given?
+    end
+
+    def keychain
+      @keychain ||= Boxen::Keychain.new self.user
+    end
+
+    def token
+      @token ||= keychain.token
     end
 
     # Create an API instance using the current user creds. A new
