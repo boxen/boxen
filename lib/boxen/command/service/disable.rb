@@ -12,3 +12,4 @@ class Boxen::Command::Service::Disable < Boxen::Command::Service
 end
 
 Boxen::Command.register :"service:disable", Boxen::Command::Service::Disable
+Boxen::Command.register :"services:disable", Boxen::Command::Service::Disable

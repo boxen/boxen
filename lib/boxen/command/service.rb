@@ -57,3 +57,4 @@ require "boxen/command/service/disable"
 require "boxen/command/service/restart"
 
 Boxen::Command.register :service, Boxen::Command::Service
+Boxen::Command.register :services, Boxen::Command::Service

@@ -12,3 +12,4 @@ class Boxen::Command::Service::Enable < Boxen::Command::Service
 end
 
 Boxen::Command.register :"service:enable", Boxen::Command::Service::Enable
+Boxen::Command.register :"services:enable", Boxen::Command::Service::Enable

@@ -13,3 +13,4 @@ class Boxen::Command::Service::Restart < Boxen::Command::Service
 end
 
 Boxen::Command.register :"service:restart", Boxen::Command::Service::Restart
+Boxen::Command.register :"services:restart", Boxen::Command::Service::Restart
