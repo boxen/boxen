@@ -283,10 +283,6 @@ module Boxen
 
     attr_writer :stealth
 
-    # A GitHub OAuth token. Default is `nil`.
-
-    attr_reader :token
-
     def token=(token)
       @token = token
       @api = nil
