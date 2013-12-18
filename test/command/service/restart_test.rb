@@ -35,7 +35,7 @@ describe Boxen::Command::Service::Restart do
                             :enable  => true,
                             :disable => true)
 
-      Boxen::Service.stubs(:list).
+      Boxen::Service.stubs(:list_enabled).
         returns([@single_c_thread, @many_pthreads])
     end
 

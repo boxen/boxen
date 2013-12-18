@@ -10,6 +10,14 @@ class Boxen::Command::Service::Restart < Boxen::Command::Service
 
     Boxen::CommandStatus.new(0)
   end
+
+  def services
+    @services ||= if @args.any?
+                    @args.map { |s| Boxen::Service.new(s) }
+                  else
+                    Boxen::Service.list_enabled
+                  end
+  end
 end
 
 Boxen::Command.register :"service:restart", Boxen::Command::Service::Restart
