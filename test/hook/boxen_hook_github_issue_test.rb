@@ -73,7 +73,7 @@ class BoxenHookGitHubIssueTest < Boxen::Test
   end
 
   def test_hostname
-    @hook.expects(:"`").with("hostname").returns "whatevs.local\n"
+    Socket.expects(:gethostname).returns("whatevs.local")
     assert_equal "whatevs.local", @hook.hostname
   end
 
