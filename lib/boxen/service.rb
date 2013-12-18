@@ -10,6 +10,13 @@ module Boxen
       end
     end
 
+    def self.list_enabled
+      prefix = /^dev\./
+      enabled = capture_output("sudo /bin/launchctl list").split("\n").map { |l| l.split(/\s/) }.map(&:last)
+      names = enabled.grep(prefix).map { |name| name.sub(prefix, "") }.compact
+      names.map { |name| new(name) }
+    end
+
     def initialize(name)
       @name = name
     end
@@ -26,8 +33,11 @@ module Boxen
       Boxen::Util.sudo('/bin/launchctl', 'unload', '-w', location)
     end
 
-
     private
+
+    def self.capture_output(command)
+      `#{command}`
+    end
 
     def location
       "#{self.class.location}/dev.#{name}.plist"
