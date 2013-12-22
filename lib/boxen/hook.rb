@@ -5,10 +5,19 @@ module Boxen
     attr_reader :result
 
     def self.all
-      [
-        Boxen::Hook::GitHubIssue,
-        Boxen::Hook::Web
-      ]
+      @hooks
+    end
+
+    def self.register(klass)
+      unless defined? @hooks
+        @hooks = []
+      end
+
+      @hooks << klass
+    end
+
+    def self.run
+      @hooks.each { |hook| hook.new(nil, nil, nil).run }
     end
 
     def initialize(config, checkout, result)
@@ -25,7 +34,7 @@ module Boxen
     end
 
     def perform?
-      false
+      enabled?
     end
 
     def run
