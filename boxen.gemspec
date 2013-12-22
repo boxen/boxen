@@ -24,6 +24,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "octokit",          "~> 2.3.0"
   gem.add_dependency "puppet",           "~> 3.0"
 
-  gem.add_development_dependency "minitest", "4.4.0" # pinned for mocha
+  gem.add_development_dependency "minitest", "~> 5.0" # pinned for mocha
   gem.add_development_dependency "mocha",    "~> 0.13"
 end
