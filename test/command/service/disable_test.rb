@@ -11,7 +11,7 @@ describe Boxen::Command::Service::Disable do
     end
 
     it "should disable the service" do
-      stdout, stderr = capture_io do
+      stdout, _ = capture_io do
         Boxen::Command::Service::Disable.new("single_c_thread").run
       end
 
@@ -34,7 +34,7 @@ describe Boxen::Command::Service::Disable do
     end
 
     it "should enable all services" do
-      stdout, stderr = capture_io do
+      stdout, _ = capture_io do
         Boxen::Command::Service::Disable.new.run
       end
 

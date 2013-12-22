@@ -77,6 +77,7 @@ module Boxen
     def initialize(&block)
       @fde  = true
       @pull = true
+      @debug = false
 
       yield self if block_given?
     end
@@ -127,7 +128,7 @@ module Boxen
     # `BOXEN_HOME` environment variable.
 
     def homedir
-      @homedir || ENV["BOXEN_HOME"] || "/opt/boxen"
+      @homedir ||= (ENV["BOXEN_HOME"] || "/opt/boxen")
     end
 
     attr_writer :homedir
@@ -137,7 +138,7 @@ module Boxen
     # overwritten on every run.
 
     def logfile
-      @logfile || ENV["BOXEN_LOG_FILE"] || "#{repodir}/log/boxen.log"
+      @logfile ||= (ENV["BOXEN_LOG_FILE"] || "#{repodir}/log/boxen.log")
     end
 
     attr_writer :logfile
@@ -149,38 +150,6 @@ module Boxen
     # A GitHub user's profile name.
 
     attr_accessor :name
-
-    # Just go through the motions? Default is `false`.
-
-    def pretend?
-      !!@pretend
-    end
-
-    attr_writer :pretend
-
-    # Run a profiler on Puppet? Default is `false`.
-
-    def profile?
-      !!@profile
-    end
-
-    attr_writer :profile
-
-    # Enable the Puppet future parser? Default is `false`.
-
-    def future_parser?
-      !!@future_parser
-    end
-
-    attr_writer :future_parser
-
-    # Enable puppet reports ? Default is `false`.
-
-    def report?
-      !!@report
-    end
-
-    attr_writer :report
 
     # An Array of Boxen::Project entries, one for each project Boxen
     # knows how to manage.
@@ -225,7 +194,7 @@ module Boxen
     # Respects the `BOXEN_REPO_NAME` environment variable.
 
     def reponame
-      override = @reponame || ENV["BOXEN_REPO_NAME"]
+      override = @reponame ||= ENV["BOXEN_REPO_NAME"]
       return override unless override.nil?
 
       if File.directory? repodir
@@ -235,7 +204,7 @@ module Boxen
         # find the path and strip off the .git suffix
         repo_exp = Regexp.new Regexp.escape(ghuri.host) + "[/:]([^/]+/[^/]+)"
         if $?.success? && repo_exp.match(url)
-          @reponame = $1.sub /\.git$/, ""
+          @reponame = $1.sub(/\.git$/, "")
         end
       end
     end

@@ -15,7 +15,7 @@ describe Boxen::Hook do
   it "registers hooks and executes them" do
     Boxen::Hook.register DatHook
 
-    stdout, stderr = capture_io do
+    stdout, _ = capture_io do
       Boxen::Hook.run
     end
 

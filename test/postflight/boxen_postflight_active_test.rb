@@ -20,7 +20,7 @@ class BoxenPostflightActiveTest < Boxen::Test
     config = stub :envfile => "foo"
     @check = Boxen::Postflight::Active.new config
 
-    stdout, stderr = capture_io do
+    _, stderr = capture_io do
       @check.run
     end
 

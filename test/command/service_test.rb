@@ -10,7 +10,7 @@ describe Boxen::Command::Service do
     end
 
     it "displays the list of services we know about" do
-      stdout, stderr = capture_io do
+      stdout, _ = capture_io do
         Boxen::Command::Service.new.run
       end
 

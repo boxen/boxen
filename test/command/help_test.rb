@@ -29,7 +29,7 @@ describe Boxen::Command::Help do
   end
 
   it "can write help for all commands" do
-    stdout, stderr = capture_io do
+    stdout, _ = capture_io do
       Boxen::Command.invoke(:help)
     end
 
@@ -38,7 +38,7 @@ describe Boxen::Command::Help do
   end
 
   it "can write detailed help for a single command" do
-    stdout, stderr = capture_io do
+    stdout, _ = capture_io do
       Boxen::Command.invoke(:help, "foo_bar")
     end
 

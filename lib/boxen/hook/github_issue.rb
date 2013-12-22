@@ -5,8 +5,6 @@ require "boxen/hook"
 class Boxen::Hook::GitHubIssue < Boxen::Hook
   def perform?
     super &&
-      !config.stealth? &&
-      !config.pretend? &&
       !config.login.to_s.empty? &&
       checkout.master?
   end

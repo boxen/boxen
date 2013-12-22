@@ -12,8 +12,8 @@ Gem::Specification.new do |gem|
   gem.summary       = "You know, for laptops and stuff."
   gem.homepage      = "https://github.com/boxen/boxen"
 
-  gem.files         = `git ls-files`.split $/
-  gem.test_files    = gem.files.grep /^test/
+  gem.files         = `git ls-files`.split( $/)
+  gem.test_files    = gem.files.grep(/^test/)
   gem.require_paths = ["lib"]
 
   gem.add_dependency "ansi",             "~> 1.4"

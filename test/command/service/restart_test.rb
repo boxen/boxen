@@ -13,7 +13,7 @@ describe Boxen::Command::Service::Restart do
     end
 
     it "should restart the service" do
-      stdout, stderr = capture_io do
+      stdout, _ = capture_io do
         Boxen::Command::Service::Restart.new("single_c_thread").run
       end
 
@@ -38,7 +38,7 @@ describe Boxen::Command::Service::Restart do
     end
 
     it "should enable all services" do
-      stdout, stderr = capture_io do
+      stdout, _ = capture_io do
         Boxen::Command::Service::Restart.new.run
       end
 

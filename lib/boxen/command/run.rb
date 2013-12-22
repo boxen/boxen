@@ -49,9 +49,9 @@ EOS
     warn command.join(" ") if config.debug?
 
     puts "Running puppet"
-    Boxen::Util.sudo *command
+    Boxen::Util.sudo(*command)
 
-    status = Boxen::CommandStatus.new($?.exitstatus, [0, 2])
+    Boxen::CommandStatus.new($?.exitstatus, [0, 2])
   end
 
   def noop
@@ -80,7 +80,7 @@ EOS
       librarian_command << "--verbose" if config.debug?
 
       warn librarian_command.join(" ") if config.debug?
-      unless system *librarian_command
+      unless system(*librarian_command)
         abort "Can't run Puppet, fetching dependencies with librarian failed."
       end
     end

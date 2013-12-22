@@ -27,20 +27,12 @@ class BoxenHookGitHubIssueTest < Boxen::Test
 
   def test_perform
     @hook.stubs(:enabled?).returns(false)
-    @config.stubs(:stealth?).returns(true)
-    @config.stubs(:pretend?).returns(true)
     @checkout.stubs(:master?).returns(false)
     @config.stubs(:login).returns(nil)
 
     refute @hook.perform?
 
     @hook.stubs(:enabled?).returns(true)
-    refute @hook.perform?
-
-    @config.stubs(:stealth?).returns(false)
-    refute @hook.perform?
-
-    @config.stubs(:pretend?).returns(false)
     refute @hook.perform?
 
     @checkout.stubs(:master?).returns(true)
@@ -158,7 +150,7 @@ class BoxenHookGitHubIssueTest < Boxen::Test
     log = "so\nmany\nthings\nto\nreport"
     @hook.stubs(:log).returns(log)
 
-    @config.reponame = repo = 'some/repo'
+    @config.reponame = 'some/repo'
     compare = @hook.compare_url
     changes = 'so many changes'
     @checkout.stubs(:changes).returns(changes)

@@ -2,14 +2,13 @@ require "boxen/command_status"
 
 # I hate these are pulled in, it's a temporary hack until they are gone
 require "boxen/config"
-require "boxen/flags"
 
 # Pulled in so the others don't have to
 require "boxen/preflight"
 require "boxen/postflight"
 
 class Boxen::Command
-  attr_reader :config, :flags
+  attr_reader :config
 
   def self.help
     raise "You should define this"
@@ -61,7 +60,6 @@ class Boxen::Command
 
   def initialize(*args)
     @config = Boxen::Config.load
-    @flags  = Boxen::Flags.new(args).apply(@config)
     @args   = args
   end
 

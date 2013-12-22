@@ -6,7 +6,7 @@ describe Boxen::Command::Version do
   it "writes the boxen version to standard out, duh" do
     instance.stubs(:version).returns("100.0.0")
 
-    stdout, stderr = capture_io do
+    stdout, _ = capture_io do
       instance.run
     end
 

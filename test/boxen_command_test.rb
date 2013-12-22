@@ -35,7 +35,7 @@ describe Boxen::Command do
   it "registers commands and shoves them into a hash, and can invoke them" do
     Boxen::Command.register :foo, Boxen::Command::Foo
 
-    stdout, stderr = capture_io do
+    stdout, _ = capture_io do
       Boxen::Command.invoke :foo
     end
 

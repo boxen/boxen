@@ -27,7 +27,7 @@ class Boxen::Hook::Web < Boxen::Hook
     user, pass, host, port, path = \
       uri.user, uri.pass, uri.host, uri.port, uri.path
 
-    request = Net::HTTP::Post.new(path, initheader = headers)
+    request = Net::HTTP::Post.new(path, headers)
 
     if uri.scheme =~ /https/
       http.use_ssl = true
@@ -42,6 +42,8 @@ class Boxen::Hook::Web < Boxen::Hook
     response = Net::HTTP.new(host, port).start do |http|
       http.request(request)
     end
+
+    response
   end
 
   def required_environment_variables

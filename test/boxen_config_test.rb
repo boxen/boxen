@@ -96,27 +96,6 @@ class BoxenConfigTest < Boxen::Test
     assert_equal "foo", @config.name
   end
 
-  def test_pretend?
-    refute @config.pretend?
-
-    @config.pretend = true
-    assert @config.pretend?
-  end
-
-  def test_profile?
-    refute @config.profile?
-
-    @config.profile = true
-    assert @config.profile?
-  end
-
-  def test_future_parser?
-    refute @config.future_parser?
-
-    @config.future_parser = true
-    assert @config.future_parser?
-  end
-
   def test_projects
     files = Dir["#{@config.repodir}/modules/projects/manifests/*.pp"]
     assert_equal files.size, @config.projects.size
@@ -383,7 +362,7 @@ class BoxenConfigTest < Boxen::Test
     ENV["BOXEN_S3_BUCKET"] = val
   end
 
-  def test_s3host_env_var
+  def test_s3bucket_env_var
     val = ENV["BOXEN_S3_BUCKET"]
 
     ENV["BOXEN_S3_BUCKET"] = "my-bucket"
