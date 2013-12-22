@@ -19,7 +19,7 @@ describe Boxen::Hook do
       Boxen::Hook.run
     end
 
-    assert_equal stdout, "yolo"
+    assert_equal "yolo\n", stdout
   end
 
 end
