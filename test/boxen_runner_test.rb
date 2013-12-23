@@ -118,7 +118,7 @@ class BoxenRunnerTest < Boxen::Test
       service.expects(:disable).once
       service.expects(:enable).once
     end
-    Boxen::Service.stubs(:list).returns(services)
+    Boxen::Service.stubs(:list_enabled).returns(services)
 
     assert_raises(SystemExit) do
       runner.process

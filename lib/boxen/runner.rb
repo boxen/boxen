@@ -127,7 +127,7 @@ module Boxen
       # --restart-services restarts all services
 
       if flags.restart_services?
-        Boxen::Service.list.each do |service|
+        Boxen::Service.list_enabled.each do |service|
           puts "Restarting #{service}..."
           service.disable
           service.enable

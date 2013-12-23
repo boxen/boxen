@@ -12,6 +12,12 @@ class BoxenServiceTest < Boxen::Test
     assert_equal ['other', 'test'], services.collect(&:name).sort
   end
 
+  def test_list_enabled
+    Boxen::Service.expects(:capture_output).with("sudo /bin/launchctl list").returns "foo bar dev.baz\nfoo bar bazz"
+    services = Boxen::Service.list_enabled
+    assert_equal ['baz'], services.collect(&:name)
+  end
+
   def test_enable
     service = Boxen::Service.new('blip')
     Boxen::Util.expects(:sudo).with('/bin/launchctl', 'load', '-w',
