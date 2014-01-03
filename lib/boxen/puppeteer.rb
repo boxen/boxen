@@ -61,6 +61,8 @@ module Boxen
       flags << "--no-report" unless config.report?
       flags << "--detailed-exitcodes"
 
+      flags << "--graph" if config.graph?
+
       flags << "--show_diff"
 
       if config.profile?
@@ -86,6 +88,8 @@ module Boxen
       FileUtils.rm_f config.logfile
 
       FileUtils.rm_rf "#{config.puppetdir}/var/reports" if config.report?
+
+      FileUtils.rm_rf "#{config.puppetdir}/var/state/graphs" if config.graph?
 
       FileUtils.mkdir_p File.dirname config.logfile
       FileUtils.touch config.logfile

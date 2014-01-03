@@ -18,6 +18,7 @@ class BoxenPuppeteerTest < Boxen::Test
       stubs(:debug?).returns true
       stubs(:pretend?).returns true
       stubs(:report?).returns false
+      stubs(:graph?).returns false
       stubs(:color?).returns false
     end
 
@@ -55,6 +56,7 @@ class BoxenPuppeteerTest < Boxen::Test
       stubs(:profile?).returns false
       stubs(:future_parser?).returns false
       stubs(:report?).returns false
+      stubs(:graph?).returns false
       stubs(:puppetdir).returns "puppetdir"
       stubs(:repodir).returns "test/fixtures/repo"
       stubs(:color?).returns true

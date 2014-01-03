@@ -32,6 +32,7 @@ module Boxen
       @pretend          = false
       @profile          = false
       @report           = false
+      @graph            = false
       @projects         = false
       @stealth          = false
       @disable_service  = false
@@ -56,6 +57,10 @@ module Boxen
 
         o.on "--report", "Enable puppet reports." do
           @report = true
+        end
+
+        o.on "--graph", "Enable generation of dependency graphs." do
+          @graph = true
         end
 
         o.on "--env", "Show useful environment variables." do
@@ -163,6 +168,7 @@ module Boxen
       config.profile       = profile?
       config.future_parser = future_parser?
       config.report        = report?
+      config.graph         = graph?
       config.srcdir        = srcdir   if srcdir
       config.stealth       = stealth?
       config.user          = user     if user
@@ -241,6 +247,10 @@ module Boxen
 
     def report?
       @report
+    end
+
+    def graph?
+      @graph
     end
 
     def projects?
