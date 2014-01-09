@@ -32,11 +32,16 @@ class Boxen::Command::Atmos < Boxen::Command
 end
 
 describe Boxen::Command do
+  before do
+    @config = Minitest::Mock.new
+    def @config.debug?; false; end
+  end
+
   it "registers commands and shoves them into a hash, and can invoke them" do
     Boxen::Command.register :foo, Boxen::Command::Foo
 
     stdout, _ = capture_io do
-      Boxen::Command.invoke :foo
+      Boxen::Command.invoke :foo, @config
     end
 
     assert_match "foo", stdout
@@ -46,7 +51,7 @@ describe Boxen::Command do
     Boxen::Command.register :barnette, Boxen::Command::Barnette
 
     stdout, stderr = capture_io do
-      Boxen::Command.invoke :barnette
+      Boxen::Command.invoke :barnette, @config
     end
 
     assert_match "lol this fails in ur face", stderr
@@ -57,7 +62,7 @@ describe Boxen::Command do
     Boxen::Command.register :atmos, Boxen::Command::Atmos
 
     stdout, stderr = capture_io do
-      Boxen::Command.invoke :atmos
+      Boxen::Command.invoke :atmos, @config
     end
 
     assert_match "lol this fails in ur face", stderr

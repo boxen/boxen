@@ -4,6 +4,7 @@ require "boxen/command/service/restart"
 describe Boxen::Command::Service::Restart do
   describe "with args" do
     before do
+      @config = mock("config")
       @single_c_thread = mock("service",
                               :name    => "single_c_thread",
                               :enable  => true,
@@ -14,7 +15,7 @@ describe Boxen::Command::Service::Restart do
 
     it "should restart the service" do
       stdout, _ = capture_io do
-        Boxen::Command::Service::Restart.new("single_c_thread").run
+        Boxen::Command::Service::Restart.new(@config, "single_c_thread").run
       end
 
       assert_equal stdout, "Restarting service: single_c_thread\n"
@@ -23,6 +24,7 @@ describe Boxen::Command::Service::Restart do
 
   describe "without args" do
     before do
+      @config = mock("config")
       @single_c_thread = mock("service",
                               :name    => "single_c_thread",
                               :enable  => true,
@@ -39,7 +41,7 @@ describe Boxen::Command::Service::Restart do
 
     it "should enable all services" do
       stdout, _ = capture_io do
-        Boxen::Command::Service::Restart.new.run
+        Boxen::Command::Service::Restart.new(@config).run
       end
 
       assert_equal stdout, <<-EOS

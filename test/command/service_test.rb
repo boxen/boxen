@@ -1,6 +1,10 @@
 require "boxen/command/service"
 
 describe Boxen::Command::Service do
+  before do
+    @config = Minitest::Mock.new
+  end
+
   describe "#run" do
     before do
       Boxen::Service.stubs(:list).returns([
@@ -11,7 +15,7 @@ describe Boxen::Command::Service do
 
     it "displays the list of services we know about" do
       stdout, _ = capture_io do
-        Boxen::Command::Service.new.run
+        Boxen::Command::Service.new(@config).run
       end
 
       assert_equal stdout, <<-EOS
@@ -34,7 +38,7 @@ EOS
       end
 
       it "collects services based on args" do
-        assert_equal [@foobar], Boxen::Command::Service.new("foobar").services
+        assert_equal [@foobar], Boxen::Command::Service.new(@config, "foobar").services
       end
     end
 
@@ -44,7 +48,7 @@ EOS
       end
 
       it "collects all services" do
-        assert_equal [@foobar], Boxen::Command::Service.new.services
+        assert_equal [@foobar], Boxen::Command::Service.new(@config).services
       end
     end
   end

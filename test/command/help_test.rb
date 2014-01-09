@@ -18,6 +18,8 @@ end
 
 describe Boxen::Command::Help do
   before do
+    @config = mock("config")
+
     Boxen::Command.reset!
     Boxen::Command.register :foo_bar, FooBar
     Boxen::Command.register :bar_baz, BarBaz
@@ -30,7 +32,7 @@ describe Boxen::Command::Help do
 
   it "can write help for all commands" do
     stdout, _ = capture_io do
-      Boxen::Command.invoke(:help)
+      Boxen::Command.invoke(:help, @config)
     end
 
     assert_match "    foo_bar          help yourself", stdout
@@ -39,7 +41,7 @@ describe Boxen::Command::Help do
 
   it "can write detailed help for a single command" do
     stdout, _ = capture_io do
-      Boxen::Command.invoke(:help, "foo_bar")
+      Boxen::Command.invoke(:help, @config, "foo_bar")
     end
 
     assert_match "okay fine I'll help you", stdout

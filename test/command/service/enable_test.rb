@@ -3,6 +3,7 @@ require "boxen/command/service/enable"
 describe Boxen::Command::Service::Enable do
   describe "given arguments" do
     before do
+      @config = mock("config")
       @single_c_thread = mock("service",
                               :name   => "single_c_thread",
                               :enable => true)
@@ -12,7 +13,7 @@ describe Boxen::Command::Service::Enable do
 
     it "should enable the service" do
       stdout, _ = capture_io do
-        Boxen::Command::Service::Enable.new("single_c_thread").run
+        Boxen::Command::Service::Enable.new(@config, "single_c_thread").run
       end
 
       assert_equal stdout, "Enabling service: single_c_thread\n"
@@ -21,6 +22,7 @@ describe Boxen::Command::Service::Enable do
 
   describe "given no arguments" do
     before do
+      @config = mock("config")
       @single_c_thread = mock("service",
                               :name   => "single_c_thread",
                               :enable => true)
@@ -35,7 +37,7 @@ describe Boxen::Command::Service::Enable do
 
     it "should enable all services" do
       stdout, _ = capture_io do
-        Boxen::Command::Service::Enable.new.run
+        Boxen::Command::Service::Enable.new(@config).run
       end
 
       assert_equal stdout, <<-EOS

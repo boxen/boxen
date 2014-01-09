@@ -1,8 +1,5 @@
 require "boxen/command_status"
 
-# I hate these are pulled in, it's a temporary hack until they are gone
-require "boxen/config"
-
 # Pulled in so the others don't have to
 require "boxen/preflight"
 require "boxen/postflight"
@@ -50,16 +47,16 @@ class Boxen::Command
     @commands = {}
   end
 
-  def self.invoke(name, *args)
+  def self.invoke(name, config, *args)
     if @commands && @commands.has_key?(name.to_sym)
-      @commands[name.to_sym].new(*args).invoke
+      @commands[name.to_sym].new(config, *args).invoke
     else
       raise "Could not find command #{name}!"
     end
   end
 
-  def initialize(*args)
-    @config = Boxen::Config.load
+  def initialize(config, *args)
+    @config = config
     @args   = args
   end
 
