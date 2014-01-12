@@ -42,9 +42,7 @@ EOS
   end
 end
 
-#require "boxen/command/service/enable"
-#require "boxen/command/service/disable"
-#require "boxen/command/service/restart"
+require "boxen/command/project/install"
 
 Boxen::Command.register :project,  Boxen::Command::Project
 Boxen::Command.register :projects, Boxen::Command::Project
