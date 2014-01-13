@@ -33,6 +33,7 @@ class Boxen::Command::Run < Boxen::Command
             --no-color              Don't output any colored text to the tty.
             --report                Generate graphs and catalog data from Puppet.
             --profile               Display very high-level performance details from the Puppet run.
+            --future-parser         Use Puppet's upcoming future parser
 
     boxen run:noop [options]
 
@@ -56,6 +57,18 @@ EOS
 
   def noop
     false
+  end
+
+  def report?
+    @args.include? '--report'
+  end
+
+  def profile?
+    @args.include? '--profile'
+  end
+
+  def future_parser?
+    @args.include? '--future-parser'
   end
 
   private
@@ -91,7 +104,7 @@ EOS
 
     FileUtils.rm_f config.logfile
 
-    FileUtils.rm_rf "#{config.puppetdir}/var/reports" if config.report?
+    FileUtils.rm_rf "#{config.puppetdir}/var/reports" if report?
 
     FileUtils.mkdir_p File.dirname config.logfile
     FileUtils.touch config.logfile
@@ -118,19 +131,17 @@ EOS
     _flags << ["--logdest",      "#{config.repodir}/log/puppet.log"]
     _flags << ["--logdest",      "console"]
 
-    _flags << "--no-report" unless config.report?
+    _flags << "--no-report" unless report?
     _flags << "--detailed-exitcodes"
 
     _flags << "--show_diff"
 
-    if config.profile?
+    if profile?
       _flags << "--evaltrace"
       _flags << "--summarize"
     end
 
-    if config.future_parser?
-      _flags << "--parser=future"
-    end
+    _flags << "--parser=future" if future_parser?
 
     _flags << "--debug" if config.debug?
     _flags << "--noop"  if noop
