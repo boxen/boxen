@@ -4,7 +4,7 @@ class Boxen::Preflight::Offline < Boxen::Preflight
   def ok?
     config.offline = !google_reachable?
 
-    warn "Running boxen in offline mode as we couldn't reach google." if config.offline?
+    info "Running boxen in offline mode as we couldn't reach google." if config.offline?
 
     true
   end

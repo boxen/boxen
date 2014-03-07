@@ -11,6 +11,7 @@ class Boxen::Command::Run < Boxen::Command
     Boxen::Preflight::Offline,
     Boxen::Preflight::Creds,
     Boxen::Preflight::Identity,
+    Boxen::Preflight::Update,
     Boxen::Preflight::Facts
 
   postflight \
@@ -46,13 +47,13 @@ EOS
   end
 
   def run
-    puts "Updating librarian-puppet modules"
+    info "Updating librarian-puppet modules"
     create_clean_working_environment
     run_librarian_puppet
 
     warn command.join(" ") if debug?
 
-    puts "Running puppet"
+    info "Running puppet"
     Boxen::Util.sudo(*command)
 
     Boxen::CommandStatus.new($?.exitstatus, [0, 2])
@@ -80,6 +81,10 @@ EOS
 
   def debug?
     @args.include? "--debug"
+  end
+
+  def no_color?
+    @args.include? "--no-color"
   end
 
   private
@@ -159,7 +164,7 @@ EOS
     _flags << "--debug" if debug?
     _flags << "--noop"  if noop
 
-    _flags << "--color=false" unless config.color?
+    _flags << "--color=false" if no_color?
 
     _flags.flatten
   end
@@ -176,6 +181,7 @@ class Boxen::Command::Run::Noop < Boxen::Command::Run
     Boxen::Preflight::Offline,
     Boxen::Preflight::Creds,
     Boxen::Preflight::Identity,
+    Boxen::Preflight::Update,
     Boxen::Preflight::Facts
 
   postflight \

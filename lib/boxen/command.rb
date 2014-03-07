@@ -3,8 +3,11 @@ require "boxen/command_status"
 # Pulled in so the others don't have to
 require "boxen/preflight"
 require "boxen/postflight"
+require "boxen/util/logging"
 
 class Boxen::Command
+  include Boxen::Util::Logging
+
   class UnknownCommandError < StandardError; end
 
   attr_reader :config
@@ -79,18 +82,18 @@ class Boxen::Command
 
   def preflights?
     if self.class.preflights.any?
-      puts "Performing preflight checks"
+      info "Performing preflight checks"
     end
 
     self.class.preflights.all? do |p|
 
-      puts "  ==> Performing preflight check: #{p.name}" if @config.debug?
+      debug "Performing preflight check: #{p.name}"
 
       p = p.new(@config)
       status = p.ok?
 
       if status
-        puts "  ==> Passed preflight check: #{p.class.name}" if @config.debug?
+        debug "Passed preflight check: #{p.class.name}"
       else
         p.run
       end
@@ -100,14 +103,18 @@ class Boxen::Command
   end
 
   def postflights?
-    if self.class.postflights.any? && !@config.debug?
-      puts "Performing postflight checks"
+    if self.class.postflights.any?
+      info "Performing postflight checks"
     end
 
     self.class.postflights.each do |p|
       p = p.new(@config)
       p.run unless p.ok?
     end
+  end
+
+  def debug?
+    @config.debug?
   end
 end
 

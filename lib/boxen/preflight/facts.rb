@@ -30,7 +30,7 @@ class Boxen::Preflight::Facts < Boxen::Preflight
       f.write "#{name}=#{value}\n"
     end
 
-    puts "    --> Setting global fact `#{name}` to `#{value}`" if config.debug?
+    debug "Setting global fact `#{name}` to `#{value}`"
   end
 
 end

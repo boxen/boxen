@@ -1,10 +1,11 @@
-require "ansi"
+require "boxen/util/logging"
 
 module Boxen
 
   # The superclass for preflight and postflight sanity checks.
 
   class Check
+    include Boxen::Util::Logging
 
     # A collection of preflight instances for `config`. An instance is
     # created for every constant under `self` that's also a
@@ -46,27 +47,5 @@ module Boxen
       raise "Subclasses must implement this method."
     end
 
-    # A fancier `abort` and `warn`. This will probably really annoy
-    # someone at some point because it's overriding a Kernel method,
-    # but it's limited to checks.
-
-    def abort(message, *extras)
-      extras << { :color => :red }
-      warn message, *extras
-      exit 1
-    end
-
-    def warn(message, *extras)
-      options = Hash === extras.last ? extras.pop : {}
-      color   = options[:color] || :yellow
-
-      $stderr.puts ANSI.send(color) { "--> #{message}" }
-
-      unless extras.empty?
-        extras.each { |line| $stderr.puts "    #{line}" }
-      end
-
-      $stderr.puts
-    end
   end
 end
