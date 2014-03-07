@@ -61,19 +61,23 @@ EOS
   end
 
   def report?
-    @args.include? '--report'
+    @args.include? "--report"
   end
 
   def profile?
-    @args.include? '--profile'
+    @args.include? "--profile"
   end
 
   def future_parser?
-    @args.include? '--future-parser'
+    @args.include? "--future-parser"
   end
 
   def graph?
-    @args.include? '--graph'
+    @args.include? "--graph"
+  end
+
+  def debug?
+    @args.include? "--debug"
   end
 
   private
@@ -149,7 +153,7 @@ EOS
     _flags << "--parser=future" if future_parser?
     _flags << "--graph" if graph?
 
-    _flags << "--debug" if config.debug?
+    _flags << "--debug" if debug?
     _flags << "--noop"  if noop
 
     _flags << "--color=false" unless config.color?
