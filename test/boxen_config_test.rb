@@ -7,13 +7,6 @@ class BoxenConfigTest < Boxen::Test
     @config.repodir = "test/fixtures/repo"
   end
 
-  def test_debug?
-    refute @config.debug?
-
-    @config.debug = true
-    assert @config.debug?
-  end
-
   def test_email
     assert_nil @config.email
 

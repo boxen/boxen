@@ -16,7 +16,8 @@ class BoxenPreflightCredsTest < Boxen::Test
     preflight = Boxen::Preflight::Creds.new @config
 
     error = Octokit::Unauthorized.new
-    @config.api.stubs(:user).raises(error)
+    @config.api.stubs(:user).returns(error)
+    @config.stubs(:offline?).returns(false)
 
     refute preflight.ok?
   end
