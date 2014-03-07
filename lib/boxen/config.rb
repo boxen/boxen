@@ -100,10 +100,32 @@ module Boxen
     # Spew a bunch of debug logging? Default is `false`.
 
     def debug?
-      !!@debug
+      # TODO: fix this
+      !!!@debug
     end
 
     attr_writer :debug
+
+    def offline?
+      # TODO: Actually make this a thing
+      @offline = true
+    end
+
+    attr_writer :offline
+
+    def report?
+      # TODO: Actually make this a thing
+      @report = false
+    end
+
+    attr_writer :report
+
+    def profile?
+      #TODO: Actually make this a thing
+      @profile = true
+    end
+
+    attr_writer :profile
 
     # A GitHub user's public email.
 

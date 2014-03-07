@@ -78,16 +78,19 @@ class Boxen::Command
   end
 
   def preflights?
-    if self.class.preflights.any? && !@config.debug?
+    if self.class.preflights.any?
       puts "Performing preflight checks"
     end
 
     self.class.preflights.all? do |p|
+
+      puts "  ==> Performing preflight check: #{p.name}" if @config.debug?
+
       p = p.new(@config)
       status = p.ok?
 
       if status
-        puts "Passed preflight check: #{p.class.name}" if @config.debug?
+        puts "  ==> Passed preflight check: #{p.class.name}" if @config.debug?
       else
         p.run
       end

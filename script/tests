@@ -8,3 +8,4 @@ script/bootstrap &&
     -e 'require "bundler/setup"' \
     -e 'tests = ARGV.empty? ? Dir["test/**/*_test.rb"] : ARGV' \
     -e 'tests.each { |f| load f }' "$@"
+
