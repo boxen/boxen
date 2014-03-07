@@ -54,7 +54,7 @@ class Boxen::Command
       @commands[name.to_sym].new(*args).invoke
     else
       raise UnknownCommandError,
-        "could not find `#{name}` in the list of registered commands"
+        "could not find `#{name.inspect.to_s}` in the list of registered commands"
     end
   end
 
