@@ -1,8 +1,6 @@
 require "boxen/preflight"
 
 class Boxen::Preflight::Offline < Boxen::Preflight
-  SUPPORTED_RELEASES = %w(10.8 10.9)
-
   def ok?
     config.offline = !google_reachable?
 

@@ -10,7 +10,8 @@ class Boxen::Command::Run < Boxen::Command
     Boxen::Preflight::RVM,
     Boxen::Preflight::Offline,
     Boxen::Preflight::Creds,
-    Boxen::Preflight::Identity
+    Boxen::Preflight::Identity,
+    Boxen::Preflight::Facts
 
   postflight \
     Boxen::Postflight::Active,
@@ -130,16 +131,17 @@ EOS
     _flags = []
     root  = File.expand_path "../../..", __FILE__
 
-    _flags << ["--group",        "admin"]
-    _flags << ["--confdir",      "#{config.puppetdir}/conf"]
-    _flags << ["--vardir",       "#{config.puppetdir}/var"]
-    _flags << ["--libdir",       "#{config.repodir}/lib"]#:#{root}/lib"]
-    _flags << ["--libdir",       "#{root}/lib"]
-    _flags << ["--manifestdir",  "#{config.repodir}/manifests"]
-    _flags << ["--modulepath",   "#{config.repodir}/modules:#{config.repodir}/shared"]
-    _flags << ["--hiera_config", hiera_config]
-    _flags << ["--logdest",      "#{config.repodir}/log/puppet.log"]
-    _flags << ["--logdest",      "console"]
+    _flags << ["--group",          "admin"]
+    _flags << ["--confdir",        "#{config.puppetdir}/conf"]
+    _flags << ["--vardir",         "#{config.puppetdir}/var"]
+    _flags << ["--libdir",         "#{config.repodir}/lib"]#:#{root}/lib"]
+    _flags << ["--libdir",         "#{root}/lib"]
+    _flags << ["--manifestdir",    "#{config.repodir}/manifests"]
+    _flags << ["--modulepath",     "#{config.repodir}/modules:#{config.repodir}/shared"]
+    _flags << ["--hiera_config",   hiera_config]
+    _flags << ["--logdest",        "#{config.repodir}/log/puppet.log"]
+    _flags << ["--logdest",        "console"]
+    _flags << ["--pluginfactdest", "#{config.homedir}/facts.d"]
 
     _flags << "--no-report" unless report?
     _flags << "--detailed-exitcodes"
@@ -173,7 +175,8 @@ class Boxen::Command::Run::Noop < Boxen::Command::Run
     Boxen::Preflight::RVM,
     Boxen::Preflight::Offline,
     Boxen::Preflight::Creds,
-    Boxen::Preflight::Identity
+    Boxen::Preflight::Identity,
+    Boxen::Preflight::Facts
 
   postflight \
     Boxen::Postflight::Active,
