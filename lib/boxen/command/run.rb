@@ -2,14 +2,15 @@ require "boxen/command"
 
 class Boxen::Command::Run < Boxen::Command
   preflight \
-    Boxen::Preflight::Creds,
+    Boxen::Preflight::OS,
     Boxen::Preflight::Directories,
     Boxen::Preflight::EtcMyCnf,
     Boxen::Preflight::Homebrew,
-    Boxen::Preflight::Identity,
-    Boxen::Preflight::OS,
     Boxen::Preflight::Rbenv,
-    Boxen::Preflight::RVM
+    Boxen::Preflight::RVM,
+    Boxen::Preflight::Offline,
+    Boxen::Preflight::Creds,
+    Boxen::Preflight::Identity
 
   postflight \
     Boxen::Postflight::Active,
@@ -48,7 +49,7 @@ EOS
     create_clean_working_environment
     run_librarian_puppet
 
-    warn command.join(" ") if config.debug?
+    warn command.join(" ") if debug?
 
     puts "Running puppet"
     Boxen::Util.sudo(*command)
@@ -99,9 +100,9 @@ EOS
       end
 
       librarian_command = [librarian, "install", "--path=#{config.repodir}/shared"]
-      librarian_command << "--verbose" if config.debug?
+      librarian_command << "--verbose" if debug?
 
-      warn librarian_command.join(" ") if config.debug?
+      warn librarian_command.join(" ") if debug?
       unless system(*librarian_command)
         abort "Can't run Puppet, fetching dependencies with librarian failed."
       end
@@ -164,14 +165,15 @@ end
 
 class Boxen::Command::Run::Noop < Boxen::Command::Run
   preflight \
-    Boxen::Preflight::Creds,
+    Boxen::Preflight::OS,
     Boxen::Preflight::Directories,
     Boxen::Preflight::EtcMyCnf,
     Boxen::Preflight::Homebrew,
-    Boxen::Preflight::Identity,
-    Boxen::Preflight::OS,
     Boxen::Preflight::Rbenv,
-    Boxen::Preflight::RVM
+    Boxen::Preflight::RVM,
+    Boxen::Preflight::Offline,
+    Boxen::Preflight::Creds,
+    Boxen::Preflight::Identity
 
   postflight \
     Boxen::Postflight::Active,
@@ -180,7 +182,6 @@ class Boxen::Command::Run::Noop < Boxen::Command::Run
   def noop
     true
   end
-
 end
 
 Boxen::Command.register :run, Boxen::Command::Run
