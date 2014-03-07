@@ -47,6 +47,18 @@ describe Boxen::Command do
     assert_match "foo", stdout
   end
 
+  it "fails with UnknownCommandError if the invoked command is not registered" do
+    assert_raises Boxen::Command::UnknownCommandError do
+      Boxen::Command.invoke :random_command
+    end
+  end
+
+  it "fails with UnknownCommandError if the invoked command is nil" do
+    assert_raises Boxen::Command::UnknownCommandError do
+      Boxen::Command.invoke nil
+    end
+  end
+
   it "executes preflight hooks" do
     Boxen::Command.register :barnette, Boxen::Command::Barnette
 

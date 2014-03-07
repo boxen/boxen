@@ -5,6 +5,8 @@ require "boxen/preflight"
 require "boxen/postflight"
 
 class Boxen::Command
+  class UnknownCommandError < StandardError; end
+
   attr_reader :config
 
   def self.help
@@ -47,11 +49,12 @@ class Boxen::Command
     @commands = {}
   end
 
-  def self.invoke(name, config, *args)
-    if @commands && @commands.has_key?(name.to_sym)
-      @commands[name.to_sym].new(config, *args).invoke
+  def self.invoke(name, *args)
+    if @commands && name && @commands.has_key?(name.to_sym)
+      @commands[name.to_sym].new(*args).invoke
     else
-      raise "Could not find command #{name}!"
+      raise UnknownCommandError,
+        "could not find `#{name}` in the list of registered commands"
     end
   end
 
