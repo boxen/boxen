@@ -1,14 +1,35 @@
 require "boxen/command"
 require "boxen/config"
+require "boxen/util/logging"
 
 module Boxen
   class CLI
-    def self.run(*args)
-      cmd, *cmd_args = args.flatten
-      config = Boxen::Config.load
-      status = Boxen::Command.invoke cmd, config, *cmd_args
+    include Boxen::Util::Logging
 
-      return status.code
+    def self.run(*args)
+      new.run(*args)
+    end
+
+    def initialize
+    end
+
+    def run(*args)
+      cmd, *cmd_args = args.flatten
+
+      with_friendly_errors do
+        config = Boxen::Config.load
+        status = Boxen::Command.invoke cmd, config, *cmd_args
+
+        status.code
+      end
+    end
+
+    private
+
+    def with_friendly_errors(&block)
+      yield
+    rescue => e
+      abort "#{e.class.name}: #{e.message}"
     end
   end
 end
