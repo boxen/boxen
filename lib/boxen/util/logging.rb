@@ -28,7 +28,7 @@ module Boxen
 
       def debug(message, *extras)
         if debug?
-          extras << { :color => :gray }
+          extras << { :color => :white }
           log "    DEBUG: #{message}", *extras
         end
       end

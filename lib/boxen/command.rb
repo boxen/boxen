@@ -29,7 +29,7 @@ class Boxen::Command
   end
 
   def self.postflight(*klasses)
-    postflights.replace preflights | klasses.flatten
+    postflights.replace postflights | klasses.flatten
   end
 
   def self.postflights
