@@ -1,3 +1,6 @@
+require "socket"
+require "timeout"
+
 require "boxen/preflight"
 
 class Boxen::Preflight::Offline < Boxen::Preflight
