@@ -107,8 +107,7 @@ module Boxen
     attr_writer :debug
 
     def offline?
-      # TODO: Actually make this a thing
-      @offline = true
+      @offline ||= false
     end
 
     attr_writer :offline

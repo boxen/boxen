@@ -16,18 +16,22 @@ EOS
   end
 
   def run
-    self.class.preflights.each do |p|
-      if p.name == preflight_name
-        info "#{p.name}: #{p.new(@config).ok?.inspect}"
-        return Boxen::CommandStatus.new(0)
-      end
+    if defined?(preflight)
+      info "#{preflight.name}: #{preflight.new(@config).ok?.inspect}"
+      return Boxen::CommandStatus.new(0)
+    else
+      fail("Could not find a preflight named: #{preflight_name}")
     end
+  rescue => e
+    fail("Command failed: #{e.message} #{e.backtrace}")
+  end
 
-    fail("Could not find a preflight named: #{preflight_name}")
+  def preflight
+    Object.const_get(preflight_name)
   end
 
   def preflight_name
-    "Boxen::Preflight::#{ARGV.first.capitalize}"
+    "Boxen::Preflight::#{ARGV[1].capitalize}"
   end
 end
 
