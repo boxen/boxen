@@ -19,7 +19,7 @@ class Boxen::Preflight::Offline < Boxen::Preflight
 
   def google_reachable?
     @online = begin
-      timeout(1) do
+      timeout(3) do
         s = TCPSocket.new('google.com', 80)
         s.close
       end
