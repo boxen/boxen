@@ -59,6 +59,16 @@ describe Boxen::Command do
     end
   end
 
+  it "registers command aliases" do
+    Boxen::Command.register :foo, Boxen::Command::Foo, :bar
+
+    stdout, _ = capture_io do
+      Boxen::Command.invoke :bar, @config
+    end
+
+    assert_match "foo", stdout
+  end
+
   it "executes preflight hooks" do
     Boxen::Command.register :barnette, Boxen::Command::Barnette
 

@@ -40,12 +40,16 @@ class Boxen::Command
     @commands
   end
 
-  def self.register(name, klass)
+  def self.register(name, klass, *aliases)
     unless defined?(@commands)
       @commands = {}
     end
+    unless defined?(@aliases)
+      @aliases = {}
+    end
 
     @commands[name] = klass
+    aliases.each { |a| @aliases[a] = name }
   end
 
   def self.reset!
@@ -55,6 +59,8 @@ class Boxen::Command
   def self.invoke(name, *args)
     if @commands && name && @commands.has_key?(name.to_sym)
       @commands[name.to_sym].new(*args).invoke
+    elsif @aliases && name && @aliases.has_key?(name.to_sym)
+      invoke(@aliases[name.to_sym], *args)
     else
       raise UnknownCommandError,
         "could not find `#{name.inspect.to_s}` in the list of registered commands"
