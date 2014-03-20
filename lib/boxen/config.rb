@@ -101,7 +101,7 @@ module Boxen
 
     def debug?
       # TODO: fix this
-      !!!@debug
+      !!@debug
     end
 
     attr_writer :debug
