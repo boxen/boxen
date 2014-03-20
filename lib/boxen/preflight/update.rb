@@ -5,36 +5,24 @@ class Boxen::Preflight::Update < Boxen::Preflight
     if config.offline?
       warn "Skipping update because we're offline."
 
+    elsif no_pull?
+      debug "Skipping update because we were asked to by the --no-pull flag"
+
+    elsif !on_branch?
+      warn "Boxen not on a branch (ref: #{ref}), cannot update!"
+
+    elsif !on_master_branch?
+      local_branch = current_branch.rpartition("/").last
+      warn "Boxen on a non-master branch '#{local_branch}', cannot update!"
+
+    elsif !fast_forwardable?
+      warn "Boxen has unpushed changes, cannot update!"
+
+    elsif !clean_tree?
+      warn "Boxen repo has untracked or uncommitted changes, cannot update!"
+
     else
-      if should_update?
-        info "Updating boxen..."
-        fetch
-
-        if !on_branch?
-          warn "Boxen not on a branch (ref: #{ref}), cannot update!"
-
-        elsif !on_master_branch?
-          local_branch = current_branch.rpartition("/").last
-          warn "Boxen on a non-master branch '#{local_branch}', cannot update!"
-
-        elsif !fast_forwardable?
-          warn "Boxen has unpushed changes, cannot update!"
-
-        elsif !clean_tree?
-          warn "Boxen repo has untracked or uncommitted changes, cannot update!"
-
-        elsif !upstream_changes?
-          info "Boxen is up-to-date with origin/master"
-
-        elsif update_boxen_checkout
-          info "Successfully updated to #{ref}"
-          rerun_boxen
-
-        else
-          warn "Failed to auto-update!"
-          false
-        end
-      end
+      update!
     end
 
     true
@@ -83,8 +71,8 @@ class Boxen::Preflight::Update < Boxen::Preflight
     %x(git rev-list --count HEAD..origin/master).chomp != "0"
   end
 
-  def should_update?
-    ARGV.none? { |arg| arg == "--no-pull" }
+  def no_pull?
+    ARGV.any? { |arg| arg == "--no-pull" }
   end
 
   def fast_forwardable?
@@ -93,6 +81,23 @@ class Boxen::Preflight::Update < Boxen::Preflight
 
   def current_branch
     @current_branch ||= %x(git symbolic-ref HEAD).chomp
+  end
+
+  def update!
+    info "Updating boxen..."
+    fetch
+
+    if !upstream_changes?
+      info "Boxen is up-to-date with origin/master"
+
+    elsif update_boxen_checkout
+      info "Successfully updated to #{ref}"
+      rerun_boxen
+
+    else
+      warn "Failed to auto-update!"
+      false
+    end
   end
 
   def rerun_boxen
