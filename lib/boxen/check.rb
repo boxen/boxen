@@ -47,5 +47,9 @@ module Boxen
       raise "Subclasses must implement this method."
     end
 
+
+    def debug?
+      @config.debug?
+    end
   end
 end
