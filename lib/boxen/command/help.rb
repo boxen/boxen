@@ -38,3 +38,4 @@ EOS
 end
 
 Boxen::Command.register :help, Boxen::Command::Help
+Boxen::Command.register :'--help', Boxen::Command::Help
