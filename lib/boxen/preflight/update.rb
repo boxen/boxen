@@ -7,10 +7,10 @@ class Boxen::Preflight::Update < Boxen::Preflight
 
     else
       if should_update?
+        info "Updating boxen..."
         fetch
 
         if !on_branch?
-          ref = %x(git log -1 --pretty=format:%h)
           warn "Boxen not on a branch (ref: #{ref}), cannot update!"
 
         elsif !on_master_branch?
@@ -24,10 +24,15 @@ class Boxen::Preflight::Update < Boxen::Preflight
           warn "Boxen repo has untracked or uncommitted changes, cannot update!"
 
         elsif !upstream_changes?
-          puts "Boxen is up-to-date with origin/master"
+          info "Boxen is up-to-date with origin/master"
+
+        elsif update_boxen_checkout
+          info "Successfully updated to #{ref}"
+          rerun_boxen
 
         else
-          return update
+          warn "Failed to auto-update!"
+          false
         end
       end
     end
@@ -40,6 +45,10 @@ class Boxen::Preflight::Update < Boxen::Preflight
   end
 
   private
+
+  def ref
+    %x(git log -1 --pretty=format:%h)
+  end
 
   def fetch
     "git fetch --quiet origin"
@@ -55,6 +64,7 @@ class Boxen::Preflight::Update < Boxen::Preflight
 
   def update_boxen_checkout
     %x(#{reset} && #{clean})
+    $? == 0
   end
 
   def on_branch?
@@ -85,4 +95,10 @@ class Boxen::Preflight::Update < Boxen::Preflight
     @current_branch ||= %x(git symbolic-ref HEAD).chomp
   end
 
+  def rerun_boxen
+    command = "#{$0} #{ARGV.join ' '} --no-pull"
+    debug "Re-running boxen:"
+    debug "  #{command.inspect}"
+    exec command
+  end
 end
