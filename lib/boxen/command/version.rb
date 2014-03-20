@@ -26,4 +26,4 @@ EOS
   end
 end
 
-Boxen::Command.register :version, Boxen::Command::Version
+Boxen::Command.register :version, Boxen::Command::Version, :"-v", :"--version"

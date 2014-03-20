@@ -24,6 +24,8 @@ class Boxen::Command::Service < Boxen::Command
         Restart a Boxen-managed service. If none are given, restarts all
         Boxen-managed services.
 
+    NOTE: 'boxen service' is aliased to 'services' for convenience
+
 EOS
   end
 
@@ -56,5 +58,4 @@ require "boxen/command/service/enable"
 require "boxen/command/service/disable"
 require "boxen/command/service/restart"
 
-Boxen::Command.register :service, Boxen::Command::Service
-Boxen::Command.register :services, Boxen::Command::Service
+Boxen::Command.register :service, Boxen::Command::Service, :services

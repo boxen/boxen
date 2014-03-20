@@ -13,6 +13,8 @@ class Boxen::Command::Project < Boxen::Command
 
         Install a Boxen-managed project.
 
+    NOTE: 'boxen project' is aliased to 'projects' for convenience
+
 EOS
   end
 
@@ -44,5 +46,4 @@ end
 
 require "boxen/command/project/install"
 
-Boxen::Command.register :project,  Boxen::Command::Project
-Boxen::Command.register :projects, Boxen::Command::Project
+Boxen::Command.register :project,  Boxen::Command::Project, :projects
