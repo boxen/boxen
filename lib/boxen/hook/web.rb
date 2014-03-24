@@ -52,3 +52,5 @@ module Boxen
     end
   end
 end
+
+Boxen::Hook.register Boxen::Hook::Web
