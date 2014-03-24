@@ -5,11 +5,18 @@ module Boxen
     attr_reader :puppet
     attr_reader :result
 
+    @hooks = []
+
+    def self.register(hook)
+      @hooks << hook
+    end
+
+    def self.unregister(hook)
+      @hooks.delete hook
+    end
+
     def self.all
-      [
-        Boxen::Hook::GitHubIssue,
-        Boxen::Hook::Web
-      ]
+      @hooks || []
     end
 
     def initialize(config, checkout, puppet, result)
@@ -38,3 +45,6 @@ end
 
 require "boxen/hook/github_issue"
 require "boxen/hook/web"
+
+Boxen::Hook.register Boxen::Hook::GitHubIssue
+Boxen::Hook.register Boxen::Hook::Web
