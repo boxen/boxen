@@ -45,6 +45,3 @@ end
 
 require "boxen/hook/github_issue"
 require "boxen/hook/web"
-
-Boxen::Hook.register Boxen::Hook::GitHubIssue
-Boxen::Hook.register Boxen::Hook::Web
