@@ -4,6 +4,16 @@ module Boxen
     attr_reader :checkout
     attr_reader :result
 
+    @hooks = []
+
+    def self.register(hook)
+      @hooks << hook
+    end
+
+    def self.unregister(hook)
+      @hooks.delete hook
+    end
+
     def self.all
       @hooks
     end
