@@ -9,6 +9,7 @@ class Boxen::Command
   include Boxen::Util::Logging
 
   class UnknownCommandError < StandardError; end
+  class CommandNotRunError < StandardError; end
 
   attr_reader :config
 
@@ -74,11 +75,11 @@ class Boxen::Command
 
   def invoke
     if preflights?
-      cmd_status = self.run
+      @cmd_status = self.run
 
-      postflights? if cmd_status.success?
+      postflights
 
-      cmd_status
+      @cmd_status
     end
   end
 
@@ -95,7 +96,7 @@ class Boxen::Command
 
       debug "Performing preflight check: #{p.name}"
 
-      p = p.new(@config)
+      p = p.new(@config, self)
       status = p.ok?
 
       if status
@@ -108,19 +109,28 @@ class Boxen::Command
     end
   end
 
-  def postflights?
+  def postflights
     if self.class.postflights.any?
       info "Performing postflight checks"
     end
 
     self.class.postflights.each do |p|
-      p = p.new(@config)
+      p = p.new(@config, self)
       p.run unless p.ok?
     end
   end
 
   def debug?
     @config.debug?
+  end
+
+  def success?
+    if @cmd_status
+      @cmd_status.success?
+    else
+      raise CommandNotRunError,
+        "the command hasn't been run, so we can't know if it was successful"
+    end
   end
 end
 

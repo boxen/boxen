@@ -1,23 +1,31 @@
-require "socket"
+require "boxen/postflight"
+require "boxen/checkout"
 
-require "boxen/hook"
+# Checks to see if the basic environment is loaded.
 
-class Boxen::Hook::GitHubIssue < Boxen::Hook
-  def perform?
-    super &&
-      !config.login.to_s.empty? &&
-      checkout.master?
+class Boxen::Postflight::GithubIssue < Boxen::Postflight
+  attr_reader :checkout
+
+  def initialize(*args)
+    super(*args)
+    @checkout = Boxen::Checkout.new(config)
   end
 
-  def call
-    if result.success?
+  def ok?
+    # Only run if we have credentials and we're on master
+    config.login.to_s.empty? && !checkout.master?
+  end
+
+  def run
+    if command.success?
       close_failures
     else
-      warn "Sorry! Creating an issue on #{config.reponame}."
+      warn "Sorry! Creatinga n issue on #{config.reponame}"
       record_failure
     end
   end
 
+  private
   def compare_url
     return unless config.reponame
     "#{config.ghurl}/#{config.reponame}/compare/#{checkout.sha}...master"
@@ -35,7 +43,7 @@ class Boxen::Hook::GitHubIssue < Boxen::Hook
     ENV["SHELL"]
   end
 
-  def log
+  def logfile
     File.read config.logfile
   end
 
@@ -85,7 +93,7 @@ class Boxen::Hook::GitHubIssue < Boxen::Hook
 
     body << "### Output (from #{config.logfile})"
     body << "\n\n"
-    body << "```\n#{log}\n```\n"
+    body << "```\n#{logfile}\n```\n"
 
     body
   end
@@ -93,12 +101,10 @@ class Boxen::Hook::GitHubIssue < Boxen::Hook
   def failure_label
     @failure_label ||= 'failure'
   end
-  attr_writer :failure_label
 
   def ongoing_label
     @ongoing_label ||= 'ongoing'
   end
-  attr_writer :ongoing_label
 
   def issues?
     return unless config.reponame
@@ -107,10 +113,14 @@ class Boxen::Hook::GitHubIssue < Boxen::Hook
     config.api.repository(config.reponame).has_issues
   end
 
-  private
   def required_environment_variables
     ['BOXEN_ISSUES_ENABLED']
   end
-end
 
-Boxen::Hook.register Boxen::Hook::GitHubIssue
+  def enabled?
+    required_vars = Array(required_environment_variables)
+    required_vars.any? && required_vars.all? do |var|
+      ENV[var] && !ENV[var].empty?
+    end
+  end
+end

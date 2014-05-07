@@ -11,10 +11,10 @@ module Boxen
     # created for every constant under `self` that's also a
     # subclass of `self`.
 
-    def self.checks(config)
+    def self.checks(config, command)
       constants.map { |n| const_get n }.
         select { |c| c < self }.
-        map { |c| c.new config }
+        map { |c| c.new config, command }
     end
 
     # Search `dir` and load all Ruby files under it.
@@ -30,9 +30,11 @@ module Boxen
     end
 
     attr_reader :config
+    attr_reader :command
 
-    def initialize(config)
-      @config = config
+    def initialize(config, command)
+      @config  = config
+      @command = command
     end
 
     # Is everything good to go? Implemented by subclasses.

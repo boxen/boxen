@@ -17,6 +17,7 @@ class Boxen::Command::Run < Boxen::Command
   postflight \
     Boxen::Postflight::Active,
     Boxen::Postflight::Hooks,
+    Boxen::Postflight::GithubIssue,
     Boxen::Postflight::Env
 
   def self.help
