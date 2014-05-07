@@ -16,6 +16,7 @@ class Boxen::Command::Run < Boxen::Command
 
   postflight \
     Boxen::Postflight::Active,
+    Boxen::Postflight::Hooks,
     Boxen::Postflight::Env
 
   def self.help
