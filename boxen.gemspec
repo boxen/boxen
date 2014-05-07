@@ -14,6 +14,7 @@ Gem::Specification.new do |gem|
 
   gem.files         = `git ls-files`.split( $/)
   gem.test_files    = gem.files.grep(/^test/)
+  gem.executables   = gem.files.grep(/^bin/).map { |bin| File.basename(bin) }
   gem.require_paths = ["lib"]
 
   gem.add_dependency "ansi",             "~> 1.4"

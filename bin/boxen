@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'boxen/cli'
+Boxen::CLI.run ARGV
