@@ -1,5 +1,5 @@
-require_relative 'boxen/test'
-require_relative '../lib/boxen/preflight/os'
+require 'boxen/test'
+require 'boxen/preflight/os'
 
 class BoxenPreflightOSTest < Boxen::Test
   def preflight
