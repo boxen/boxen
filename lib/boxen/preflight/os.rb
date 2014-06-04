@@ -1,14 +1,14 @@
 require "boxen/preflight"
 
 class Boxen::Preflight::OS < Boxen::Preflight
-  SUPPORTED_RELEASES = %w(10.8 10.9)
+  MIN_VERSION = '10.8'
 
   def ok?
     osx? && supported_release?
   end
 
   def run
-    abort "You must be running one of the following OS X versions: #{SUPPORTED_RELEASES.join(' ')}."
+    abort "You must be running at least the following OS X version: #{MIN_VERSION}."
   end
 
   private
@@ -18,9 +18,7 @@ class Boxen::Preflight::OS < Boxen::Preflight
   end
 
   def supported_release?
-    SUPPORTED_RELEASES.any? do |r|
-      current_release.start_with? r
-    end
+    Gem::Version.new(current_release) >= Gem::Version.new(MIN_VERSION)
   end
 
   def current_release
