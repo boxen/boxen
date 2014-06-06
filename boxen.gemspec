@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "json_pure",        [">= 1.7.7", "< 2.0"]
   gem.add_dependency "librarian-puppet", "~> 1.0.0"
   gem.add_dependency "octokit",          "~> 2.7", ">= 2.7.1"
-  gem.add_dependency "puppet",           "~> 3.0"
+  gem.add_dependency "puppet",           "~> 3.6"
 
   gem.add_development_dependency "minitest", "4.4.0" # pinned for mocha
   gem.add_development_dependency "mocha",    "~> 0.13"
