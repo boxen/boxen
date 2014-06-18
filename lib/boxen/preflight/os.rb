@@ -18,8 +18,6 @@ class Boxen::Preflight::OS < Boxen::Preflight
   end
 
   def supported_release?
-    puts "#{current_release} >= #{MIN_VERSION}?"
-
     Gem::Version.new(current_release) >= Gem::Version.new(MIN_VERSION)
   end
 

@@ -11,18 +11,18 @@ class BoxenPreflightOSTest < Boxen::Test
   def test_invalid_version
     preflight.instance_variable_set(:@current_release, '10.7.0')
 
-    assert !preflight.ok?
+    assert !preflight.send(:supported_release?)
   end
 
   def test_valid_version
     preflight.instance_variable_set(:@current_release, '10.8.0')
 
-    assert preflight.ok?
+    assert preflight.send :supported_release?
   end
 
   def test_valid_subversion
     preflight.instance_variable_set(:@current_release, '10.10.10')
 
-    assert preflight.ok?
+    assert preflight.send :supported_release?
   end
 end
