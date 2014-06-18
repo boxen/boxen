@@ -1,6 +1,8 @@
 require 'boxen/test'
 require 'boxen/preflight/os'
 
+# Trigger rebuild
+
 class BoxenPreflightOSTest < Boxen::Test
   def preflight
     @preflight ||= Boxen::Preflight::OS.new(mock('config'))
