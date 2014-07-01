@@ -45,7 +45,12 @@ module Boxen
 
       # Save the config for Puppet (and next time).
 
-      Boxen::Config.save config
+      begin
+        Boxen::Config.save config
+      rescue Exception => e
+        $stderr.puts e.message
+        $stderr.puts "Warning: failed to save Boxen config. The run will continue, but no configuration will persist to your next run."
+      end
 
       # Make the magic happen.
 
