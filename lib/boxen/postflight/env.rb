@@ -24,6 +24,6 @@ class Boxen::Postflight::Env < Boxen::Postflight
   end
 
   def run
-    warn "Source #{config.envfile} or restart your shell for new stuff!"
+    warn "Run source #{config.envfile} or restart your shell for new stuff!"
   end
 end
