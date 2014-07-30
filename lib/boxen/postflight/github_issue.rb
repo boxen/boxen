@@ -20,7 +20,7 @@ class Boxen::Postflight::GithubIssue < Boxen::Postflight
     if command.success?
       close_failures
     else
-      warn "Sorry! Creatinga n issue on #{config.reponame}"
+      warn "Sorry! Creating an issue on #{config.reponame}"
       record_failure
     end
   end
