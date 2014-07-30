@@ -4,16 +4,13 @@ require "boxen/checkout"
 # Checks to see if the basic environment is loaded.
 
 class Boxen::Postflight::GithubIssue < Boxen::Postflight
-  attr_reader :checkout
-
-  def initialize(*args)
-    super(*args)
-    @checkout = Boxen::Checkout.new(config)
+  def checkout
+    @checkout ||= Boxen::Checkout.new(@config)
   end
 
   def ok?
     # Only run if we have credentials and we're on master
-    config.login.to_s.empty? && !checkout.master?
+    config.login.to_s.empty? || !checkout.master?
   end
 
   def run
@@ -25,7 +22,6 @@ class Boxen::Postflight::GithubIssue < Boxen::Postflight
     end
   end
 
-  private
   def compare_url
     return unless config.reponame
     "#{config.ghurl}/#{config.reponame}/compare/#{checkout.sha}...master"
@@ -98,10 +94,12 @@ class Boxen::Postflight::GithubIssue < Boxen::Postflight
     body
   end
 
+  attr_writer :failure_label
   def failure_label
     @failure_label ||= 'failure'
   end
 
+  attr_writer :ongoing_label
   def ongoing_label
     @ongoing_label ||= 'ongoing'
   end
