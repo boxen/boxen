@@ -10,7 +10,7 @@ class Boxen::Postflight::GithubIssue < Boxen::Postflight
 
   def ok?
     # Only run if we have credentials and we're on master
-    config.login.to_s.empty? || !checkout.master?
+    !enabled? || config.login.to_s.empty? || !checkout.master?
   end
 
   def run
