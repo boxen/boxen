@@ -3,7 +3,7 @@ require "boxen/postflight"
 
 class BoxenPostflightActiveTest < Boxen::Test
   def setup
-    @check = Boxen::Postflight::Active.new :config
+    @check = Boxen::Postflight::Active.new :config, :command
   end
 
   def test_ok?
@@ -18,7 +18,7 @@ class BoxenPostflightActiveTest < Boxen::Test
 
   def test_run
     config = stub :envfile => "foo"
-    @check = Boxen::Postflight::Active.new config
+    @check = Boxen::Postflight::Active.new config, :command
 
     _, stderr = capture_io do
       @check.run
