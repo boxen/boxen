@@ -1,18 +1,22 @@
-require "boxen/hook"
+require "boxen/postflight"
 require "json"
 require "net/http"
 
-class Boxen::Hook::Web < Boxen::Hook
-  def perform?
-    enabled?
+class Boxen::Postflight::WebHook < Boxen::Postflight
+  def ok?
+    !enabled?
   end
 
-  private
-  def call
+  attr_writer :checkout
+  def checkout
+    @checkout ||= Boxen::Checkout.new(config)
+  end
+
+  def run
     payload = {
       :login  => config.user,
       :sha    => checkout.sha,
-      :status => result.success? ? 'success' : 'failure',
+      :status => command.success? ? 'success' : 'failure',
       :time   => "#{Time.now.utc.to_i}"
     }
 
@@ -49,6 +53,11 @@ class Boxen::Hook::Web < Boxen::Hook
   def required_environment_variables
     ['BOXEN_WEB_HOOK_URL']
   end
-end
 
-Boxen::Hook.register Boxen::Hook::Web
+  def enabled?
+    required_vars = Array(required_environment_variables)
+    required_vars.any? && required_vars.all? do |var|
+      ENV[var] && !ENV[var].empty?
+    end
+  end
+end

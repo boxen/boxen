@@ -52,5 +52,3 @@ module Boxen
     end
   end
 end
-
-require "boxen/hook/web"

@@ -1,16 +1,18 @@
-require "boxen/test"
-require "boxen/hook/web"
+require 'boxen/test'
+require 'boxen/postflight'
+require 'boxen/postflight/web_hook'
 
 class Boxen::Config
   attr_writer :api
 end
 
-class BoxenHookWebTest < Boxen::Test
+class BoxenPostflightWebHookTest < Boxen::Test
   def setup
     @config   = Boxen::Config.new
     @checkout = Boxen::Checkout.new(@config)
-    @result   = stub 'result', :success? => true
-    @hook = Boxen::Hook::Web.new @config, @checkout, @result
+    @command  = stub 'command', :success? => true
+    @hook = Boxen::Postflight::WebHook.new @config, @command
+    @hook.checkout = @checkout
   end
 
   def test_enabled
@@ -28,18 +30,18 @@ class BoxenHookWebTest < Boxen::Test
     ENV['BOXEN_WEB_HOOK_URL'] = original
   end
 
-  def test_perform
+  def test_ok
     @hook.stubs(:enabled?).returns(false)
-    refute @hook.perform?
+    assert @hook.ok?
 
     @hook.stubs(:enabled?).returns(true)
-    assert @hook.perform?
+    refute @hook.ok?
   end
 
   def test_run
     @config.stubs(:user).returns('fred')
     @checkout.stubs(:sha).returns('87dbag3')
-    @result.stubs(:success?).returns(false)
+    @command.stubs(:success?).returns(false)
     now = Time.now
     Time.stubs(:now).returns(now)
 
