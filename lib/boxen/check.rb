@@ -7,26 +7,10 @@ module Boxen
   class Check
     include Boxen::Util::Logging
 
-    # A collection of preflight instances for `config`. An instance is
-    # created for every constant under `self` that's also a
-    # subclass of `self`.
-
-    def self.checks(config, command)
-      constants.map { |n| const_get n }.
-        select { |c| c < self }.
-        map { |c| c.new config, command }
-    end
-
     # Search `dir` and load all Ruby files under it.
 
     def self.register(dir)
       Dir["#{dir}/*.rb"].sort.each { |f| load f }
-    end
-
-    # Check each instance against `config`.
-
-    def self.run(config)
-      checks(config).each { |check| check.run unless check.ok? }
     end
 
     attr_reader :config
