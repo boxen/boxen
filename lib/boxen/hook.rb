@@ -2,7 +2,6 @@ module Boxen
   class Hook
     attr_reader :config
     attr_reader :checkout
-    attr_reader :puppet
     attr_reader :result
 
     @hooks = []
@@ -16,13 +15,24 @@ module Boxen
     end
 
     def self.all
-      @hooks || []
+      @hooks
     end
 
-    def initialize(config, checkout, puppet, result)
+    def self.register(klass)
+      unless defined? @hooks
+        @hooks = []
+      end
+
+      @hooks << klass
+    end
+
+    def self.run
+      @hooks.each { |hook| hook.new(nil, nil, nil).run }
+    end
+
+    def initialize(config, checkout, result)
       @config   = config
       @checkout = checkout
-      @puppet   = puppet
       @result   = result
     end
 
@@ -34,7 +44,7 @@ module Boxen
     end
 
     def perform?
-      false
+      enabled?
     end
 
     def run
@@ -42,6 +52,3 @@ module Boxen
     end
   end
 end
-
-require "boxen/hook/github_issue"
-require "boxen/hook/web"

@@ -3,7 +3,7 @@ require 'boxen/preflight/rvm'
 
 class BoxenPreflightRVMTest < Boxen::Test
   def test_directory_check
-    preflight = Boxen::Preflight::RVM.new(mock('config'))
+    preflight = Boxen::Preflight::RVM.new(mock('config'), mock('command'))
     File.expects(:exist?).with("#{ENV['HOME']}/.rvm").returns(false)
     assert preflight.ok?
   end

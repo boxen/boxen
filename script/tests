@@ -6,5 +6,6 @@ cd "$(dirname $0)"/..
 script/bootstrap &&
   ruby -rubygems -Ilib:test \
     -e 'require "bundler/setup"' \
+    -e 'require "minitest/autorun"' \
     -e 'tests = ARGV.empty? ? Dir["test/**/*_test.rb"] : ARGV' \
     -e 'tests.each { |f| load f }' "$@"

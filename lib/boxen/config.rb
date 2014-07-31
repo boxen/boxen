@@ -25,9 +25,6 @@ module Boxen
           end
         end
 
-        keychain        = Boxen::Keychain.new config.user
-        config.token    = keychain.token
-
         if config.enterprise?
           # configure to talk to GitHub Enterprise
           Octokit.configure do |c|
@@ -80,8 +77,17 @@ module Boxen
     def initialize(&block)
       @fde  = true
       @pull = true
+      @debug = false
 
       yield self if block_given?
+    end
+
+    def keychain
+      @keychain ||= Boxen::Keychain.new self.user
+    end
+
+    def token
+      @token ||= keychain.token
     end
 
     # Create an API instance using the current user creds. A new
@@ -94,10 +100,31 @@ module Boxen
     # Spew a bunch of debug logging? Default is `false`.
 
     def debug?
+      # TODO: fix this
       !!@debug
     end
 
     attr_writer :debug
+
+    def offline?
+      @offline ||= false
+    end
+
+    attr_writer :offline
+
+    def report?
+      # TODO: Actually make this a thing
+      @report = false
+    end
+
+    attr_writer :report
+
+    def profile?
+      #TODO: Actually make this a thing
+      @profile = true
+    end
+
+    attr_writer :profile
 
     # A GitHub user's public email.
 
@@ -122,7 +149,7 @@ module Boxen
     # `BOXEN_HOME` environment variable.
 
     def homedir
-      @homedir || ENV["BOXEN_HOME"] || "/opt/boxen"
+      @homedir ||= (ENV["BOXEN_HOME"] || "/opt/boxen")
     end
 
     attr_writer :homedir
@@ -132,7 +159,7 @@ module Boxen
     # overwritten on every run.
 
     def logfile
-      @logfile || ENV["BOXEN_LOG_FILE"] || "#{repodir}/log/boxen.log"
+      @logfile ||= (ENV["BOXEN_LOG_FILE"] || "#{repodir}/log/boxen.log")
     end
 
     attr_writer :logfile
@@ -144,46 +171,6 @@ module Boxen
     # A GitHub user's profile name.
 
     attr_accessor :name
-
-    # Just go through the motions? Default is `false`.
-
-    def pretend?
-      !!@pretend
-    end
-
-    attr_writer :pretend
-
-    # Run a profiler on Puppet? Default is `false`.
-
-    def profile?
-      !!@profile
-    end
-
-    attr_writer :profile
-
-    # Enable the Puppet future parser? Default is `false`.
-
-    def future_parser?
-      !!@future_parser
-    end
-
-    attr_writer :future_parser
-
-    # Enable puppet reports ? Default is `false`.
-
-    def report?
-      !!@report
-    end
-
-    attr_writer :report
-
-    # Enable generation of dependency graphs.
-
-    def graph?
-      !!@graph
-    end
-
-    attr_writer :graph
 
     # An Array of Boxen::Project entries, one for each project Boxen
     # knows how to manage.
@@ -208,7 +195,7 @@ module Boxen
     # `BOXEN_PUPPET_DIR` environment variable.
 
     def puppetdir
-      @puppetdir || ENV["BOXEN_PUPPET_DIR"] || "/tmp/boxen/puppet"
+      @puppetdir ||= (ENV["BOXEN_PUPPET_DIR"] || "/tmp/boxen/puppet")
     end
 
     attr_writer :puppetdir
@@ -217,7 +204,7 @@ module Boxen
     # `Dir.pwd`. Respects the `BOXEN_REPO_DIR` environment variable.
 
     def repodir
-      @repodir || ENV["BOXEN_REPO_DIR"] || Dir.pwd
+      @repodir ||= (ENV["BOXEN_REPO_DIR"] || Dir.pwd)
     end
 
     attr_writer :repodir
@@ -228,7 +215,7 @@ module Boxen
     # Respects the `BOXEN_REPO_NAME` environment variable.
 
     def reponame
-      override = @reponame || ENV["BOXEN_REPO_NAME"]
+      override = @reponame ||= ENV["BOXEN_REPO_NAME"]
       return override unless override.nil?
 
       if File.directory? repodir
@@ -238,7 +225,7 @@ module Boxen
         # find the path and strip off the .git suffix
         repo_exp = Regexp.new Regexp.escape(ghuri.host) + "[/:]([^/]+/[^/]+)"
         if $?.success? && repo_exp.match(url)
-          @reponame = $1.sub /\.git$/, ""
+          @reponame = $1.sub(/\.git$/, "")
         end
       end
     end
@@ -248,7 +235,7 @@ module Boxen
     # GitHub location (public or GitHub Enterprise)
 
     def ghurl
-      @ghurl || ENV["BOXEN_GITHUB_ENTERPRISE_URL"] || "https://github.com"
+      @ghurl ||= (ENV["BOXEN_GITHUB_ENTERPRISE_URL"] || "https://github.com")
     end
 
     attr_writer :ghurl
@@ -256,8 +243,7 @@ module Boxen
     # Repository URL template (required for GitHub Enterprise)
 
     def repotemplate
-      default = 'https://github.com/%s'
-      @repotemplate || ENV["BOXEN_REPO_URL_TEMPLATE"] || default
+      @repotemplate ||= (ENV["BOXEN_REPO_URL_TEMPLATE"] || "https://github.com/%s")
     end
 
     attr_writer :repotemplate
@@ -272,7 +258,7 @@ module Boxen
     # `"/Users/#{user}/src"`.
 
     def srcdir
-      @srcdir || ENV["BOXEN_SRC_DIR"] || "/Users/#{user}/src"
+      @srcdir ||= (ENV["BOXEN_SRC_DIR"] || "/Users/#{user}/src")
     end
 
     attr_writer :srcdir
@@ -281,14 +267,10 @@ module Boxen
     # Respects the `BOXEN_NO_ISSUE` environment variable.
 
     def stealth?
-      !!ENV["BOXEN_NO_ISSUE"] || @stealth
+      @stealth ||= !!ENV["BOXEN_NO_ISSUE"]
     end
 
     attr_writer :stealth
-
-    # A GitHub OAuth token. Default is `nil`.
-
-    attr_reader :token
 
     def token=(token)
       @token = token
@@ -298,7 +280,7 @@ module Boxen
     # A local user login. Default is the `USER` environment variable.
 
     def user
-      @user || ENV["USER"]
+      @user ||= ENV["USER"]
     end
 
     attr_writer :user
@@ -313,7 +295,7 @@ module Boxen
     # Respects the `BOXEN_S3_HOST` environment variable.
 
     def s3host
-      @s3host || ENV["BOXEN_S3_HOST"] || "s3.amazonaws.com"
+      @s3host ||= (ENV["BOXEN_S3_HOST"] || "s3.amazonaws.com")
     end
 
     attr_writer :s3host
@@ -322,7 +304,7 @@ module Boxen
     # Respects the `BOXEN_S3_BUCKET` environment variable.
 
     def s3bucket
-      @s3bucket || ENV["BOXEN_S3_BUCKET"] || "boxen-downloads"
+      @s3bucket ||= (ENV["BOXEN_S3_BUCKET"] || "boxen-downloads")
     end
 
     attr_writer :s3bucket

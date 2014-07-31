@@ -7,13 +7,6 @@ class BoxenConfigTest < Boxen::Test
     @config.repodir = "test/fixtures/repo"
   end
 
-  def test_debug?
-    refute @config.debug?
-
-    @config.debug = true
-    assert @config.debug?
-  end
-
   def test_email
     assert_nil @config.email
 
@@ -94,27 +87,6 @@ class BoxenConfigTest < Boxen::Test
 
     @config.name = "foo"
     assert_equal "foo", @config.name
-  end
-
-  def test_pretend?
-    refute @config.pretend?
-
-    @config.pretend = true
-    assert @config.pretend?
-  end
-
-  def test_profile?
-    refute @config.profile?
-
-    @config.profile = true
-    assert @config.profile?
-  end
-
-  def test_future_parser?
-    refute @config.future_parser?
-
-    @config.future_parser = true
-    assert @config.future_parser?
   end
 
   def test_projects
@@ -324,8 +296,6 @@ class BoxenConfigTest < Boxen::Test
   end
 
   def test_token
-    assert_nil @config.token
-
     @config.token = "foo"
     assert_equal "foo", @config.token
   end
@@ -382,7 +352,7 @@ class BoxenConfigTest < Boxen::Test
     ENV["BOXEN_S3_BUCKET"] = val
   end
 
-  def test_s3host_env_var
+  def test_s3bucket_env_var
     val = ENV["BOXEN_S3_BUCKET"]
 
     ENV["BOXEN_S3_BUCKET"] = "my-bucket"

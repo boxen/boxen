@@ -2,6 +2,6 @@ require "minitest/autorun"
 require "mocha/setup"
 
 module Boxen
-  class Test < MiniTest::Unit::TestCase
+  class Test < MiniTest::Test
   end
 end

@@ -2,6 +2,8 @@ require "boxen/preflight"
 
 class Boxen::Preflight::Identity < Boxen::Preflight
   def ok?
+    return true if config.offline?
+    
     !user || (config.email && config.name)
   end
 

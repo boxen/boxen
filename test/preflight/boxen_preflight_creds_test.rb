@@ -8,21 +8,23 @@ class BoxenPreflightCredsTest < Boxen::Test
       c.user  = 'mojombo'
       c.token = 'sekr3t!'
     end
+    @command = stub 'command'
     ENV.delete("BOXEN_GITHUB_LOGIN")
     ENV.delete("BOXEN_GITHUB_PASSWORD")
   end
 
   def test_basic
-    preflight = Boxen::Preflight::Creds.new @config
+    preflight = Boxen::Preflight::Creds.new @config, @command
 
     error = Octokit::Unauthorized.new
-    @config.api.stubs(:user).raises(error)
+    @config.api.stubs(:user).returns(error)
+    @config.stubs(:offline?).returns(false)
 
     refute preflight.ok?
   end
 
   def test_basic_with_otp_challenge
-    preflight = Boxen::Preflight::Creds.new @config
+    preflight = Boxen::Preflight::Creds.new @config, @command
 
     blank_opt = {:headers => {}}
     good_otp  = {:headers => {"X-GitHub-OTP" => "123456"}}
@@ -43,7 +45,7 @@ class BoxenPreflightCredsTest < Boxen::Test
 
   def test_fetch_login_and_password_when_nothing_is_given_in_env
     # fetches login and password by asking
-    preflight = Boxen::Preflight::Creds.new @config
+    preflight = Boxen::Preflight::Creds.new @config, @command
     HighLine.any_instance.expects(:ask).with("GitHub login: ").returns "l"
     HighLine.any_instance.expects(:ask).with("GitHub password: ").returns "p"
     preflight.send(:fetch_login_and_password)
@@ -55,7 +57,7 @@ class BoxenPreflightCredsTest < Boxen::Test
   def test_fetch_password_when_login_is_given_in_env
     # fetches only password by asking
     ENV["BOXEN_GITHUB_LOGIN"] = "l"
-    preflight = Boxen::Preflight::Creds.new @config
+    preflight = Boxen::Preflight::Creds.new @config, @command
     preflight.expects(:warn)
     HighLine.any_instance.expects(:ask).with("GitHub login: ").never
     HighLine.any_instance.expects(:ask).with("GitHub password: ").returns "p"
@@ -68,7 +70,7 @@ class BoxenPreflightCredsTest < Boxen::Test
   def test_fetch_login_when_password_is_given_in_env
     # fetches only login by asking
     ENV["BOXEN_GITHUB_PASSWORD"] = "p"
-    preflight = Boxen::Preflight::Creds.new @config
+    preflight = Boxen::Preflight::Creds.new @config, @command
     preflight.expects(:warn)
     HighLine.any_instance.expects(:ask).with("GitHub login: ").returns "l"
     HighLine.any_instance.expects(:ask).with("GitHub password: ").never

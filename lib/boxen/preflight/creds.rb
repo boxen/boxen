@@ -12,6 +12,8 @@ class Boxen::Preflight::Creds < Boxen::Preflight
   attr :password
 
   def ok?
+    return true if config.offline?
+
     if config.token && config.api.user
       # There was a period of time when login wasn't geting set on first run.
       # This should correct that.
