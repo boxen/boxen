@@ -44,7 +44,7 @@ module Boxen
       flags << ["--vardir",      "#{config.puppetdir}/var"]
       flags << ["--libdir",      "#{config.repodir}/lib"]#:#{root}/lib"]
       flags << ["--libdir",      "#{root}/lib"]
-      flags << ["--manifestdir", "#{config.repodir}/manifests"]
+      flags << ["--manifest", "#{config.repodir}/manifests"]
       flags << ["--modulepath",  "#{config.repodir}/modules:#{config.repodir}/shared"]
 
       # Don't ever complain about Hiera to me
