@@ -21,10 +21,10 @@ module Boxen
     end
 
     def command
-      manifest = "#{config.repodir}/manifests/site.pp"
-      puppet   = "#{config.repodir}/bin/puppet"
+      manifestdir = "#{config.repodir}/manifests"
+      puppet      = "#{config.repodir}/bin/puppet"
 
-      [puppet, "apply", flags, manifest].flatten
+      [puppet, "apply", flags, manifestdir].flatten
     end
 
     def hiera_config
@@ -44,7 +44,6 @@ module Boxen
       flags << ["--vardir",      "#{config.puppetdir}/var"]
       flags << ["--libdir",      "#{config.repodir}/lib"]#:#{root}/lib"]
       flags << ["--libdir",      "#{root}/lib"]
-      flags << ["--manifestdir", "#{config.repodir}/manifests"]
       flags << ["--modulepath",  "#{config.repodir}/modules:#{config.repodir}/shared"]
 
       # Don't ever complain about Hiera to me
