@@ -221,6 +221,11 @@ module Boxen
       @list_services
     end
 
+    def run?
+      !(list_services? || restart_services? || enable_service? || disable_service? ||
+        enable_services? || disable_services? || help?)
+    end
+
     # Parse `args` as an array of CLI argument Strings. Raises
     # Boxen::Error if anything goes wrong. Returns `self`.
 
