@@ -46,20 +46,21 @@ module Boxen
 
     def self.save(config)
       attrs = {
-        :email        => config.email,
-        :fde          => config.fde?,
-        :homedir      => config.homedir,
-        :login        => config.login,
-        :name         => config.name,
-        :puppetdir    => config.puppetdir,
-        :repodir      => config.repodir,
-        :reponame     => config.reponame,
-        :ghurl        => config.ghurl,
-        :srcdir       => config.srcdir,
-        :user         => config.user,
-        :repotemplate => config.repotemplate,
-        :s3host       => config.s3host,
-        :s3bucket     => config.s3bucket
+        :email             => config.email,
+        :fde               => config.fde?,
+        :homedir           => config.homedir,
+        :login             => config.login,
+        :name              => config.name,
+        :puppetdir         => config.puppetdir,
+        :repodir           => config.repodir,
+        :reponame          => config.reponame,
+        :ghurl             => config.ghurl,
+        :srcdir            => config.srcdir,
+        :user              => config.user,
+        :repotemplate      => config.repotemplate,
+        :s3host            => config.s3host,
+        :s3bucket          => config.s3bucket,
+        :download_url_base => config.download_url_base
       }
 
       file = "#{config.homedir}/config/boxen/defaults.json"
@@ -309,6 +310,7 @@ module Boxen
 
     attr_writer :color
 
+    # Deprecated
     # The S3 host name. Default is `"s3.amazonaws.com"`.
     # Respects the `BOXEN_S3_HOST` environment variable.
 
@@ -318,6 +320,7 @@ module Boxen
 
     attr_writer :s3host
 
+    # Deprecated
     # The S3 bucket name. Default is `"boxen-downloads"`.
     # Respects the `BOXEN_S3_BUCKET` environment variable.
 
@@ -326,5 +329,11 @@ module Boxen
     end
 
     attr_writer :s3bucket
+
+    def download_url_base
+      @download_url_base || ENV["BOXEN_DOWNLOAD_URL_BASE"] || "http://#{s3bucket}.#{s3host}"
+    end
+
+    attr_writer :download_url_base
   end
 end

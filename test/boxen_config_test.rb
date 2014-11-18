@@ -390,4 +390,25 @@ class BoxenConfigTest < Boxen::Test
   ensure
     ENV["BOXEN_S3_BUCKET"] = val
   end
+
+  def test_download_url_base
+    val = ENV["BOXEN_DOWNLOAD_URL_BASE"]
+    ENV["BOXEN_DOWNLOAD_URL_BASE"] = nil
+
+    assert_equal "http://boxen-downloads.s3.amazonaws.com", @config.download_url_base
+
+    @config.download_url_base = "https://some-fake.cloudfront.net/foo"
+    assert_equal "https://some-fake.cloudfront.net/foo", @config.download_url_base
+  ensure
+    ENV["BOXEN_DOWNLOAD_URL_BASE"] = val
+  end
+
+  def test_download_url_base_env_var
+    val = ENV["BOXEN_DOWNLOAD_URL_BASE"]
+
+    ENV["BOXEN_DOWNLOAD_URL_BASE"] = "https://myboxendownloads.example/org"
+    assert_equal "https://myboxendownloads.example/org", @config.download_url_base
+  ensure
+    ENV["BOXEN_DOWNLOAD_URL_BASE"] = val
+  end
 end
