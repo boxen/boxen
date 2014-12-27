@@ -1,5 +1,6 @@
 require "fileutils"
 require "boxen/util"
+require "shellwords"
 
 module Boxen
 
@@ -93,29 +94,40 @@ module Boxen
       FileUtils.mkdir_p File.dirname config.logfile
       FileUtils.touch config.logfile
 
-      if File.file? "Puppetfile"
-        librarian = "#{config.repodir}/bin/librarian-puppet"
+      librarian("install --path=#{config.repodir}/shared")
 
-        unless config.enterprise?
-          # Set an environment variable for librarian-puppet's
-          # github_tarball source strategy.
-          ENV["GITHUB_API_TOKEN"] = config.token
-        end
-
-        librarian_command = [librarian, "install", "--path=#{config.repodir}/shared"]
-        librarian_command << "--verbose" if config.debug?
-
-        warn librarian_command.join(" ") if config.debug?
-        unless system *librarian_command
-          abort "Can't run Puppet, fetching dependencies with librarian failed."
-        end
-      end
-
-      warn command.join(" ") if config.debug?
-
-      Boxen::Util.sudo *command
+      Boxen::Util.sudo(*command)
 
       Status.new($?.exitstatus)
+    end
+
+    def librarian(args)
+      return unless puppetfile_present?
+
+      ENV["GITHUB_API_TOKEN"] = config.token unless config.enterprise?
+
+      librarian_command = "#{config.repodir}/bin/librarian-puppet"
+      parsed_args = "#{librarian_command} #{args}".shellsplit
+      parsed_args << "--verbose" if config.debug?
+
+      warn parsed_args.join(" ") if config.debug?
+
+      system(*parsed_args)
+
+      abort_unless_successful_run
+    end
+
+    def puppetfile_present?
+      File.file? "Puppetfile"
+    end
+
+    def abort_unless_successful_run
+      msg = "Can't run Puppet, fetching dependencies with librarian failed."
+      abort msg unless $?.exitstatus
+    end
+
+    def check_for_new_puppet_modules
+      librarian("outdated")
     end
   end
 end

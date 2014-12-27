@@ -24,25 +24,26 @@ module Boxen
     # parse immediately.
 
     def initialize(*args)
-      @args             = []
-      @debug            = false
-      @env              = false
-      @fde              = true
-      @help             = false
-      @pretend          = false
-      @profile          = false
-      @report           = false
-      @graph            = false
-      @projects         = false
-      @stealth          = false
-      @disable_service  = false
-      @enable_service   = false
-      @restart_service  = false
-      @disable_services = false
-      @enable_services  = false
-      @restart_services = false
-      @list_services    = false
-      @color            = true
+      @args                 = []
+      @debug                = false
+      @env                  = false
+      @fde                  = true
+      @help                 = false
+      @pretend              = false
+      @profile              = false
+      @report               = false
+      @graph                = false
+      @projects             = false
+      @stealth              = false
+      @disable_service      = false
+      @enable_service       = false
+      @restart_service      = false
+      @disable_services     = false
+      @enable_services      = false
+      @restart_services     = false
+      @list_services        = false
+      @list_updated_modules = false
+      @color                = true
 
       @options = OptionParser.new do |o|
         o.banner = "Usage: #{File.basename $0} [options] [projects...]\n\n"
@@ -97,6 +98,10 @@ module Boxen
 
         o.on "--list-services", "List Boxen services." do
           @list_services = true
+        end
+
+        o.on "--list-updated-modules", "List modules with newer versions available." do
+          @list_updated_modules = true
         end
 
         o.on "--homedir DIR", "Boxen's home directory." do |homedir|
@@ -219,6 +224,10 @@ module Boxen
 
     def list_services?
       @list_services
+    end
+
+    def list_updated_modules?
+      @list_updated_modules
     end
 
     def run?
