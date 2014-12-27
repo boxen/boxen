@@ -2,15 +2,13 @@ require "fileutils"
 require "boxen/util"
 
 module Boxen
-
   # Manages an invocation of puppet.
 
   class Puppeteer
-
     class Status < Struct.new(:code)
       # Puppet's detailed exit codes reserves 2 for a successful run with changes
       def success?
-        [0,2].include?(code)
+        [0, 2].include?(code)
       end
     end
 

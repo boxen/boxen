@@ -55,7 +55,7 @@ module Boxen
       end
 
       # Return Puppet's exit status.
-      return status.code
+      status.code
     end
   end
 end

@@ -2,12 +2,10 @@ require "optparse"
 require "boxen/error"
 
 module Boxen
-
   # Various flags and settings parsed from the command line. See
   # Setup::Configuration for more info.
 
   class Flags
-
     attr_reader :args
     attr_reader :homedir
     attr_reader :logfile

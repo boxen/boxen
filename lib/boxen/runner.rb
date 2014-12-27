@@ -48,7 +48,6 @@ module Boxen
     end
 
     def process_flags
-
       # --projects prints a list of available projects and exits.
 
       if flags.projects?
@@ -135,7 +134,6 @@ module Boxen
 
         exit
       end
-
     end
 
     def process_args

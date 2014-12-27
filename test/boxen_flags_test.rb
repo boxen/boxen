@@ -212,6 +212,6 @@ class BoxenFlagsTest < Boxen::Test
   # Create an instance of Boxen::Flags with optional `args`.
 
   def flags(*args)
-    Boxen::Flags.new *args
+    Boxen::Flags.new(*args)
   end
 end

@@ -13,8 +13,9 @@ class BoxenUtilTest < Boxen::Test
   end
 
   def test_self_sudo
-    Boxen::Util.expects(:system).
-      with "sudo", "-p", "Password for sudo: ", "echo", "foo"
+    Boxen::Util.expects(:system).with(
+      "sudo", "-p", "Password for sudo: ", "echo", "foo"
+    )
 
     Boxen::Util.sudo "echo", "foo"
   end
