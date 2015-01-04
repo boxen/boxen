@@ -8,6 +8,7 @@ Gem::Specification.new do |gem|
   gem.description   = "Manage Mac development boxes with love (and Puppet)."
   gem.summary       = "You know, for laptops and stuff."
   gem.homepage      = "https://github.com/boxen/boxen"
+  gem.license       = 'MIT'
 
   gem.files         = `git ls-files`.split $/
   gem.test_files    = gem.files.grep /^test/
