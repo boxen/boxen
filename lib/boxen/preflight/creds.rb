@@ -65,6 +65,9 @@ class Boxen::Preflight::Creds < Boxen::Preflight
   end
 
   def run
+    if not config.auth?
+        return
+    end
     fetch_login_and_password
     tokens = get_tokens
 

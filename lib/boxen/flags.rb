@@ -28,6 +28,7 @@ module Boxen
       @debug            = false
       @env              = false
       @fde              = true
+      @auth             = true
       @help             = false
       @pretend          = false
       @profile          = false
@@ -115,6 +116,10 @@ module Boxen
           @fde = false
         end
 
+        o.on "--no-auth", "Don't require Github authentication." do
+          @auth = false
+        end
+
         # --no-pull is used before options are parsed, but consumed here.
 
         o.on "--no-pull", "Don't try to update code before applying."
@@ -160,6 +165,7 @@ module Boxen
     def apply(config)
       config.debug         = debug?
       config.fde           = fde?     if config.fde?
+      config.auth          = auth?    if config.auth?
       config.homedir       = homedir  if homedir
       config.logfile       = logfile  if logfile
       config.login         = login    if login
@@ -187,6 +193,10 @@ module Boxen
 
     def fde?
       @fde
+    end
+
+    def auth?
+      @auth
     end
 
     def help?
