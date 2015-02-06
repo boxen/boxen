@@ -9,6 +9,9 @@ class BoxenFlagsTest < Boxen::Test
       stubs(:fde?).returns true
       expects(:fde=).with false
 
+      stubs(:auth?).returns true
+      expects(:auth=).with false
+
       expects(:homedir=).with "homedir"
       expects(:logfile=).with "logfile"
       expects(:login=).with "login"
@@ -27,7 +30,7 @@ class BoxenFlagsTest < Boxen::Test
     # Do our best to frob every switch.
 
     flags = Boxen::Flags.new "--debug", "--help", "--login", "login",
-      "--no-fde", "--no-pull", "--no-issue", "--noop",
+      "--no-fde", "--no-auth", "--no-pull", "--no-issue", "--noop",
       "--pretend", "--profile", "--future-parser", "--report", "--graph", "--projects",
       "--user", "user", "--homedir", "homedir", "--srcdir", "srcdir",
       "--logfile", "logfile", "--token", "token"
@@ -128,6 +131,11 @@ class BoxenFlagsTest < Boxen::Test
   def test_no_fde
     assert flags.fde?
     refute flags("--no-fde").fde?
+  end
+
+  def test_no_auth
+    assert flags.auth?
+    refute flags("--no-auth").auth?
   end
 
   def test_no_pull_is_a_noop

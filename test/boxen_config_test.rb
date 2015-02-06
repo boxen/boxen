@@ -37,6 +37,22 @@ class BoxenConfigTest < Boxen::Test
     ENV["BOXEN_NO_FDE"] = val
   end
 
+  def test_auth?
+    assert @config.auth?
+
+    @config.auth = false
+    refute @config.auth?
+  end
+
+  def test_auth_env_var
+    val = ENV["BOXEN_NO_AUTH"]
+
+    ENV["BOXEN_NO_AUTH"] = "1"
+    refute @config.auth?
+
+    ENV["BOXEN_NO_AUTH"] = val
+  end
+
   def test_homedir
     val = ENV["BOXEN_HOME"]
     ENV["BOXEN_HOME"] = nil
