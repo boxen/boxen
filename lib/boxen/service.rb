@@ -1,4 +1,4 @@
-require "boxen/util"
+require 'boxen/util'
 
 module Boxen
   class Service
@@ -44,7 +44,7 @@ module Boxen
     end
 
     def self.location
-      "/Library/LaunchDaemons"
+      '/Library/LaunchDaemons'
     end
 
     def self.files

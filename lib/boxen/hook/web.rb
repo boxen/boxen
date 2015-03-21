@@ -1,6 +1,6 @@
-require "boxen/hook"
-require "json"
-require "net/http"
+require 'boxen/hook'
+require 'json'
+require 'net/http'
 
 module Boxen
   class Hook
@@ -10,12 +10,13 @@ module Boxen
       end
 
       private
+
       def call
         payload = {
-          :login  => config.user,
-          :sha    => checkout.sha,
-          :status => result.success? ? 'success' : 'failure',
-          :time   => "#{Time.now.utc.to_i}"
+          login: config.user,
+          sha: checkout.sha,
+          status: result.success? ? 'success' : 'failure',
+          time: "#{Time.now.utc.to_i}"
         }
 
         post_web_hook payload

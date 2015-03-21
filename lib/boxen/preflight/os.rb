@@ -1,4 +1,4 @@
-require "boxen/preflight"
+require 'boxen/preflight'
 
 class Boxen::Preflight::OS < Boxen::Preflight
   SUPPORTED_RELEASES = %w(10.8 10.9 10.10)
@@ -14,7 +14,7 @@ class Boxen::Preflight::OS < Boxen::Preflight
   private
 
   def osx?
-    `uname -s`.chomp == "Darwin"
+    `uname -s`.chomp == 'Darwin'
   end
 
   def supported_release?

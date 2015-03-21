@@ -1,25 +1,24 @@
-require "shellwords"
+require 'shellwords'
 
 module Boxen
   class Keychain
-
     # The keychain proxy we use to provide isolation and a friendly
     # message in security prompts.
 
-    HELPER = File.expand_path "../../../script/Boxen", __FILE__
+    HELPER = File.expand_path '../../../script/Boxen', __FILE__
 
     # The service name to use when loading/saving passwords.
 
-    PASSWORD_SERVICE = "GitHub Password"
+    PASSWORD_SERVICE = 'GitHub Password'
 
     # The service name to use when loading/saving API keys.
 
-    TOKEN_SERVICE = "GitHub API Token"
+    TOKEN_SERVICE = 'GitHub API Token'
 
     def initialize(login)
       @login = login
       # Clear the password. We're storing tokens now.
-      set PASSWORD_SERVICE, ""
+      set PASSWORD_SERVICE, ''
     end
 
     def token
@@ -38,21 +37,21 @@ module Boxen
       cmd = shellescape(HELPER, service, login)
 
       result = `#{cmd}`.strip
-      $?.success? ? result : nil
+      $CHILD_STATUS.success? ? result : nil
     end
 
     def set(service, token)
       cmd = shellescape(HELPER, service, login, token)
 
       unless system *cmd
-        raise Boxen::Error, "Can't save #{service} in the keychain."
+        fail Boxen::Error, "Can't save #{service} in the keychain."
       end
 
       token
     end
 
     def shellescape(*args)
-      args.map { |s| Shellwords.shellescape s }.join " "
+      args.map { |s| Shellwords.shellescape s }.join ' '
     end
   end
 end

@@ -1,5 +1,5 @@
-require "optparse"
-require "boxen/error"
+require 'optparse'
+require 'boxen/error'
 
 module Boxen
   # Various flags and settings parsed from the command line. See
@@ -43,109 +43,109 @@ module Boxen
       @color            = true
 
       @options = OptionParser.new do |o|
-        o.banner = "Usage: #{File.basename $0} [options] [projects...]\n\n"
+        o.banner = "Usage: #{File.basename $PROGRAM_NAME} [options] [projects...]\n\n"
 
-        o.on "--debug", "Be really verbose." do
+        o.on '--debug', 'Be really verbose.' do
           @debug = true
         end
 
-        o.on "--pretend", "--noop", "Don't make changes." do
+        o.on '--pretend', '--noop', "Don't make changes." do
           @pretend = true
         end
 
-        o.on "--report", "Enable puppet reports." do
+        o.on '--report', 'Enable puppet reports.' do
           @report = true
         end
 
-        o.on "--graph", "Enable generation of dependency graphs." do
+        o.on '--graph', 'Enable generation of dependency graphs.' do
           @graph = true
         end
 
-        o.on "--env", "Show useful environment variables." do
+        o.on '--env', 'Show useful environment variables.' do
           @env = true
         end
 
-        o.on "--help", "-h", "-?", "Show help." do
+        o.on '--help', '-h', '-?', 'Show help.' do
           @help = true
         end
 
-        o.on "--disable-service SERVICE", "Disable a Boxen service." do |service|
+        o.on '--disable-service SERVICE', 'Disable a Boxen service.' do |service|
           @disable_service = service
         end
 
-        o.on "--enable-service SERVICE", "Enable a Boxen service." do |service|
+        o.on '--enable-service SERVICE', 'Enable a Boxen service.' do |service|
           @enable_service = service
         end
 
-        o.on "--restart-service SERVICE", "Restart a Boxen service." do |service|
+        o.on '--restart-service SERVICE', 'Restart a Boxen service.' do |service|
           @restart_service = service
         end
 
-        o.on "--disable-services", "Disable all Boxen services." do
+        o.on '--disable-services', 'Disable all Boxen services.' do
           @disable_services = true
         end
 
-        o.on "--enable-services", "Enable all Boxen services." do
+        o.on '--enable-services', 'Enable all Boxen services.' do
           @enable_services = true
         end
 
-        o.on "--restart-services", "Restart all Boxen services." do
+        o.on '--restart-services', 'Restart all Boxen services.' do
           @restart_services = true
         end
 
-        o.on "--list-services", "List Boxen services." do
+        o.on '--list-services', 'List Boxen services.' do
           @list_services = true
         end
 
-        o.on "--homedir DIR", "Boxen's home directory." do |homedir|
+        o.on '--homedir DIR', "Boxen's home directory." do |homedir|
           @homedir = homedir
         end
 
-        o.on "--logfile DIR", "Boxen's log file." do |logfile|
+        o.on '--logfile DIR', "Boxen's log file." do |logfile|
           @logfile = logfile
         end
 
-        o.on "--login LOGIN", "Your GitHub login." do |login|
+        o.on '--login LOGIN', 'Your GitHub login.' do |login|
           @login = login
         end
 
-        o.on "--no-fde", "Don't require full disk encryption." do
+        o.on '--no-fde', "Don't require full disk encryption." do
           @fde = false
         end
 
         # --no-pull is used before options are parsed, but consumed here.
 
-        o.on "--no-pull", "Don't try to update code before applying."
+        o.on '--no-pull', "Don't try to update code before applying."
 
-        o.on "--no-issue", "--stealth", "Don't open an issue on failure." do
+        o.on '--no-issue', '--stealth', "Don't open an issue on failure." do
           @stealth = true
         end
 
-        o.on "--token TOKEN", "Your GitHub OAuth token." do |token|
+        o.on '--token TOKEN', 'Your GitHub OAuth token.' do |token|
           @token = token
         end
 
-        o.on "--profile", "Profile the Puppet run." do
+        o.on '--profile', 'Profile the Puppet run.' do
           @profile = true
         end
 
-        o.on "--future-parser", "Enable the Puppet future parser" do
+        o.on '--future-parser', 'Enable the Puppet future parser' do
           @future_parser = true
         end
 
-        o.on "--projects", "Show available projects." do
+        o.on '--projects', 'Show available projects.' do
           @projects = true
         end
 
-        o.on "--srcdir DIR", "The directory where repos live." do |srcdir|
+        o.on '--srcdir DIR', 'The directory where repos live.' do |srcdir|
           @srcdir = srcdir
         end
 
-        o.on "--user USER", "Your local user." do |user|
+        o.on '--user USER', 'Your local user.' do |user|
           @user = user
         end
 
-        o.on "--no-color", "Disable colors." do
+        o.on '--no-color', 'Disable colors.' do
           @color = false
         end
       end
@@ -233,7 +233,7 @@ module Boxen
       self
 
     rescue OptionParser::MissingArgument, OptionParser::InvalidOption => e
-      raise Boxen::Error, "#{e.message}\n#@options"
+      raise Boxen::Error, "#{e.message}\n#{@options}"
     end
 
     def pretend?
