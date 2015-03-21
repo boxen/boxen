@@ -3,9 +3,8 @@ require 'boxen/util'
 
 module Boxen
   # Manages an invocation of puppet.
-
   class Puppeteer
-    class Status < Struct.new(:code)
+    Status = Struct.new(:code) do
       # Puppet's detailed exit codes reserves 2 for a successful run with changes
       def success?
         [0, 2].include?(code)
