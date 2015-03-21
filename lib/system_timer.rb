@@ -6,8 +6,7 @@
 # To squash the message and stop confusing people, this shim just
 # exposes Timeout as SystemTimer. I'm a bad person.
 
-
-if (!defined?(RUBY_ENGINE) || "ruby" == RUBY_ENGINE) && RUBY_VERSION < '1.9'
-  require "timeout"
+if (!defined?(RUBY_ENGINE) || 'ruby' == RUBY_ENGINE) && RUBY_VERSION < '1.9'
+  require 'timeout'
   SystemTimer = Timeout
 end

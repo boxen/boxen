@@ -80,7 +80,7 @@ class BoxenPuppeteerTest < Boxen::Test
   def assert_flag_value(flag, value, flags)
     pair = [flag, value]
 
-    found = (0..flags.size).detect do |i|
+    found = (0..flags.size).find do |i|
       candidate = flags[i, pair.size]
       value == :anything ? candidate.size == pair.size : candidate == pair
     end

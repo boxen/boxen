@@ -11,7 +11,9 @@ module Boxen
     end
 
     def master?
-      Dir.chdir(config.repodir) { `git symbolic-ref HEAD`.strip == 'refs/heads/master' }
+      Dir.chdir(config.repodir) do
+        `git symbolic-ref HEAD`.strip == 'refs/heads/master'
+      end
     end
 
     def dirty?

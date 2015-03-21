@@ -1,9 +1,9 @@
-require "boxen/config"
-require "boxen/flags"
-require "boxen/postflight"
-require "boxen/preflight"
-require "boxen/runner"
-require "boxen/util"
+require 'boxen/config'
+require 'boxen/flags'
+require 'boxen/postflight'
+require 'boxen/preflight'
+require 'boxen/runner'
+require 'boxen/util'
 
 module Boxen
   class CLI
@@ -38,24 +38,23 @@ module Boxen
       # overriding anything.
       flags.apply config
 
-      if flags.run?
-        # Run the preflight checks.
-        Boxen::Preflight.run config
+      run_preflight_checks if flags.run?
+      run_postflight_checks if flags.run? && status.success?
 
-        # Save the config for Puppet (and next time).
-        Boxen::Config.save config
-      end
+      status.code
+    end
 
-      # Make the magic happen.
-      status = Boxen::CLI.new(config, flags).run
+    def run_preflight_checks
+      Boxen::Preflight.run config
+      Boxen::Config.save config
+    end
 
-      if flags.run?
-        # Run the postflight checks.
-        Boxen::Postflight.run config if status.success?
-      end
+    def run_postflight_checks
+      Boxen::Postflight.run config
+    end
 
-      # Return Puppet's exit status.
-      return status.code
+    def status
+      Boxen::CLI.new(config, flags).run
     end
   end
 end

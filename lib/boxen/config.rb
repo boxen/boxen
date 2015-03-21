@@ -1,17 +1,16 @@
-require "boxen/keychain"
-require "boxen/project"
-require "fileutils"
-require "json"
-require "octokit"
-require "shellwords"
+require 'boxen/keychain'
+require 'boxen/project'
+require 'fileutils'
+require 'json'
+require 'octokit'
+require 'shellwords'
 
 module Boxen
-
   # All configuration for Boxen, whether it's loaded from command-line
   # args, environment variables, config files, or the keychain.
 
   class Config
-    def self.load(&block)
+    def self.load(&_block)
       new do |config|
         file = "#{config.homedir}/config/boxen/defaults.json"
 
@@ -46,27 +45,27 @@ module Boxen
 
     def self.save(config)
       attrs = {
-        :email        => config.email,
-        :fde          => config.fde?,
-        :homedir      => config.homedir,
-        :login        => config.login,
-        :name         => config.name,
-        :puppetdir    => config.puppetdir,
-        :repodir      => config.repodir,
-        :reponame     => config.reponame,
-        :ghurl        => config.ghurl,
-        :srcdir       => config.srcdir,
-        :user         => config.user,
-        :repotemplate => config.repotemplate,
-        :s3host       => config.s3host,
-        :s3bucket     => config.s3bucket
+        email: config.email,
+        fde: config.fde?,
+        homedir: config.homedir,
+        login: config.login,
+        name: config.name,
+        puppetdir: config.puppetdir,
+        repodir: config.repodir,
+        reponame: config.reponame,
+        ghurl: config.ghurl,
+        srcdir: config.srcdir,
+        user: config.user,
+        repotemplate: config.repotemplate,
+        s3host: config.s3host,
+        s3bucket: config.s3bucket
       }
 
       file = "#{config.homedir}/config/boxen/defaults.json"
       FileUtils.mkdir_p File.dirname file
 
-      File.open file, "wb" do |f|
-        f.write JSON.generate Hash[attrs.reject { |k, v| v.nil? }]
+      File.open file, 'wb' do |f|
+        f.write JSON.generate Hash[attrs.reject { |_k, v| v.nil? }]
       end
 
       keychain          = Boxen::Keychain.new config.user
@@ -77,7 +76,7 @@ module Boxen
 
     # Create a new instance. Yields `self` if `block` is given.
 
-    def initialize(&block)
+    def initialize(&_block)
       @fde  = true
       @pull = true
 
@@ -88,7 +87,7 @@ module Boxen
     # instance is created any time `token` changes.
 
     def api
-      @api ||= Octokit::Client.new :login => token, :password => 'x-oauth-basic'
+      @api ||= Octokit::Client.new login: token, password: 'x-oauth-basic'
     end
 
     # Spew a bunch of debug logging? Default is `false`.
@@ -113,7 +112,7 @@ module Boxen
     # the `BOXEN_NO_FDE` environment variable.
 
     def fde?
-      !ENV["BOXEN_NO_FDE"] && @fde
+      !ENV['BOXEN_NO_FDE'] && @fde
     end
 
     attr_writer :fde
@@ -122,7 +121,7 @@ module Boxen
     # `BOXEN_HOME` environment variable.
 
     def homedir
-      @homedir || ENV["BOXEN_HOME"] || "/opt/boxen"
+      @homedir || ENV['BOXEN_HOME'] || '/opt/boxen'
     end
 
     attr_writer :homedir
@@ -132,7 +131,7 @@ module Boxen
     # overwritten on every run.
 
     def logfile
-      @logfile || ENV["BOXEN_LOG_FILE"] || "#{repodir}/log/boxen.log"
+      @logfile || ENV['BOXEN_LOG_FILE'] || "#{repodir}/log/boxen.log"
     end
 
     attr_writer :logfile
@@ -195,7 +194,7 @@ module Boxen
 
     def projects
       files = Dir["#{repodir}/modules/projects/manifests/*.pp"]
-      names = files.map { |m| File.basename m, ".pp" }.sort
+      names = files.map { |m| File.basename m, '.pp' }.sort
 
       names.map do |name|
         Boxen::Project.new "#{srcdir}/#{name}"
@@ -208,7 +207,7 @@ module Boxen
     # `BOXEN_PUPPET_DIR` environment variable.
 
     def puppetdir
-      @puppetdir || ENV["BOXEN_PUPPET_DIR"] || "/tmp/boxen/puppet"
+      @puppetdir || ENV['BOXEN_PUPPET_DIR'] || '/tmp/boxen/puppet'
     end
 
     attr_writer :puppetdir
@@ -217,7 +216,7 @@ module Boxen
     # `Dir.pwd`. Respects the `BOXEN_REPO_DIR` environment variable.
 
     def repodir
-      @repodir || ENV["BOXEN_REPO_DIR"] || Dir.pwd
+      @repodir || ENV['BOXEN_REPO_DIR'] || Dir.pwd
     end
 
     attr_writer :repodir
@@ -228,7 +227,7 @@ module Boxen
     # Respects the `BOXEN_REPO_NAME` environment variable.
 
     def reponame
-      override = @reponame || ENV["BOXEN_REPO_NAME"]
+      override = @reponame || ENV['BOXEN_REPO_NAME']
       return override unless override.nil?
 
       if File.directory? repodir
@@ -236,9 +235,9 @@ module Boxen
         url = Dir.chdir(repodir) { `git config remote.origin.url`.strip }
 
         # find the path and strip off the .git suffix
-        repo_exp = Regexp.new Regexp.escape(ghuri.host) + "[/:]([^/]+/[^/]+)"
-        if $?.success? && repo_exp.match(url)
-          @reponame = $1.sub /\.git$/, ""
+        repo_exp = Regexp.new Regexp.escape(ghuri.host) + '[/:]([^/]+/[^/]+)'
+        if $CHILD_STATUS.success? && repo_exp.match(url)
+          @reponame = Regexp.last_match(1).sub /\.git$/, ''
         end
       end
     end
@@ -248,7 +247,7 @@ module Boxen
     # GitHub location (public or GitHub Enterprise)
 
     def ghurl
-      @ghurl || ENV["BOXEN_GITHUB_ENTERPRISE_URL"] || "https://github.com"
+      @ghurl || ENV['BOXEN_GITHUB_ENTERPRISE_URL'] || 'https://github.com'
     end
 
     attr_writer :ghurl
@@ -257,7 +256,7 @@ module Boxen
 
     def repotemplate
       default = 'https://github.com/%s'
-      @repotemplate || ENV["BOXEN_REPO_URL_TEMPLATE"] || default
+      @repotemplate || ENV['BOXEN_REPO_URL_TEMPLATE'] || default
     end
 
     attr_writer :repotemplate
@@ -265,14 +264,14 @@ module Boxen
     # Does this Boxen use a GitHub Enterprise instance?
 
     def enterprise?
-      ghurl != "https://github.com"
+      ghurl != 'https://github.com'
     end
 
     # The directory where repos live. Default is
     # `"/Users/#{user}/src"`.
 
     def srcdir
-      @srcdir || ENV["BOXEN_SRC_DIR"] || "/Users/#{user}/src"
+      @srcdir || ENV['BOXEN_SRC_DIR'] || "/Users/#{user}/src"
     end
 
     attr_writer :srcdir
@@ -281,7 +280,7 @@ module Boxen
     # Respects the `BOXEN_NO_ISSUE` environment variable.
 
     def stealth?
-      !!ENV["BOXEN_NO_ISSUE"] || @stealth
+      !!ENV['BOXEN_NO_ISSUE'] || @stealth
     end
 
     attr_writer :stealth
@@ -298,7 +297,7 @@ module Boxen
     # A local user login. Default is the `USER` environment variable.
 
     def user
-      @user || ENV["USER"]
+      @user || ENV['USER']
     end
 
     attr_writer :user
@@ -313,7 +312,7 @@ module Boxen
     # Respects the `BOXEN_S3_HOST` environment variable.
 
     def s3host
-      @s3host || ENV["BOXEN_S3_HOST"] || "s3.amazonaws.com"
+      @s3host || ENV['BOXEN_S3_HOST'] || 's3.amazonaws.com'
     end
 
     attr_writer :s3host
@@ -322,7 +321,7 @@ module Boxen
     # Respects the `BOXEN_S3_BUCKET` environment variable.
 
     def s3bucket
-      @s3bucket || ENV["BOXEN_S3_BUCKET"] || "boxen-downloads"
+      @s3bucket || ENV['BOXEN_S3_BUCKET'] || 'boxen-downloads'
     end
 
     attr_writer :s3bucket

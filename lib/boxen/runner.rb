@@ -1,11 +1,11 @@
-require "boxen/checkout"
-require "boxen/config"
-require "boxen/hook"
-require "boxen/flags"
-require "boxen/puppeteer"
-require "boxen/service"
-require "boxen/util"
-require "facter"
+require 'boxen/checkout'
+require 'boxen/config'
+require 'boxen/hook'
+require 'boxen/flags'
+require 'boxen/puppeteer'
+require 'boxen/service'
+require 'boxen/util'
+require 'facter'
 
 module Boxen
   class Runner
@@ -26,7 +26,7 @@ module Boxen
     def process
       # --env prints out the current BOXEN_ env vars.
 
-      exec "env | grep ^BOXEN_ | sort" if flags.env?
+      exec 'env | grep ^BOXEN_ | sort' if flags.env?
 
       process_flags
 
@@ -48,11 +48,10 @@ module Boxen
     end
 
     def process_flags
-
       # --projects prints a list of available projects and exits.
 
       if flags.projects?
-        puts "You can install any of these projects with `#{$0} <project-name>`:\n"
+        puts "You can install any of these projects with `#{$PROGRAM_NAME} <project-name>`:\n"
 
         config.projects.each do |project|
           puts "  #{project.name}"
@@ -135,12 +134,11 @@ module Boxen
 
         exit
       end
-
     end
 
     def process_args
       projects = flags.args.join(',')
-      File.open("#{config.repodir}/.projects", "w+") do |f|
+      File.open("#{config.repodir}/.projects", 'w+') do |f|
         f.truncate 0
         f.write projects
       end

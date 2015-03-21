@@ -1,9 +1,7 @@
 module Boxen
-
   # A project managed by Boxen.
 
   class Project
-
     # The directory where this project's repo should live.
 
     attr_reader :dir

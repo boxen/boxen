@@ -1,4 +1,4 @@
-require "boxen/util"
+require 'boxen/util'
 
 module Boxen
   class Service
@@ -11,10 +11,33 @@ module Boxen
     end
 
     def self.list_enabled
-      prefix = /^dev\./
-      enabled = capture_output("sudo /bin/launchctl list").split("\n").map { |l| l.split(/\s/) }.map(&:last)
-      names = enabled.grep(prefix).map { |name| name.sub(prefix, "") }.compact
-      names.map { |name| new(name) }
+      service_list_names.map { |name| new(name) }
+    end
+
+    class << self
+      private
+
+      def service_list_names
+        prefix = /^dev\./
+        service_list.grep(prefix).map do |name|
+          name.sub(prefix, '')
+        end.compact
+      end
+
+      def service_list
+        capture_output(service_list_cmd)
+          .split("\n").map do |line|
+            line.split(/\s/)
+          end.map(&:last)
+      end
+
+      def capture_output(command)
+        `#{command}`
+      end
+
+      def service_list_cmd
+        'sudo /bin/launchctl list'
+      end
     end
 
     def initialize(name)
@@ -35,16 +58,12 @@ module Boxen
 
     private
 
-    def self.capture_output(command)
-      `#{command}`
-    end
-
     def location
       "#{self.class.location}/dev.#{name}.plist"
     end
 
     def self.location
-      "/Library/LaunchDaemons"
+      '/Library/LaunchDaemons'
     end
 
     def self.files

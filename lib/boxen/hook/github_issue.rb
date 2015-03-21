@@ -1,13 +1,13 @@
-require "boxen/hook"
+require 'boxen/hook'
 
 module Boxen
   class Hook
     class GitHubIssue < Hook
       def perform?
         enabled? &&
-        !config.stealth? && !config.pretend? &&
-        !config.login.to_s.empty? &&
-        checkout.master?
+          !config.stealth? && !config.pretend? &&
+          !config.login.to_s.empty? &&
+          checkout.master?
       end
 
       def call
@@ -33,7 +33,7 @@ module Boxen
       end
 
       def shell
-        ENV["SHELL"]
+        ENV['SHELL']
       end
 
       def log
@@ -45,7 +45,7 @@ module Boxen
 
         title = "Failed for #{config.user}"
         config.api.create_issue(config.reponame, title, failure_details,
-          :labels => [failure_label])
+                                labels: [failure_label])
       end
 
       def close_failures
@@ -61,9 +61,12 @@ module Boxen
       def failures
         return [] unless issues?
 
-        issues = config.api.list_issues(config.reponame, :state => 'open',
-          :labels => failure_label, :creator => config.login)
-        issues.reject! {|i| i.labels.collect(&:name).include?(ongoing_label)}
+        issues = config.api.list_issues(
+          config.reponame,
+          state: 'open',
+          labels: failure_label, creator: config.login
+        )
+        issues.reject! { |i| i.labels.collect(&:name).include?(ongoing_label) }
         issues
       end
 
@@ -74,13 +77,13 @@ module Boxen
         body << "\n\n"
 
         if checkout.dirty?
-          body << "### Changes"
+          body << '### Changes'
           body << "\n\n"
           body << "```\n#{checkout.changes}\n```"
           body << "\n\n"
         end
 
-        body << "### Puppet Command"
+        body << '### Puppet Command'
         body << "\n\n"
         body << "```\n#{puppet.command.join(' ')}\n```"
         body << "\n\n"
@@ -110,6 +113,7 @@ module Boxen
       end
 
       private
+
       def required_environment_variables
         ['BOXEN_ISSUES_ENABLED']
       end

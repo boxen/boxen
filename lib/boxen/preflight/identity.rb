@@ -1,4 +1,4 @@
-require "boxen/preflight"
+require 'boxen/preflight'
 
 class Boxen::Preflight::Identity < Boxen::Preflight
   def ok?
