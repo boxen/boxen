@@ -3,6 +3,9 @@ require 'boxen/config'
 require 'boxen/preflight/creds'
 
 class BoxenPreflightCredsTest < Boxen::Test
+  # Make a struct to use for stubbing out authorization records
+  Struct.new("Authorization", :id, :note, :fingerprint, :token)
+
   def setup
     @config   = Boxen::Config.new do |c|
       c.user  = 'mojombo'
@@ -76,5 +79,51 @@ class BoxenPreflightCredsTest < Boxen::Test
 
     assert_equal "l", @config.login
     assert_equal "p", preflight.instance_variable_get(:@password)
+  end
+
+  def test_basic_with_existing_token
+    preflight = Boxen::Preflight::Creds.new @config
+    note = "Note1"
+    fingerprint = "Fingerprint1"
+    token = "Token1"
+    existing_token = Struct::Authorization.new(1, note, fingerprint, token)
+
+    preflight.expects(:fetch_login_and_password).returns("")
+    preflight.expects(:get_tokens).returns([existing_token])
+    preflight.expects(:note).twice().returns(note)
+    preflight.expects(:fingerprint).twice().returns(fingerprint)
+    preflight.tmp_api.expects(:delete_authorization).with(existing_token.id)
+    preflight.tmp_api.expects(:create_authorization).with(
+      :note => note,
+      :fingerprint => fingerprint,
+      :scopes => %w(repo user),
+      :headers => {}
+    ).returns(existing_token)
+    preflight.expects(:ok?).returns(true)
+
+    preflight.run
+  end
+
+  def test_basic_with_no_existing_token
+    preflight = Boxen::Preflight::Creds.new @config
+    note = "Note1"
+    fingerprint = "Fingerprint1"
+    token = "Token1"
+    existing_token = Struct::Authorization.new(1, note, fingerprint, token)
+
+    preflight.expects(:fetch_login_and_password).returns("")
+    preflight.expects(:get_tokens).returns([])
+    preflight.expects(:note).returns(note)
+    preflight.expects(:fingerprint).returns(fingerprint)
+    preflight.tmp_api.expects(:delete_authorization).never
+    preflight.tmp_api.expects(:create_authorization).with(
+      :note => note,
+      :fingerprint => fingerprint,
+      :scopes => %w(repo user),
+      :headers => {}
+    ).returns(existing_token)
+    preflight.expects(:ok?).returns(true)
+
+    preflight.run
   end
 end

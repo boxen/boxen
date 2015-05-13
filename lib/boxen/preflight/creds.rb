@@ -1,6 +1,8 @@
 require "boxen/preflight"
 require "highline"
 require "octokit"
+require "digest"
+require "socket"
 
 # HACK: Unless this is `false`, HighLine has some really bizarre
 # problems with empty/expended streams at bizarre intervals.
@@ -68,12 +70,15 @@ class Boxen::Preflight::Creds < Boxen::Preflight
     fetch_login_and_password
     tokens = get_tokens
 
-    unless auth = tokens.detect { |a| a.note == "Boxen" }
-      auth = tmp_api.create_authorization \
-        :note => "Boxen",
-        :scopes => %w(repo user),
-        :headers => headers
-    end
+    auth = tokens.detect { |a| a.note == note && a.fingerprint == fingerprint }
+
+    tmp_api.delete_authorization(auth.id) if auth
+
+    auth = tmp_api.create_authorization \
+      :note => note,
+      :scopes => %w(repo user),
+      :headers => headers,
+      :fingerprint => fingerprint
 
     config.token = auth.token
 
@@ -104,5 +109,25 @@ class Boxen::Preflight::Creds < Boxen::Preflight
     return unless found = ENV[key]
     warn "Oh, looks like you've provided your #{thing} as environmental variable..."
     found
+  end
+
+  def fingeprint
+    @fingerprint ||= begin
+      # See Apple technical note TN1103, "Uniquely Identifying a Macintosh
+      # Computer."
+      serial_number_match_data = IO.popen(
+        ["ioreg", "-c", "IOPlatformExpertDevice", "-d", "2"]
+      ).read.match(/"IOPlatformSerialNumber" = "([[:alnum:]]+)"/)
+      if serial_number_match_data
+        Digest::SHA256.hexdigest(serial_number_match_data[1])
+      else
+        abort "Sorry, I was unable to obtain your Mac's serial number.",
+          "Boxen requires access to your Mac's serial number in order to generate a unique GitHub Personal Access Token."
+      end
+    end
+  end
+
+  def note
+    @note ||= "Boxen: #{Socket.gethostname}"
   end
 end
