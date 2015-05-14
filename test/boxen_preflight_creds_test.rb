@@ -81,7 +81,7 @@ class BoxenPreflightCredsTest < Boxen::Test
     assert_equal "p", preflight.instance_variable_get(:@password)
   end
 
-  def test_basic_with_existing_token
+  def test_run_with_existing_token
     preflight = Boxen::Preflight::Creds.new @config
     note = "App1"
     fingerprint = "Fingerprint1"
@@ -103,7 +103,7 @@ class BoxenPreflightCredsTest < Boxen::Test
     preflight.run
   end
 
-  def test_basic_with_no_existing_token
+  def test_run_with_no_existing_token
     preflight = Boxen::Preflight::Creds.new @config
     note = "App1"
     fingerprint = "Fingerprint1"
@@ -125,7 +125,7 @@ class BoxenPreflightCredsTest < Boxen::Test
     preflight.run
   end
 
-  def test_basic_does_not_delete_unrelated_tokens
+  def test_run_does_not_delete_unrelated_tokens
     preflight = Boxen::Preflight::Creds.new @config
     note = "App1"
     fingerprint = "Fingerprint1"
@@ -151,7 +151,7 @@ class BoxenPreflightCredsTest < Boxen::Test
     preflight.run
   end
 
-  def test_basic_does_delete_legacy_token
+  def test_run_does_delete_legacy_token
     preflight = Boxen::Preflight::Creds.new @config
     note = "App1"
     fingerprint = "Fingerprint1"
