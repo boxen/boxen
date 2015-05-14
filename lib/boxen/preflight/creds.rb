@@ -70,15 +70,27 @@ class Boxen::Preflight::Creds < Boxen::Preflight
     fetch_login_and_password
     tokens = get_tokens
 
+    # Boxen now supports the updated GitHub Authorizations API by using a unique
+    # `fingerprint` for each Boxen installation for a user. We delete any older
+    # authorization that does not make use of `fingerprint` so that the "legacy"
+    # authorization doesn't persist in the user's list of personal access
+    # tokens.
+    legacy_auth = tokens.detect { |a| a.note == "Boxen" && a.fingerprint == nil }
+    tmp_api.delete_authorization(legacy_auth.id, :headers => headers) if legacy_auth
+
+    # The updated GitHub authorizations API, in order to improve security, no
+    # longer returns a plaintext `token` for existing authorizations. So, if an
+    # authorization already exists for this machine we need to first delete it
+    # so that we can create a new one.
     auth = tokens.detect { |a| a.note == note && a.fingerprint == fingerprint }
+    tmp_api.delete_authorization(auth.id, :headers => headers) if auth
 
-    tmp_api.delete_authorization(auth.id) if auth
-
-    auth = tmp_api.create_authorization \
+    auth = tmp_api.create_authorization(
       :note => note,
       :scopes => %w(repo user),
-      :headers => headers,
-      :fingerprint => fingerprint
+      :fingerprint => fingerprint,
+      :headers => headers
+    )
 
     config.token = auth.token
 
@@ -111,7 +123,7 @@ class Boxen::Preflight::Creds < Boxen::Preflight
     found
   end
 
-  def fingeprint
+  def fingerprint
     @fingerprint ||= begin
       # See Apple technical note TN1103, "Uniquely Identifying a Macintosh
       # Computer."
@@ -119,10 +131,14 @@ class Boxen::Preflight::Creds < Boxen::Preflight
         ["ioreg", "-c", "IOPlatformExpertDevice", "-d", "2"]
       ).read.match(/"IOPlatformSerialNumber" = "([[:alnum:]]+)"/)
       if serial_number_match_data
-        Digest::SHA256.hexdigest(serial_number_match_data[1])
+        # The fingerprint must be unique across all personal access tokens for a
+        # given user. We prefix the serial number with the application name to
+        # differeniate between any other personal access token that uses the
+        # Mac serial number for the fingerprint.
+        Digest::SHA256.hexdigest("Boxen: #{serial_number_match_data[1]}")
       else
         abort "Sorry, I was unable to obtain your Mac's serial number.",
-          "Boxen requires access to your Mac's serial number in order to generate a unique GitHub Personal Access Token."
+          "Boxen requires access to your Mac's serial number in order to generate a unique GitHub personal access token."
       end
     end
   end

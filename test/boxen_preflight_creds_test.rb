@@ -3,7 +3,7 @@ require 'boxen/config'
 require 'boxen/preflight/creds'
 
 class BoxenPreflightCredsTest < Boxen::Test
-  # Make a struct to use for stubbing out authorization records
+  # Make a struct to use for stubbing out authorization objects.
   Struct.new("Authorization", :id, :note, :fingerprint, :token)
 
   def setup
@@ -83,46 +83,94 @@ class BoxenPreflightCredsTest < Boxen::Test
 
   def test_basic_with_existing_token
     preflight = Boxen::Preflight::Creds.new @config
-    note = "Note1"
+    note = "App1"
     fingerprint = "Fingerprint1"
-    token = "Token1"
-    existing_token = Struct::Authorization.new(1, note, fingerprint, token)
+    existing_token = Struct::Authorization.new(1, note, fingerprint, "Token1")
 
-    preflight.expects(:fetch_login_and_password).returns("")
-    preflight.expects(:get_tokens).returns([existing_token])
-    preflight.expects(:note).twice().returns(note)
-    preflight.expects(:fingerprint).twice().returns(fingerprint)
-    preflight.tmp_api.expects(:delete_authorization).with(existing_token.id)
+    preflight.stubs(:fetch_login_and_password).returns("")
+    preflight.stubs(:get_tokens).returns([existing_token])
+    preflight.stubs(:note).returns(note)
+    preflight.stubs(:fingerprint).returns(fingerprint)
+    preflight.stubs(:ok?).returns(true)
+    preflight.tmp_api.expects(:delete_authorization).with(existing_token.id, :headers => {})
     preflight.tmp_api.expects(:create_authorization).with(
       :note => note,
       :fingerprint => fingerprint,
       :scopes => %w(repo user),
       :headers => {}
     ).returns(existing_token)
-    preflight.expects(:ok?).returns(true)
 
     preflight.run
   end
 
   def test_basic_with_no_existing_token
     preflight = Boxen::Preflight::Creds.new @config
-    note = "Note1"
+    note = "App1"
     fingerprint = "Fingerprint1"
-    token = "Token1"
-    existing_token = Struct::Authorization.new(1, note, fingerprint, token)
+    new_token = Struct::Authorization.new(1, note, fingerprint, "Token1")
 
-    preflight.expects(:fetch_login_and_password).returns("")
-    preflight.expects(:get_tokens).returns([])
-    preflight.expects(:note).returns(note)
-    preflight.expects(:fingerprint).returns(fingerprint)
+    preflight.stubs(:fetch_login_and_password).returns("")
+    preflight.stubs(:get_tokens).returns([])
+    preflight.stubs(:note).returns(note)
+    preflight.stubs(:fingerprint).returns(fingerprint)
+    preflight.stubs(:ok?).returns(true)
     preflight.tmp_api.expects(:delete_authorization).never
     preflight.tmp_api.expects(:create_authorization).with(
       :note => note,
       :fingerprint => fingerprint,
       :scopes => %w(repo user),
       :headers => {}
+    ).returns(new_token)
+
+    preflight.run
+  end
+
+  def test_basic_does_not_delete_unrelated_tokens
+    preflight = Boxen::Preflight::Creds.new @config
+    note = "App1"
+    fingerprint = "Fingerprint1"
+    new_token = Struct::Authorization.new(1, note, fingerprint, "Token1")
+    unrelated_token = Struct::Authorization.new(2, "App2", fingerprint, "Token2")
+    unrelated_token_with_fingerprint = Struct::Authorization.new(3, "App3", "Fingerprint3", "Token3")
+
+    preflight.stubs(:fetch_login_and_password).returns("")
+    preflight.stubs(:get_tokens).returns(
+      [unrelated_token, unrelated_token_with_fingerprint]
+    )
+    preflight.stubs(:note).returns(note)
+    preflight.stubs(:fingerprint).returns(fingerprint)
+    preflight.stubs(:ok?).returns(true)
+    preflight.tmp_api.expects(:delete_authorization).never
+    preflight.tmp_api.expects(:create_authorization).with(
+      :note => note,
+      :fingerprint => fingerprint,
+      :scopes => %w(repo user),
+      :headers => {}
+    ).returns(new_token)
+
+    preflight.run
+  end
+
+  def test_basic_does_delete_legacy_token
+    preflight = Boxen::Preflight::Creds.new @config
+    note = "App1"
+    fingerprint = "Fingerprint1"
+    existing_token = Struct::Authorization.new(1, note, fingerprint, "Token1")
+    legacy_token = Struct::Authorization.new(2, "Boxen", nil, "Token2")
+
+    preflight.stubs(:fetch_login_and_password).returns("")
+    preflight.stubs(:get_tokens).returns([existing_token, legacy_token])
+    preflight.stubs(:note).returns(note)
+    preflight.stubs(:fingerprint).returns(fingerprint)
+    preflight.stubs(:ok?).returns(true)
+    preflight.tmp_api.expects(:delete_authorization).with(2, :headers => {})
+    preflight.tmp_api.expects(:delete_authorization).with(1, :headers => {})
+    preflight.tmp_api.expects(:create_authorization).with(
+      :note => note,
+      :fingerprint => fingerprint,
+      :scopes => %w(repo user),
+      :headers => {}
     ).returns(existing_token)
-    preflight.expects(:ok?).returns(true)
 
     preflight.run
   end
