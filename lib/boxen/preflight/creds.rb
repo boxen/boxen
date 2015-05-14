@@ -133,7 +133,7 @@ class Boxen::Preflight::Creds < Boxen::Preflight
       if serial_number_match_data
         # The fingerprint must be unique across all personal access tokens for a
         # given user. We prefix the serial number with the application name to
-        # differeniate between any other personal access token that uses the
+        # differentiate between any other personal access token that uses the
         # Mac serial number for the fingerprint.
         Digest::SHA256.hexdigest("Boxen: #{serial_number_match_data[1]}")
       else
