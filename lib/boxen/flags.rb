@@ -222,8 +222,13 @@ module Boxen
     end
 
     def run?
-      !(list_services? || restart_services? || enable_service? || disable_service? ||
-        enable_services? || disable_services? || help?)
+      !(
+        list_services? ||
+        restart_services? || restart_service? ||
+        enable_services? || enable_service? ||
+        disable_services? || disable_service? ||
+        help?
+      )
     end
 
     # Parse `args` as an array of CLI argument Strings. Raises
