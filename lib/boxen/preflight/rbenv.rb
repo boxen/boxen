@@ -7,6 +7,9 @@ class Boxen::Preflight::Rbenv < Boxen::Preflight
   end
 
   def ok?
-    !File.exist? "#{ENV['HOME']}/.rbenv"
+    rbenv_location = "#{ENV['HOME']}/.rbenv"
+    !File.exist?(rbenv_location) ||
+         (File.symlink?(rbenv_location) &&
+          File.readlink(rbenv_location) == "/opt/rubies/")
   end
 end
