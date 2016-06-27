@@ -3,8 +3,11 @@
 Gem::Specification.new do |gem|
   gem.name          = "boxen"
   gem.version       = "2.9.0"
-  gem.authors       = ["John Barnette", "Will Farrington", "David Goodlad", "Jacob Bednarz"]
-  gem.email         = ["jbarnette@github.com", "wfarr@github.com", "dgoodlad@github.com", "jacob.bednarz@gmail.com"]
+  # Thanks go out to the previous maintainers John Barnette, Will
+  # Farrington, David Goodlad and Mike McQuaid for getting this project
+  # to where it is today.
+  gem.authors       = ["Jacob Bednarz"]
+  gem.email         = ["jacob.bednarz@gmail.com"]
   gem.description   = "Manage Mac development boxes with love (and Puppet)."
   gem.summary       = "You know, for laptops and stuff."
   gem.homepage      = "https://github.com/boxen/boxen"
