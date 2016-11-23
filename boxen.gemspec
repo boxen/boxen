@@ -21,7 +21,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "hiera",            "~> 1.0"
   gem.add_dependency "highline",         "~> 1.6.0"
   gem.add_dependency "json_pure",        [">= 1.7.7", "< 2.0"]
-  gem.add_dependency "librarian-puppet", "~> 1.0.0"
+  gem.add_dependency "librarian-puppet", "~> 1.4.1"
   gem.add_dependency "octokit",          "~> 2.7", ">= 2.7.1"
   gem.add_dependency "puppet",           "~> 3.7"
 
