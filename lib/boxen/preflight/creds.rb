@@ -129,7 +129,7 @@ class Boxen::Preflight::Creds < Boxen::Preflight
       # Computer."
       serial_number_match_data = IO.popen(
         ["ioreg", "-c", "IOPlatformExpertDevice", "-d", "2"]
-      ).read.match(/"IOPlatformSerialNumber" = "([[:alnum:]]+)"/)
+      ).read.match(/"IOPlatformSerialNumber" = "([[:alnum:]\/]+)"/)
       if serial_number_match_data
         # The fingerprint must be unique across all personal access tokens for a
         # given user. We prefix the serial number with the application name to
