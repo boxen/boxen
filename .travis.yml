@@ -3,4 +3,6 @@ before_install: gem update --system 2.1.11
 script: "./script/tests"
 gemfile: "this/does/not/exist"
 rvm:
-  - "2.0.0"
+  - 2.0
+  - 2.1
+  - 2.2
