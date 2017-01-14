@@ -48,6 +48,7 @@ module Boxen
       attrs = {
         :email        => config.email,
         :fde          => config.fde?,
+        :auth         => config.auth?,
         :homedir      => config.homedir,
         :login        => config.login,
         :name         => config.name,
@@ -79,6 +80,7 @@ module Boxen
 
     def initialize(&block)
       @fde  = true
+      @auth = true
       @pull = true
 
       yield self if block_given?
@@ -117,6 +119,15 @@ module Boxen
     end
 
     attr_writer :fde
+
+    # Run with Github authentication? Default is `true`. Respects
+    # the `BOXEN_NO_AUTH` environment variable.
+
+    def auth?
+      !ENV["BOXEN_NO_AUTH"] && @auth
+    end
+
+    attr_writer :auth
 
     # Boxen's home directory. Default is `"/opt/boxen"`. Respects the
     # `BOXEN_HOME` environment variable.
