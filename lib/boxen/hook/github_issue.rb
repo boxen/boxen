@@ -61,8 +61,11 @@ module Boxen
       def failures
         return [] unless issues?
 
+        creator = config.login
+        return [] if creator.nil?
+
         issues = config.api.list_issues(config.reponame, :state => 'open',
-          :labels => failure_label, :creator => config.login)
+          :labels => failure_label, :creator => creator)
         issues.reject! {|i| i.labels.collect(&:name).include?(ongoing_label)}
         issues
       end
