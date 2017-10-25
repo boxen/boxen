@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "ansi",             "~> 1.4"
-  gem.add_dependency "hiera",            "~> 2.0"
+  gem.add_dependency "hiera",            "~> 3.0"
   gem.add_dependency "highline",         "~> 1.6.0"
   gem.add_dependency "json_pure",        [">= 1.7.7", "< 2.0"]
   gem.add_dependency "librarian-puppet", "~> 2.2"
