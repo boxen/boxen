@@ -25,8 +25,12 @@ module Boxen
           end
         end
 
-        keychain        = Boxen::Keychain.new config.user
-        config.token    = keychain.token
+        if Boxen::Util.osx?
+          keychain     = Boxen::Keychain.new config.user
+          config.token = keychain.token
+        else
+          config.token = ''
+        end
 
         if config.enterprise?
           # configure to talk to GitHub Enterprise
@@ -69,8 +73,10 @@ module Boxen
         f.write JSON.generate Hash[attrs.reject { |k, v| v.nil? }]
       end
 
-      keychain          = Boxen::Keychain.new config.user
-      keychain.token    = config.token
+      if Boxen::Util.osx?
+        keychain       = Boxen::Keychain.new config.user
+        keychain.token = config.token
+      end
 
       config
     end
