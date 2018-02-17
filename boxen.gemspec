@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |gem|
   gem.name          = "boxen"
-  gem.version       = "3.1.2"
+  gem.version       = "3.1.3"
   # Thanks go out to the previous maintainers John Barnette, Will
   # Farrington, David Goodlad and Mike McQuaid for getting this project
   # to where it is today.
