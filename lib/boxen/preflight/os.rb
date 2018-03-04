@@ -9,7 +9,9 @@ class Boxen::Preflight::OS < Boxen::Preflight
 
   def run
     abort <<~HEREDOC
-      You must be running one of the following Mac OS versions: #{SUPPORTED_RELEASES.join(' ')}
+      You must be running one of the following Mac OS versions:
+
+      #{pretty_list_output(SUPPORTED_RELEASES)}
 
       While not recommended, it is possible to ignore this warning and
       continue anyway. Just prefix your Boxen command with
@@ -18,6 +20,11 @@ class Boxen::Preflight::OS < Boxen::Preflight
   end
 
   private
+
+  def pretty_list_output(values)
+    output = values.map { |value| "- #{value}" }
+    output.join("\n")
+  end
 
   def osx?
     `uname -s`.chomp == "Darwin"
