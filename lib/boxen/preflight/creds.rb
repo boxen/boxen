@@ -97,7 +97,9 @@ class Boxen::Preflight::Creds < Boxen::Preflight
     unless ok?
       puts
       abort "Something went terribly wrong.",
-        "I was able to get your OAuth token, but was unable to use it."
+        "I was able to get your OAuth token, but was unable to use it." \
+	"This could be because you are using two-factor authentication or " \
+	" maybe you have an old personal access token in Github settings."
     end
   end
 
