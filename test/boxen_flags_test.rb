@@ -26,12 +26,29 @@ class BoxenFlagsTest < Boxen::Test
 
     # Do our best to frob every switch.
 
-    flags = Boxen::Flags.new "--debug", "--help", "--login", "login",
-      "--no-fde", "--no-pull", "--no-issue", "--noop",
-      "--pretend", "--profile", "--future-parser", "--report", "--graph", "--projects",
-      "--user", "user", "--homedir", "homedir", "--srcdir", "srcdir",
-      "--logfile", "logfile", "--token", "token"
+    flags_list = %w(
+      --debug
+      --help
+      --login login
+      --no-fde
+      --no-pull
+      --no-issue
+      --noop
+      --pretend
+      --profile
+      --future-parser
+      --report
+      --graph
+      --projects
+      --user user
+      --homedir homedir
+      --srcdir srcdir
+      --logfile logfile
+      --token token
+      --list-updated-modules
+    )
 
+    flags = Boxen::Flags.new(flags_list)
     assert_same config, flags.apply(config)
   end
 
@@ -199,6 +216,11 @@ class BoxenFlagsTest < Boxen::Test
 
   def test_user
     assert_equal "jbarnette", flags("--user", "jbarnette").user
+  end
+
+  def test_list_updated_modules?
+    refute flags.list_updated_modules?
+    assert flags('--list-updated-modules').list_updated_modules?
   end
 
   def test_user_missing_value

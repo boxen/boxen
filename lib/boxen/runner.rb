@@ -114,6 +114,16 @@ module Boxen
         exit
       end
 
+      # --list-updated-modules lists updated puppet modules
+
+      if flags.list_updated_modules?
+        puts "Checking for modules with new releases (this might take awhile)..."
+        @puppet.check_for_new_puppet_modules
+
+        exit
+      end
+
+
       # --list-services lists all services
 
       if flags.list_services?
